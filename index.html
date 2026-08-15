@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUDr. Ľubomír Polaščín - Nephroctor | Nefrológia · IT · Vzdelávanie</title>
+    <meta name="description" content="MUDr. Ľubomír Polaščín - Nephroctor. Nefrológia, interná medicína, medicínske vzdelávanie, preklady, vývoj webových aplikácií a digitálnych nástrojov, integrácia AI v zdravotníctve.">
+    <meta name="author" content="MUDr. Ľubomír Polaščín">
+    <link rel="canonical" href="https://nephroctor.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="MUDr. Ľubomír Polaščín - Nephroctor">
+    <meta property="og:description" content="Nefrológia, interná medicína, medicínske vzdelávanie, preklady, vývoj webových aplikácií a digitálnych nástrojov, integrácia AI v zdravotníctve.">
+    <meta property="og:url" content="https://nephroctor.com/">
+    <meta property="og:locale" content="sk_SK">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #0a2540;
+            --color-accent: #00b4d8;
+            --color-accent-dark: #0077b6;
+            --color-bg: #f8fafc;
+            --color-card: #ffffff;
+            --color-text: #1e293b;
+            --color-muted: #64748b;
+            --radius: 16px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header / Logo */
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header img {
+            max-width: 340px;
+            width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .header .subtitle {
+            font-size: 0.95rem;
+            color: var(--color-muted);
+        }
+
+        /* Business Info Card */
+        .card {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .info-item .icon {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-item .icon svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
+        }
+
+        .info-item .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-muted);
+            font-weight: 600;
+        }
+
+        .info-item .value {
+            font-size: 0.95rem;
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .info-item .value a {
+            color: var(--color-accent-dark);
+            text-decoration: none;
+        }
+
+        .info-item .value a:hover {
+            text-decoration: underline;
+        }
+
+        /* Language selector */
+        .lang-section {
+            margin-bottom: 2rem;
+        }
+
+        .lang-section h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--color-primary);
+        }
+
+        .lang-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            padding: 0.5rem 0.85rem;
+            min-height: 44px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            background: var(--color-card);
+            color: var(--color-text);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .lang-btn:hover,
+        .lang-btn:focus-visible,
+        .lang-btn.active {
+            border-color: var(--color-accent);
+            background: var(--color-accent);
+            color: white;
+        }
+
+        .lang-btn:focus-visible {
+            outline: 3px solid var(--color-accent-dark);
+            outline-offset: 2px;
+        }
+
+        /* Content area */
+        .content-card {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .content-card h2 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--color-primary);
+        }
+
+        .content-card p {
+            color: var(--color-muted);
+            font-size: 0.92rem;
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            color: var(--color-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+            .card {
+                padding: 1.5rem;
+            }
+            .header img {
+                max-width: 260px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .lang-btn {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <img src="assets/logo-transparent.png" alt="Nephroctor - MUDr. Ľubomír Polaščín">
+            <h1>MUDr. Ľubomír Polaščín - Nephroctor</h1>
+            <p class="subtitle" id="subtitle">Nefrológia · Interná medicína · IT · Vzdelávanie</p>
+        </header>
+
+        <main>
+        <!-- Business Info -->
+        <div class="card" aria-label="Kontaktné údaje">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    </div>
+                    <div>
+                        <div class="label">IČO</div>
+                        <div class="value">57 646 856</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    </div>
+                    <div>
+                        <div class="label">DIČ</div>
+                        <div class="value">1047524401</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    </div>
+                    <div>
+                        <div class="label">E-mail</div>
+                        <div class="value"><a href="mailto:lubomir.polascin@nephroctor.com">lubomir.polascin@nephroctor.com</a></div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                    </div>
+                    <div>
+                        <div class="label">Mobil</div>
+                        <div class="value"><a href="tel:+421917370474">+421 917 370 474</a></div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    </div>
+                    <div>
+                        <div class="label">Web</div>
+                        <div class="value">
+                            <a href="https://nephroctor.com" target="_blank" rel="noopener noreferrer">nephroctor.com</a><br>
+                            <a href="https://polascin.net" target="_blank" rel="noopener noreferrer">polascin.net</a><br>
+                            <a href="https://nefro.polascin.net" target="_blank" rel="noopener noreferrer">nefro.polascin.net</a><br>
+                            <a href="https://demo.arenibus.com" target="_blank" rel="noopener noreferrer">demo.arenibus.com</a><br>
+                            <a href="https://arenibus.polascin.net" target="_blank" rel="noopener noreferrer">arenibus.polascin.net</a><br>
+                            <a href="https://alphagrab.de" target="_blank" rel="noopener noreferrer">alphagrab.de</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Language Selection -->
+        <section class="lang-section" aria-label="Výber jazyka">
+            <h2 id="lang-title">Vyberte jazyk / Select language</h2>
+            <div class="lang-grid" id="lang-grid" role="group" aria-label="Jazyky">
+                <!-- Generated by JS -->
+            </div>
+        </section>
+
+        <!-- Translated Content -->
+        <section class="content-card" id="content-area">
+            <h2 id="content-heading">O nás</h2>
+            <p id="content-text">MUDr. Ľubomír Polaščín - Nephroctor je živnostník špecializujúci sa na nefrológiu a vnútorné lekárstvo. Činnosti zahŕňajú: klinickú a konziliárnu nefrológiu, dialýzu (hemodialýza, hemodiafiltrácia, peritoneálna dialýza), ultrasonografiu, medicínske vzdelávanie a prednášky, špecializované medicínske preklady, vývoj webových aplikácií, medicínskych kalkulačiek a digitálnych nástrojov, integráciu umelej inteligencie v zdravotníctve, počítačové služby a spracovanie údajov, vydavateľskú činnosť, výskum a vývoj, poradenstvo a organizovanie vzdelávacích podujatí.</p>
+        </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            &copy; 2026 MUDr. Ľubomír Polaščín - Nephroctor | IČO: 57 646 856
+        </footer>
+    </div>
+
+    <script>
+        const translations = {
+            bg: {
+                name: "Български",
+                subtitle: "Нефрология · Вътрешна медицина · IT · Образование",
+                langTitle: "Изберете език",
+                heading: "За нас",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor е самостоятелно заето лице, специализирано в нефрологията и вътрешната медицина. Дейностите включват: клинична и консултативна нефрология, диализа (хемодиализа, хемодиафилтрация, перитонеална диализа), ултрасонография, медицинско образование и лекции, специализирани медицински преводи, разработка на уеб приложения, медицински калкулатори и цифрови инструменти, интеграция на изкуствен интелект в здравеопазването, компютърни услуги и обработка на данни, издателска дейност, изследвания и развитие, консултантска дейност и организиране на обучителни мероприятия."
+            },
+            hr: {
+                name: "Hrvatski",
+                subtitle: "Nefrologija · Interna medicina · IT · Edukacija",
+                langTitle: "Odaberite jezik",
+                heading: "O nama",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor je samostalni poduzetnik specijaliziran za nefrologiju i internu medicinu. Djelatnosti uključuju: kliničku i konzilijarnu nefrologiju, dijalizu (hemodijaliza, hemodijafiltracija, peritonealna dijaliza), ultrasonografiju, medicinsku edukaciju i predavanja, specijalizirane medicinske prijevode, razvoj web aplikacija, medicinskih kalkulatora i digitalnih alata, integraciju umjetne inteligencije u zdravstvo, računalne usluge i obradu podataka, izdavačku djelatnost, istraživanje i razvoj, savjetodavnu djelatnost i organizaciju obrazovnih događanja."
+            },
+            cs: {
+                name: "Čeština",
+                subtitle: "Nefrologie · Interní medicína · IT · Vzdělávání",
+                langTitle: "Vyberte jazyk",
+                heading: "O nás",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor je živnostník specializující se na nefrologii a vnitřní lékařství. Činnosti zahrnují: klinickou a konziliární nefrologii, dialýzu (hemodialýza, hemodiafiltrace, peritoneální dialýza), ultrasonografii, lékařské vzdělávání a přednášky, odborné medicínské překlady, vývoj webových aplikací, medicínských kalkulaček a digitálních nástrojů, integraci umělé inteligence ve zdravotnictví, počítačové služby a zpracování dat, vydavatelskou činnost, výzkum a vývoj, poradenství a organizaci vzdělávacích akcí."
+            },
+            da: {
+                name: "Dansk",
+                subtitle: "Nefrologi · Intern medicin · IT · Uddannelse",
+                langTitle: "Vælg sprog",
+                heading: "Om os",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor er en selvstændig erhvervsdrivende specialiseret i nefrologi og intern medicin. Aktiviteterne omfatter: klinisk og konsultativ nefrologi, dialyse (hæmodialyse, hæmodiafiltration, peritonealdialyse), ultrasonografi, medicinsk undervisning og foredrag, specialiserede medicinske oversættelser, udvikling af webapplikationer, medicinske beregnere og digitale værktøjer, integration af kunstig intelligens i sundhedsvæsenet, computerservice og databehandling, forlagsvirksomhed, forskning og udvikling, rådgivning og arrangering af uddannelsesbegivenheder."
+            },
+            nl: {
+                name: "Nederlands",
+                subtitle: "Nefrologie · Interne geneeskunde · IT · Onderwijs",
+                langTitle: "Kies taal",
+                heading: "Over ons",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor is een zelfstandig ondernemer gespecialiseerd in nefrologie en interne geneeskunde. De activiteiten omvatten: klinische en consultatieve nefrologie, dialyse (hemodialyse, hemodiafiltratie, peritoneale dialyse), echografie, medische educatie en lezingen, gespecialiseerde medische vertalingen, ontwikkeling van webapplicaties, medische rekenhulpen en digitale hulpmiddelen, integratie van kunstmatige intelligentie in de gezondheidszorg, computerdiensten en gegevensverwerking, uitgeverij, onderzoek en ontwikkeling, advies en organisatie van educatieve evenementen."
+            },
+            en: {
+                name: "English",
+                subtitle: "Nephrology · Internal Medicine · IT · Education",
+                langTitle: "Select language",
+                heading: "About us",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor is a sole trader specialising in nephrology and internal medicine. Activities include: clinical and consultative nephrology, dialysis (haemodialysis, haemodiafiltration, peritoneal dialysis), ultrasonography, medical education and lecturing, specialised medical translation, development of web applications, medical calculators and digital tools, integration of artificial intelligence in healthcare, computer services and data processing, publishing, research and development, consulting, and organisation of educational events."
+            },
+            et: {
+                name: "Eesti",
+                subtitle: "Nefroloogia · Sisemeditsiin · IT · Haridus",
+                langTitle: "Valige keel",
+                heading: "Meist",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor on füüsilisest isikust ettevõtja, kes on spetsialiseerunud nefroloogiale ja sisehaigustele. Tegevused hõlmavad: kliinilist ja konsultatiivset nefroloogiat, dialüüsi (hemodialüüs, hemodiafiltratsioon, peritoneaaldialüüs), ultrasonograafiat, meditsiinilist koolitust ja loenguid, spetsialiseeritud meditsiinilisi tõlkeid, veebirakenduste, meditsiiniliste kalkulaatorite ja digitaalsete tööriistade arendust, tehisintellekti integreerimist tervishoius, arvutiteenuseid ja andmetöötlust, kirjastustegevust, teadus- ja arendustegevust, nõustamist ning haridusürituste korraldamist."
+            },
+            fi: {
+                name: "Suomi",
+                subtitle: "Nefrologia · Sisätautioppi · IT · Koulutus",
+                langTitle: "Valitse kieli",
+                heading: "Meistä",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor on yksityinen elinkeinonharjoittaja, joka on erikoistunut nefrologiaan ja sisätauteihin. Toimintaan kuuluu: kliininen ja konsultatiivinen nefrologia, dialyysi (hemodialyysi, hemodiafiltraatio, peritoneaalidialyysi), ultraäänitutkimus, lääketieteellinen koulutus ja luennointi, erikoistuneet lääketieteelliset käännökset, verkkosovellusten, lääketieteellisten laskureiden ja digitaalisten työkalujen kehitys, tekoälyn integrointi terveydenhuoltoon, tietotekniikkapalvelut ja tietojenkäsittely, kustannustoiminta, tutkimus ja kehitys, konsultointi sekä koulutustapahtumien järjestäminen."
+            },
+            fr: {
+                name: "Français",
+                subtitle: "Néphrologie · Médecine interne · IT · Éducation",
+                langTitle: "Choisir la langue",
+                heading: "À propos",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor est un entrepreneur individuel spécialisé en néphrologie et médecine interne. Les activités comprennent : néphrologie clinique et consultative, dialyse (hémodialyse, hémodiafiltration, dialyse péritonéale), échographie, enseignement médical et conférences, traductions médicales spécialisées, développement d'applications web, de calculateurs médicaux et d'outils numériques, intégration de l'intelligence artificielle dans les soins de santé, services informatiques et traitement de données, édition, recherche et développement, conseil et organisation d'événements éducatifs."
+            },
+            de: {
+                name: "Deutsch",
+                subtitle: "Nephrologie · Innere Medizin · IT · Bildung",
+                langTitle: "Sprache wählen",
+                heading: "Über uns",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor ist ein Einzelunternehmer mit Spezialisierung auf Nephrologie und Innere Medizin. Die Tätigkeiten umfassen: klinische und konsiliarische Nephrologie, Dialyse (Hämodialyse, Hämodiafiltration, Peritonealdialyse), Ultrasonographie, medizinische Ausbildung und Vorträge, spezialisierte medizinische Übersetzungen, Entwicklung von Webanwendungen, medizinischen Rechnern und digitalen Werkzeugen, Integration künstlicher Intelligenz im Gesundheitswesen, Computerdienste und Datenverarbeitung, Verlagstätigkeit, Forschung und Entwicklung, Beratung sowie Organisation von Bildungsveranstaltungen."
+            },
+            el: {
+                name: "Ελληνικά",
+                subtitle: "Νεφρολογία · Παθολογία · IT · Εκπαίδευση",
+                langTitle: "Επιλέξτε γλώσσα",
+                heading: "Σχετικά με εμάς",
+                text: "Ο MUDr. Ľubomír Polaščín - Nephroctor είναι ατομική επιχείρηση εξειδικευμένη στη νεφρολογία και την παθολογία. Οι δραστηριότητες περιλαμβάνουν: κλινική και συμβουλευτική νεφρολογία, αιμοκάθαρση (αιμοδιάλυση, αιμοδιαδιήθηση, περιτοναϊκή κάθαρση), υπερηχογραφία, ιατρική εκπαίδευση και διαλέξεις, εξειδικευμένες ιατρικές μεταφράσεις, ανάπτυξη εφαρμογών ιστού, ιατρικών υπολογιστών και ψηφιακών εργαλείων, ενσωμάτωση τεχνητής νοημοσύνης στην υγειονομική περίθαλψη, υπηρεσίες πληροφορικής και επεξεργασίας δεδομένων, εκδοτική δραστηριότητα, έρευνα και ανάπτυξη, συμβουλευτική και διοργάνωση εκπαιδευτικών εκδηλώσεων."
+            },
+            hu: {
+                name: "Magyar",
+                subtitle: "Nefrológia · Belgyógyászat · IT · Oktatás",
+                langTitle: "Válasszon nyelvet",
+                heading: "Rólunk",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor egyéni vállalkozó, nefrológiára és belgyógyászatra specializálódott. Tevékenységei közé tartozik: klinikai és konzultációs nefrológia, dialízis (hemodialízis, hemodiafiltráció, peritoneális dialízis), ultrahang-vizsgálat, orvosi oktatás és előadások, szakosodott orvosi fordítások, webalkalmazások, orvosi kalkulátorok és digitális eszközök fejlesztése, mesterséges intelligencia integrációja az egészségügybe, számítástechnikai szolgáltatások és adatfeldolgozás, kiadói tevékenység, kutatás és fejlesztés, tanácsadás valamint oktatási rendezvények szervezése."
+            },
+            ga: {
+                name: "Gaeilge",
+                subtitle: "Néifreolaíocht · Míochaine Inmheánach · TF · Oideachas",
+                langTitle: "Roghnaigh teanga",
+                heading: "Fúinn",
+                text: "Is trádálaí aonair é MUDr. Ľubomír Polaščín - Nephroctor atá speisialaithe sa néifreolaíocht agus sa mhíochaine inmheánach. I measc na ngníomhaíochtaí tá: néifreolaíocht chliniciúil agus chomhairleach, dialysis (haemaidialysis, haemaidiastíonadh, dialysis peireatóinéalach), ultrasonagrafaíocht, oideachas leighis agus léachtaí, aistriúcháin leighis speisialaithe, forbairt feidhmchlár gréasáin, áireamháin leighis agus uirlisí digiteacha, comhtháthú na hintleachta saorga sa chúram sláinte, seirbhísí ríomhaire agus próiseáil sonraí, foilsitheoireacht, taighde agus forbairt, comhairliúchán agus eagrú imeachtaí oideachais."
+            },
+            it: {
+                name: "Italiano",
+                subtitle: "Nefrologia · Medicina interna · IT · Formazione",
+                langTitle: "Seleziona lingua",
+                heading: "Chi siamo",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor è un lavoratore autonomo specializzato in nefrologia e medicina interna. Le attività comprendono: nefrologia clinica e consultiva, dialisi (emodialisi, emodiafiltrazione, dialisi peritoneale), ecografia, formazione medica e conferenze, traduzioni mediche specializzate, sviluppo di applicazioni web, calcolatori medici e strumenti digitali, integrazione dell'intelligenza artificiale nella sanità, servizi informatici ed elaborazione dati, editoria, ricerca e sviluppo, consulenza e organizzazione di eventi formativi."
+            },
+            lv: {
+                name: "Latviešu",
+                subtitle: "Nefroloģija · Iekšķīgās slimības · IT · Izglītība",
+                langTitle: "Izvēlieties valodu",
+                heading: "Par mums",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor ir individuālais komersants, kas specializējas nefroloģijā un iekšķīgajās slimībās. Darbības ietver: klīnisko un konsultatīvo nefroloģiju, dialīzi (hemodialīze, hemodiaflitrācija, peritoneālā dialīze), ultrasonogrāfiju, medicīnisko izglītību un lekcijas, specializētus medicīniskos tulkojumus, tīmekļa lietojumprogrammu, medicīnisko kalkulatoru un digitālo rīku izstrādi, mākslīgā intelekta integrēšanu veselības aprūpē, datoru pakalpojumus un datu apstrādi, izdevējdarbību, pētniecību un attīstību, konsultēšanu un izglītojošu pasākumu organizēšanu."
+            },
+            lt: {
+                name: "Lietuvių",
+                subtitle: "Nefrologija · Vidaus medicina · IT · Švietimas",
+                langTitle: "Pasirinkite kalbą",
+                heading: "Apie mus",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor yra individualus verslininkas, besispecializuojantis nefrologijoje ir vidaus medicinoje. Veikla apima: klinikinę ir konsultacinę nefrologiją, dializę (hemodializė, hemodiafiltracija, peritoninė dializė), ultrasonografiją, medicininį švietimą ir paskaitas, specializuotus medicininius vertimus, interneto programų, medicininių skaičiuoklių ir skaitmeninių įrankių kūrimą, dirbtinio intelekto integraciją sveikatos priežiūroje, kompiuterines paslaugas ir duomenų apdorojimą, leidybinę veiklą, mokslinius tyrimus ir plėtrą, konsultacijas bei švietimo renginių organizavimą."
+            },
+            mt: {
+                name: "Malti",
+                subtitle: "Nefroloġija · Mediċina Interna · IT · Edukazzjoni",
+                langTitle: "Agħżel lingwa",
+                heading: "Dwarna",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor huwa negozjant waħdu speċjalizzat fin-nefroloġija u l-mediċina interna. L-attivitajiet jinkludu: nefroloġija klinika u konsultattiva, dijaliżi (emodijaliżi, emodjafiltrazjoni, dijaliżi peritoneali), ultrasonografija, edukazzjoni medika u lectures, traduzzjonijiet mediċi speċjalizzati, żvilupp ta' applikazzjonijiet web, kalkulaturi mediċi u għodod diġitali, integrazzjoni tal-intelliġenza artifiċjali fil-kura tas-saħħa, servizzi tal-kompjuter u l-ipproċessar tad-data, pubblikazzjoni, riċerka u żvilupp, konsulenza u organizzazzjoni ta' avvenimenti edukattivi."
+            },
+            pl: {
+                name: "Polski",
+                subtitle: "Nefrologia · Medycyna wewnętrzna · IT · Edukacja",
+                langTitle: "Wybierz język",
+                heading: "O nas",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor jest przedsiębiorcą specjalizującym się w nefrologii i medycynie wewnętrznej. Działalność obejmuje: nefrologię kliniczną i konsultacyjną, dializę (hemodializa, hemodiafiltracja, dializa otrzewnowa), ultrasonografię, edukację medyczną i wykłady, specjalistyczne tłumaczenia medyczne, tworzenie aplikacji internetowych, kalkulatorów medycznych i narzędzi cyfrowych, integrację sztucznej inteligencji w opiece zdrowotnej, usługi komputerowe i przetwarzanie danych, działalność wydawniczą, badania i rozwój, doradztwo oraz organizację wydarzeń edukacyjnych."
+            },
+            pt: {
+                name: "Português",
+                subtitle: "Nefrologia · Medicina interna · TI · Educação",
+                langTitle: "Selecionar idioma",
+                heading: "Sobre nós",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor é um empresário em nome individual especializado em nefrologia e medicina interna. As atividades incluem: nefrologia clínica e consultiva, diálise (hemodiálise, hemodiafiltração, diálise peritoneal), ecografia, ensino médico e palestras, traduções médicas especializadas, desenvolvimento de aplicações web, calculadoras médicas e ferramentas digitais, integração de inteligência artificial na saúde, serviços informáticos e processamento de dados, atividade editorial, investigação e desenvolvimento, consultoria e organização de eventos educativos."
+            },
+            ro: {
+                name: "Română",
+                subtitle: "Nefrologie · Medicină internă · IT · Educație",
+                langTitle: "Selectați limba",
+                heading: "Despre noi",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor este un întreprinzător individual specializat în nefrologie și medicină internă. Activitățile includ: nefrologie clinică și consultativă, dializă (hemodializă, hemodiafiltrare, dializă peritoneală), ecografie, educație medicală și prelegeri, traduceri medicale specializate, dezvoltarea de aplicații web, calculatoare medicale și instrumente digitale, integrarea inteligenței artificiale în sistemul de sănătate, servicii informatice și prelucrarea datelor, activitate editorială, cercetare și dezvoltare, consultanță și organizarea de evenimente educaționale."
+            },
+            sk: {
+                name: "Slovenčina",
+                subtitle: "Nefrológia · Interná medicína · IT · Vzdelávanie",
+                langTitle: "Vyberte jazyk",
+                heading: "O nás",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor je živnostník špecializujúci sa na nefrológiu a vnútorné lekárstvo. Činnosti zahŕňajú: klinickú a konziliárnu nefrológiu, dialýzu (hemodialýza, hemodiafiltrácia, peritoneálna dialýza), ultrasonografiu, medicínske vzdelávanie a prednášky, špecializované medicínske preklady, vývoj webových aplikácií, medicínskych kalkulačiek a digitálnych nástrojov, integráciu umelej inteligencie v zdravotníctve, počítačové služby a spracovanie údajov, vydavateľskú činnosť, výskum a vývoj, poradenstvo a organizovanie vzdelávacích podujatí."
+            },
+            sl: {
+                name: "Slovenščina",
+                subtitle: "Nefrologija · Interna medicina · IT · Izobraževanje",
+                langTitle: "Izberite jezik",
+                heading: "O nas",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor je samostojni podjetnik, specializiran za nefrologijo in interno medicino. Dejavnosti vključujejo: klinično in konzultativno nefrologijo, dializo (hemodializa, hemodijafiltracija, peritonealna dializa), ultrasonografijo, medicinsko izobraževanje in predavanja, specializirane medicinske prevode, razvoj spletnih aplikacij, medicinskih kalkulatorjev in digitalnih orodij, integracijo umetne inteligence v zdravstvo, računalniške storitve in obdelavo podatkov, založniško dejavnost, raziskave in razvoj, svetovanje ter organizacijo izobraževalnih dogodkov."
+            },
+            es: {
+                name: "Español",
+                subtitle: "Nefrología · Medicina interna · TI · Educación",
+                langTitle: "Seleccionar idioma",
+                heading: "Sobre nosotros",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor es un empresario individual especializado en nefrología y medicina interna. Las actividades incluyen: nefrología clínica y consultiva, diálisis (hemodiálisis, hemodiafiltración, diálisis peritoneal), ecografía, educación médica y conferencias, traducciones médicas especializadas, desarrollo de aplicaciones web, calculadoras médicas y herramientas digitales, integración de inteligencia artificial en la atención sanitaria, servicios informáticos y procesamiento de datos, actividad editorial, investigación y desarrollo, consultoría y organización de eventos educativos."
+            },
+            sv: {
+                name: "Svenska",
+                subtitle: "Nefrologi · Internmedicin · IT · Utbildning",
+                langTitle: "Välj språk",
+                heading: "Om oss",
+                text: "MUDr. Ľubomír Polaščín - Nephroctor är en enskild näringsidkare specialiserad på nefrologi och internmedicin. Verksamheten omfattar: klinisk och konsultativ nefrologi, dialys (hemodialys, hemodiafiltration, peritonealdialys), ultrasonografi, medicinsk utbildning och föreläsningar, specialiserade medicinska översättningar, utveckling av webbapplikationer, medicinska kalkylatorer och digitala verktyg, integrering av artificiell intelligens i hälso- och sjukvården, datortjänster och databehandling, förlagsverksamhet, forskning och utveckling, rådgivning samt anordnande av utbildningsevenemang."
+            }
+        };
+
+        let currentLang = 'sk';
+
+        function buildLangButtons() {
+            const grid = document.getElementById('lang-grid');
+            const order = ['sk', 'cs', 'en', 'de', 'fr', 'es', 'it', 'pt', 'nl', 'pl', 'hu', 'ro', 'bg', 'hr', 'sl', 'da', 'sv', 'fi', 'et', 'lv', 'lt', 'el', 'ga', 'mt'];
+            order.forEach(code => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'lang-btn' + (code === currentLang ? ' active' : '');
+                btn.textContent = translations[code].name;
+                btn.setAttribute('data-lang', code);
+                btn.setAttribute('aria-label', translations[code].name);
+                btn.addEventListener('click', () => switchLang(code));
+                grid.appendChild(btn);
+            });
+        }
+
+        function switchLang(code) {
+            currentLang = code;
+            const t = translations[code];
+
+            document.getElementById('subtitle').textContent = t.subtitle;
+            document.getElementById('lang-title').textContent = t.langTitle;
+            document.getElementById('content-heading').textContent = t.heading;
+            document.getElementById('content-text').textContent = t.text;
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-lang') === code);
+            });
+
+            document.documentElement.lang = code;
+        }
+
+        buildLangButtons();
+    </script>
+</body>
+</html>

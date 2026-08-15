@@ -1,0 +1,9 @@
+.git/
+.github/
+.trunk/
+.audit.md
+.doaudit.md
+.deployignore
+.gitignore
+LICENSE
+README.md
