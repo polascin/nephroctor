@@ -71,7 +71,22 @@
             max-width: 500px;
             width: 100%;
             height: auto;
+        }
+
+        .logo-wrapper {
+            display: inline-block;
+            background: #ffffff;
+            padding: 1.5rem 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
             margin-bottom: 1.5rem;
+        }
+
+        :root[data-theme="dark"] .logo-wrapper,
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) .logo-wrapper {
+                background: #f1f5f9;
+            }
         }
 
         .header h1 {
@@ -317,10 +332,12 @@
     <div class="container">
         <!-- Header -->
         <header class="header">
-            <picture>
-                <source srcset="assets/logo-transparent.webp" type="image/webp">
-                <img src="assets/logo-transparent.png" alt="Nephroctor - MUDr. Ľubomír Polaščín">
-            </picture>
+            <div class="logo-wrapper">
+                <picture>
+                    <source srcset="assets/logo-transparent.webp" type="image/webp">
+                    <img src="assets/logo-transparent.png" alt="Nephroctor - MUDr. Ľubomír Polaščín">
+                </picture>
+            </div>
             <h1>MUDr. Ľubomír Polaščín - Nephroctor</h1>
             <p class="subtitle" id="subtitle">Nefrológia · Interná medicína · IT · Vzdelávanie</p>
         </header>
