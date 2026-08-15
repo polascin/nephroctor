@@ -21,15 +21,19 @@ jobs:
           cp -r assets deploy/
 
       - name: Deploy via SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          server: ${{ secrets.SFTP_HOST }}
-          username: ${{ secrets.SFTP_USER }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          port: ${{ secrets.SFTP_PORT }}
-          local_path: "./deploy/*"
-          remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
-          sftp_only: true
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq lftp > /dev/null 2>&1
+          lftp -u "$SFTP_USER","$SFTP_PASSWORD" \
+            -e "set sftp:connect-program 'ssh -o StrictHostKeyChecking=no -p $SFTP_PORT'; \
+                mirror --reverse --verbose --delete deploy/ $SFTP_REMOTE_PATH/; \
+                bye" \
+            sftp://"$SFTP_HOST"
+        env:
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          SFTP_USER: ${{ secrets.SFTP_USER }}
+          SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
+          SFTP_PORT: ${{ secrets.SFTP_PORT }}
+          SFTP_REMOTE_PATH: ${{ secrets.SFTP_REMOTE_PATH }}
 
       - name: Smoke check
         run: |
