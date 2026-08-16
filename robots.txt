@@ -1,0 +1,7 @@
+# robots.txt for https://nephroctor.com/
+# The whole site is public and intended to be indexed.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://nephroctor.com/sitemap.xml

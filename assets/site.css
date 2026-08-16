@@ -1,0 +1,599 @@
+/* ==========================================================================
+   Nephroctor – shared stylesheet (index.html + /legal/*.html)
+   Self-hosted Inter (SIL OFL 1.1) – no third-party font CDN, see /legal/cookies.html
+   ========================================================================== */
+
+/* --- Inter, variable, self-hosted ---------------------------------------- */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('fonts/inter-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('fonts/inter-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('fonts/inter-greek.woff2') format('woff2');
+    unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('fonts/inter-greek-ext.woff2') format('woff2');
+    unicode-range: U+1F00-1FFF;
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('fonts/inter-cyrillic.woff2') format('woff2');
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('fonts/inter-cyrillic-ext.woff2') format('woff2');
+    unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
+/* --- Design tokens -------------------------------------------------------- */
+:root {
+    --color-primary: #0a2540;
+    --color-accent: #00b4d8;
+    --color-accent-dark: #0077b6;
+    /* Filled controls: --color-accent-strong pairs with --color-on-accent
+       and is contrast-checked in both themes (see .audit.md, Beh #7). */
+    --color-accent-strong: #0077b6;
+    --color-on-accent: #ffffff;
+    /* Icon plate gradient. The light stop is #0096b5 rather than the brand
+       #00b4d8 so the white glyph clears WCAG 1.4.11 (3.48:1 vs 2.46:1). */
+    --color-icon-from: #0096b5;
+    --color-icon-to: #0077b6;
+    --color-bg: #f8fafc;
+    --color-card: #ffffff;
+    --color-text: #1e293b;
+    --color-muted: #475569;
+    --color-border: #e2e8f0;
+    --radius: 16px;
+    --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+:root[data-theme="dark"] {
+    --color-primary: #e2e8f0;
+    --color-accent: #22d3ee;
+    --color-accent-dark: #67e8f9;
+    --color-accent-strong: #22d3ee;
+    --color-on-accent: #0f172a;
+    --color-icon-from: #22d3ee;
+    --color-icon-to: #67e8f9;
+    --color-bg: #0f172a;
+    --color-card: #1e293b;
+    --color-text: #f1f5f9;
+    --color-muted: #94a3b8;
+    --color-border: #334155;
+    --shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --color-primary: #e2e8f0;
+        --color-accent: #22d3ee;
+        --color-accent-dark: #67e8f9;
+        --color-accent-strong: #22d3ee;
+        --color-on-accent: #0f172a;
+        --color-icon-from: #22d3ee;
+        --color-icon-to: #67e8f9;
+        --color-bg: #0f172a;
+        --color-card: #1e293b;
+        --color-text: #f1f5f9;
+        --color-muted: #94a3b8;
+        --color-border: #334155;
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+    }
+}
+
+/* --- Base ----------------------------------------------------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    -webkit-text-size-adjust: 100%;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+.skip-link {
+    position: absolute;
+    left: 0.5rem;
+    top: -3rem;
+    z-index: 200;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    background: var(--color-accent-strong);
+    color: var(--color-on-accent);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+    top: 0.5rem;
+}
+
+/* --- Header / logo -------------------------------------------------------- */
+.header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.header img {
+    max-width: 500px;
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* The logo master has an opaque near-white background, so the plate stays
+   white in both themes – a tinted plate would show a visible seam. */
+.logo-wrapper {
+    display: inline-block;
+    background: #ffffff;
+    padding: 1.5rem 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+}
+
+.header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 0.25rem;
+}
+
+.header .subtitle {
+    font-size: 0.95rem;
+    color: var(--color-muted);
+}
+
+/* --- Cards ---------------------------------------------------------------- */
+.card,
+.content-card {
+    background: var(--color-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.25rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.info-item .icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--color-icon-from), var(--color-icon-to));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.info-item .icon svg {
+    width: 18px;
+    height: 18px;
+    fill: var(--color-on-accent);
+}
+
+.info-item .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-muted);
+    font-weight: 600;
+}
+
+.info-item .value {
+    font-size: 0.95rem;
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.info-item .value a {
+    color: var(--color-accent-dark);
+    text-decoration: none;
+}
+
+.info-item .value a:hover {
+    text-decoration: underline;
+}
+
+/* --- Language selector ---------------------------------------------------- */
+.lang-section {
+    margin-bottom: 2rem;
+}
+
+.lang-section h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--color-primary);
+}
+
+.lang-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.lang-btn {
+    padding: 0.5rem 0.85rem;
+    min-height: 44px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-card);
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.lang-btn:hover,
+.lang-btn[aria-pressed="true"] {
+    border-color: var(--color-accent-strong);
+    background: var(--color-accent-strong);
+    color: var(--color-on-accent);
+}
+
+.lang-btn:focus-visible,
+.theme-toggle:focus-visible,
+.skip-link:focus-visible,
+a:focus-visible {
+    outline: 3px solid var(--color-accent-dark);
+    outline-offset: 2px;
+}
+
+/* --- Content -------------------------------------------------------------- */
+.content-card h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+}
+
+.content-card p {
+    color: var(--color-muted);
+    font-size: 0.92rem;
+    line-height: 1.7;
+}
+
+/* --- Footer --------------------------------------------------------------- */
+.footer {
+    text-align: center;
+    padding: 1.5rem 0;
+    color: var(--color-muted);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem 1rem;
+    margin-bottom: 0.85rem;
+}
+
+.footer-legal a {
+    color: var(--color-accent-dark);
+    text-decoration: none;
+    padding: 0.25rem 0;
+}
+
+.footer-legal a:hover {
+    text-decoration: underline;
+}
+
+/* --- Theme toggle --------------------------------------------------------- */
+.theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    width: 44px;
+    height: 44px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 50%;
+    background: var(--color-card);
+    color: var(--color-text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    box-shadow: var(--shadow);
+    z-index: 100;
+}
+
+.theme-toggle:hover {
+    border-color: var(--color-accent-strong);
+    background: var(--color-accent-strong);
+    color: var(--color-on-accent);
+}
+
+.theme-toggle svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+/* --- Legal documents ------------------------------------------------------ */
+.doc-header {
+    margin-bottom: 1.5rem;
+}
+
+.doc-header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 0.35rem;
+}
+
+.doc-meta {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    color: var(--color-accent-dark);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.doc-lang {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.doc-lang button {
+    padding: 0.4rem 0.9rem;
+    min-height: 44px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-card);
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.doc-lang button[aria-pressed="true"] {
+    border-color: var(--color-accent-strong);
+    background: var(--color-accent-strong);
+    color: var(--color-on-accent);
+}
+
+.doc-lang button:focus-visible {
+    outline: 3px solid var(--color-accent-dark);
+    outline-offset: 2px;
+}
+
+.prose {
+    font-size: 0.92rem;
+    line-height: 1.75;
+    color: var(--color-text);
+}
+
+.prose h2 {
+    font-size: 1.05rem;
+    color: var(--color-primary);
+    margin: 1.75rem 0 0.6rem;
+}
+
+.prose h2:first-child {
+    margin-top: 0;
+}
+
+.prose h3 {
+    font-size: 0.95rem;
+    color: var(--color-primary);
+    margin: 1.25rem 0 0.4rem;
+}
+
+.prose p,
+.prose ul,
+.prose ol,
+.prose table {
+    margin-bottom: 0.85rem;
+}
+
+.prose ul,
+.prose ol {
+    padding-left: 1.35rem;
+}
+
+.prose li {
+    margin-bottom: 0.3rem;
+}
+
+.prose a {
+    color: var(--color-accent-dark);
+}
+
+.prose dt {
+    font-weight: 600;
+    margin-top: 0.6rem;
+}
+
+.table-scroll {
+    overflow-x: auto;
+    margin-bottom: 0.85rem;
+}
+
+.prose table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 30rem;
+    font-size: 0.85rem;
+}
+
+.prose th,
+.prose td {
+    border: 1px solid var(--color-border);
+    padding: 0.5rem 0.65rem;
+    text-align: left;
+    vertical-align: top;
+}
+
+.prose th {
+    background: var(--color-bg);
+    font-weight: 600;
+}
+
+.callout {
+    border-left: 4px solid var(--color-accent-strong);
+    background: var(--color-bg);
+    border-radius: 0 8px 8px 0;
+    padding: 0.85rem 1rem;
+    margin: 1rem 0;
+}
+
+.callout p:last-child {
+    margin-bottom: 0;
+}
+
+.todo {
+    border-left-color: #b45309;
+}
+
+:root[data-theme="dark"] .todo {
+    border-left-color: #fbbf24;
+}
+
+/* --- Responsive ----------------------------------------------------------- */
+@media (max-width: 600px) {
+    .container {
+        padding: 1.5rem 1rem;
+    }
+
+    .card,
+    .content-card {
+        padding: 1.5rem;
+    }
+
+    .header img {
+        max-width: 320px;
+    }
+
+    .logo-wrapper {
+        padding: 1rem 1.25rem;
+    }
+
+    .doc-header h1 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* --- Print ---------------------------------------------------------------- */
+@media print {
+    .theme-toggle,
+    .doc-lang,
+    .lang-section,
+    .skip-link,
+    .back-link {
+        display: none !important;
+    }
+
+    body {
+        background: #fff;
+        color: #000;
+    }
+
+    .card,
+    .content-card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+}

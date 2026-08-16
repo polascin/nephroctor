@@ -1,0 +1,12 @@
+Inter typeface
+==============
+
+Copyright (c) 2016-present The Inter Project Authors (https://github.com/rsms/inter)
+
+Licensed under the SIL Open Font License, Version 1.1.
+Full licence text: https://github.com/rsms/inter/blob/master/LICENSE.txt
+
+The .woff2 files in this directory are the unmodified Google Fonts variable
+subsets of Inter (weights 400-700), served from this domain instead of
+fonts.gstatic.com so that no visitor IP address is disclosed to a third party.
+See /legal/cookies.html for the data-protection rationale.

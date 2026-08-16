@@ -1,0 +1,114 @@
+# ============================================================================
+# nephroctor.com – Apache configuration for the WebSupport hosting
+# Every block is guarded by <IfModule>, so a missing module degrades to
+# "no effect" rather than a 500. See .audit.md, section 12.
+# ============================================================================
+
+AddDefaultCharset utf-8
+
+# --- Correct MIME types -----------------------------------------------------
+<IfModule mod_mime.c>
+    AddType application/manifest+json          .webmanifest
+    AddType font/woff2                         .woff2
+    AddType image/webp                         .webp
+    AddType image/x-icon                       .ico
+    AddType application/xml                    .xml
+</IfModule>
+
+# --- Security headers -------------------------------------------------------
+<IfModule mod_headers.c>
+    # No MIME sniffing.
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Clickjacking protection (frame-ancestors below is the modern equivalent).
+    Header always set X-Frame-Options "DENY"
+
+    # Send the origin only, and only to equally secure destinations.
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # The site needs none of these browser features.
+    Header always set Permissions-Policy "geolocation=(), camera=(), microphone=(), payment=(), usb=(), interest-cohort=()"
+
+    # Content Security Policy.
+    #   script-src keeps 'unsafe-inline' because the theme bootstrap must run
+    #   inline before first paint to avoid a flash of the wrong colour scheme,
+    #   and static hosting cannot issue per-request nonces. Everything else is
+    #   locked to same-origin: the site loads no third-party asset at all.
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; form-action 'none'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+
+    # HSTS. Deliberately without includeSubDomains and without preload so that
+    # a subdomain served over plain HTTP is not locked out. Raise only after
+    # confirming every subdomain has a valid certificate.
+    Header always set Strict-Transport-Security "max-age=15552000"
+
+    # Cross-origin isolation basics.
+    Header always set Cross-Origin-Opener-Policy "same-origin"
+    Header always set Cross-Origin-Resource-Policy "same-origin"
+</IfModule>
+
+# --- Canonical host and HTTPS ----------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # 1. Consolidate every alias onto https://nephroctor.com in a single hop.
+    #    www.nephroctor.com resolves to this same webspace and was answering 200
+    #    with byte-identical content, i.e. the whole site under a second address.
+    #    nephroctor.sk and nephroctor.eu are currently redirected upstream by the
+    #    host (302); the rule below is the fallback if they are ever pointed
+    #    straight at this webspace. The alias list is explicit on purpose, so a
+    #    staging or preview hostname is never redirected away.
+    RewriteCond %{HTTP_HOST} ^(www\.nephroctor\.com|(www\.)?nephroctor\.(sk|eu))$ [NC]
+    RewriteRule ^ https://nephroctor.com%{REQUEST_URI} [R=301,L]
+
+    # 2. Force HTTPS on the canonical host.
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# --- Caching ----------------------------------------------------------------
+# Filenames are not content-hashed, so CSS/JS get a short TTL while fonts and
+# images – which are replaced only deliberately – get a long one.
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault                          "access plus 1 day"
+    ExpiresByType text/html                 "access plus 0 seconds"
+    ExpiresByType text/css                  "access plus 1 day"
+    ExpiresByType application/javascript    "access plus 1 day"
+    ExpiresByType font/woff2                "access plus 1 year"
+    ExpiresByType image/webp                "access plus 30 days"
+    ExpiresByType image/png                 "access plus 30 days"
+    ExpiresByType image/jpeg                "access plus 30 days"
+    ExpiresByType image/x-icon              "access plus 30 days"
+    ExpiresByType application/manifest+json "access plus 7 days"
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(html)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+    <FilesMatch "\.woff2$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
+
+# --- Compression ------------------------------------------------------------
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml \
+        application/javascript application/json application/xml \
+        application/manifest+json image/svg+xml
+</IfModule>
+
+# --- Hardening --------------------------------------------------------------
+# No directory listings.
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
+
+# Never serve dotfiles or repository leftovers.
+<FilesMatch "^\.|(\.(md|yml|yaml|bak|log|sh)|~)$">
+    Require all denied
+</FilesMatch>
+
+# No ErrorDocument override: serving index.html for a missing path would
+# produce a soft 404 and confuse search engines. A plain 404 is correct.

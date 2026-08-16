@@ -17,8 +17,29 @@ jobs:
       - name: Prepare deploy directory
         run: |
           mkdir -p deploy
-          cp index.html deploy/
+          cp index.html robots.txt sitemap.xml site.webmanifest favicon.ico deploy/
+          cp .htaccess deploy/
           cp -r assets deploy/
+          cp -r legal deploy/
+          echo "Files staged for deployment:"
+          find deploy -type f | sort
+
+      - name: Verify deploy payload
+        run: |
+          fail=0
+          for f in index.html robots.txt sitemap.xml site.webmanifest favicon.ico .htaccess \
+                   assets/site.css assets/legal.js assets/logo.webp assets/og-image.jpg \
+                   assets/favicon.ico assets/apple-touch-icon.png \
+                   assets/fonts/inter-latin.woff2 assets/fonts/inter-latin-ext.woff2 \
+                   legal/ochrana-osobnych-udajov.html legal/cookies.html \
+                   legal/podmienky-pouzivania.html legal/pravne-informacie.html \
+                   legal/pristupnost.html legal/zdravotne-upozornenie.html; do
+            if [ ! -s "deploy/$f" ]; then
+              echo "::error::missing or empty in deploy payload: $f"
+              fail=1
+            fi
+          done
+          exit $fail
 
       - name: Deploy via SFTP
         run: |
@@ -38,9 +59,38 @@ jobs:
       - name: Smoke check
         run: |
           sleep 5
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://nephroctor.com/)
-          echo "HTTP status: $STATUS"
-          if [ "$STATUS" != "200" ]; then
-            echo "::error::Site returned $STATUS instead of 200"
-            exit 1
-          fi
+          fail=0
+          # A browser User-Agent is required: the host's bot protection answers
+          # bare curl with HTTP 466, which would fail the check spuriously.
+          UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+          for path in / \
+                      /robots.txt \
+                      /sitemap.xml \
+                      /site.webmanifest \
+                      /favicon.ico \
+                      /assets/site.css \
+                      /assets/legal.js \
+                      /assets/og-image.jpg \
+                      /assets/fonts/inter-latin.woff2 \
+                      /legal/ochrana-osobnych-udajov.html \
+                      /legal/cookies.html \
+                      /legal/podmienky-pouzivania.html \
+                      /legal/pravne-informacie.html \
+                      /legal/pristupnost.html \
+                      /legal/zdravotne-upozornenie.html; do
+            STATUS=$(curl -s -o /dev/null -A "$UA" -w "%{http_code}" "https://nephroctor.com$path")
+            printf '%-45s %s\n' "$path" "$STATUS"
+            if [ "$STATUS" != "200" ]; then
+              echo "::error::$path returned $STATUS instead of 200"
+              fail=1
+            fi
+          done
+          exit $fail
+
+      - name: Report security headers
+        run: |
+          UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+          # Informational only: .htaccess may be ignored if AllowOverride is off.
+          curl -sI -A "$UA" https://nephroctor.com/ \
+            | grep -iE '^(content-security-policy|x-content-type-options|referrer-policy|permissions-policy|strict-transport-security|x-frame-options):' \
+            || echo "::warning::No security headers seen – check that .htaccess is honoured by the host"

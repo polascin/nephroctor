@@ -1,3 +1,7 @@
+# Súbory, ktoré sa NENAHRÁVAJÚ na produkciu.
+# Poznámka: zdrojom pravdy je zoznam v .github/workflows/deploy.yml, ktorý
+# kopíruje iba vymenované cesty. Tento súbor slúži ako dokumentácia zámeru
+# a ako vstup pre prípadné ručné nasadenie (napr. rsync --exclude-from).
 .git/
 .github/
 .trunk/
@@ -5,5 +9,6 @@
 .doaudit.md
 .deployignore
 .gitignore
+DEPLOY.md
 LICENSE
 README.md
