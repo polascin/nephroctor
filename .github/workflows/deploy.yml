@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Prepare deploy directory
         run: |
@@ -21,8 +21,14 @@ jobs:
           cp .htaccess deploy/
           cp -r assets deploy/
           cp -r legal deploy/
+          # logo-transparent.* is kept in the repository for history but is not
+          # used by any page: it is RGB with no alpha channel and carries a
+          # transparency checkerboard baked into its pixels (see Beh #7).
+          # Shipping it would publish 1.1 MB of a defective asset.
+          rm -f deploy/assets/logo-transparent.png deploy/assets/logo-transparent.webp
           echo "Files staged for deployment:"
           find deploy -type f | sort
+          echo "Payload size: $(du -sh deploy | cut -f1)"
 
       - name: Verify deploy payload
         run: |
