@@ -78,17 +78,26 @@ jobs:
                       /legal/pravne-informacie.html \
                       /legal/pristupnost.html \
                       /legal/zdravotne-upozornenie.html; do
+            # One retry after a pause: the host throttles bursts with HTTP 429,
+            # so a first-attempt 429 means rate limiting, not a broken deploy.
             STATUS=$(curl -s -o /dev/null -A "$UA" -w "%{http_code}" "https://nephroctor.com$path")
+            if [ "$STATUS" = "429" ]; then
+              sleep 15
+              STATUS=$(curl -s -o /dev/null -A "$UA" -w "%{http_code}" "https://nephroctor.com$path")
+            fi
             printf '%-45s %s\n' "$path" "$STATUS"
             if [ "$STATUS" != "200" ]; then
               echo "::error::$path returned $STATUS instead of 200"
               fail=1
             fi
+            sleep 3
           done
           exit $fail
 
       - name: Report security headers
+        if: always()
         run: |
+          sleep 10
           UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
           # Informational only: .htaccess may be ignored if AllowOverride is off.
           curl -sI -A "$UA" https://nephroctor.com/ \
