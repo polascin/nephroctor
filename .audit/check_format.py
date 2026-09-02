@@ -22,7 +22,8 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 SITE = ['index.html', 'assets/site.css', 'assets/legal.js'] + \
        [f'legal/{p.name}' for p in sorted((ROOT / 'legal').glob('*.html'))]
 # Config and tooling: whitespace hygiene only, each has its own idiom.
-OTHER = ['robots.txt', 'site.webmanifest', 'sitemap.xml', '.htaccess'] + \
+OTHER = ['robots.txt', 'site.webmanifest', 'sitemap.xml', '.htaccess',
+         'legal/.htaccess'] + \
         [f'.audit/{p.name}' for p in sorted((ROOT / '.audit').glob('*.py'))] + \
         [f'.audit/{p.name}' for p in sorted((ROOT / '.audit').glob('*.js'))]
 

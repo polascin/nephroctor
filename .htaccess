@@ -66,6 +66,22 @@ AddDefaultCharset utf-8
     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 </IfModule>
 
+# --- Legal URL shortcuts ----------------------------------------------------
+# Canonical URLs stay the .html files listed in the sitemap. /privacy and
+# /terms 404 because nothing is at those paths; /legal is a real directory
+# whose listing is blocked (403).
+#
+# RedirectMatch, not Redirect: Apache Redirect is prefix-based and would
+# turn /legal/cookies.html into /legal/pravne-informacie.html/cookies.html.
+# RewriteRule cannot intercept slashless /legal — Apache hands that URL to
+# mod_dir (DirectorySlash) before per-directory rewrite runs.
+# Query strings (?lang=en) are preserved on the 301.
+<IfModule mod_alias.c>
+    RedirectMatch 301 ^/privacy/?$ /legal/ochrana-osobnych-udajov.html
+    RedirectMatch 301 ^/terms/?$ /legal/podmienky-pouzivania.html
+    RedirectMatch 301 ^/legal/?$ /legal/pravne-informacie.html
+</IfModule>
+
 # --- Caching ----------------------------------------------------------------
 # Filenames are not content-hashed, so CSS/JS get a short TTL while fonts and
 # images – which are replaced only deliberately – get a long one.

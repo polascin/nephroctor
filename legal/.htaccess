@@ -1,0 +1,11 @@
+# Fallback if the root RedirectMatch is not applied (AllowOverride too
+# narrow, or the request is already inside this directory as /legal/).
+# DirectoryIndex covers the case where mod_rewrite is missing here too.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^$ /legal/pravne-informacie.html [R=301,L]
+</IfModule>
+
+<IfModule mod_dir.c>
+    DirectoryIndex pravne-informacie.html
+</IfModule>

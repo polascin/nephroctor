@@ -37,6 +37,7 @@ jobs:
                    assets/site.css assets/legal.js assets/logo.webp assets/og-image.jpg \
                    assets/favicon.ico assets/apple-touch-icon.png \
                    assets/fonts/inter-latin.woff2 assets/fonts/inter-latin-ext.woff2 \
+                   legal/.htaccess \
                    legal/ochrana-osobnych-udajov.html legal/cookies.html \
                    legal/podmienky-pouzivania.html legal/pravne-informacie.html \
                    legal/pristupnost.html legal/zdravotne-upozornenie.html; do
@@ -98,6 +99,33 @@ jobs:
             fi
             sleep 3
           done
+          # Root legal shortcuts must 301 onto the canonical HTML documents.
+          # /legal and /legal/ are both checked (slashless directory vs slash).
+          while IFS='|' read -r path expected; do
+            [ -z "$path" ] && continue
+            hdr=$(mktemp)
+            STATUS=$(curl -s -D "$hdr" -o /dev/null -A "$UA" -w "%{http_code}" "https://nephroctor.com$path")
+            if [ "$STATUS" = "429" ]; then
+              sleep 15
+              STATUS=$(curl -s -D "$hdr" -o /dev/null -A "$UA" -w "%{http_code}" "https://nephroctor.com$path")
+            fi
+            LOCATION=$(tr -d '\r' < "$hdr" | awk 'BEGIN{IGNORECASE=1} /^location:/{print $2; exit}')
+            rm -f "$hdr"
+            printf '%-45s %s -> %s\n' "$path" "$STATUS" "$LOCATION"
+            if [ "$STATUS" != "301" ]; then
+              echo "::error::$path returned $STATUS instead of 301"
+              fail=1
+            elif ! printf '%s' "$LOCATION" | grep -q "$expected"; then
+              echo "::error::$path Location was '$LOCATION', expected to contain $expected"
+              fail=1
+            fi
+            sleep 3
+          done <<'EOF'
+/privacy|/legal/ochrana-osobnych-udajov.html
+/terms|/legal/podmienky-pouzivania.html
+/legal|/legal/pravne-informacie.html
+/legal/|/legal/pravne-informacie.html
+EOF
           exit $fail
 
       - name: Report security headers
