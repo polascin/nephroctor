@@ -1,0 +1,17 @@
+---
+description: Po zmenách vždy commit, push na main a overenie deployu na WebSupport
+alwaysApply: true
+---
+
+# Commit, push a overenie deployu
+
+Po dokončení zmien v tomto repozitári **nečakaj na pokyn**. Vždy:
+
+1. Commitni relevantné súbory (nie tajomstvá ako `.env`). Správa commitu v angličtine, výstižná, v štýle `git log`.
+2. `git push origin main` — nasadenie spúšťa workflow **Deploy to WebSupport**.
+3. Počkaj na výsledok (`gh run watch` na najnovší beh tohto workflow).
+4. Over, že kroky **Smoke check** a **Report security headers** prešli.
+5. Ak sa zmenili URL alebo správanie na produkcii, over to aj `curl` na `https://nephroctor.com` s prehliadačovým User-Agent (hosting bez neho vracia HTTP 466).
+6. Ak deploy zlyhá, oprav, commitni, pushni a over znova.
+
+Nepoužívaj `--force` na `main`, nepreskakuj hooky, nemeň `git config`.
