@@ -99,13 +99,16 @@ jobs:
             fi
             sleep 3
           done
-          # Root legal shortcuts must 301 onto the canonical HTML documents.
+          # Legal shortcuts must 301 onto the canonical Slovak HTML documents.
           # /legal and /legal/ are both checked (slashless directory vs slash).
+          # /legal/privacy.html and /legal/terms.html are English filename aliases.
           # A shell heredoc cannot be used here: unindented EOF bodies break
           # the YAML block scalar (GitHub Actions reports a syntax error).
           for spec in \
             "/privacy|/legal/ochrana-osobnych-udajov.html" \
             "/terms|/legal/podmienky-pouzivania.html" \
+            "/legal/privacy.html|/legal/ochrana-osobnych-udajov.html" \
+            "/legal/terms.html|/legal/podmienky-pouzivania.html" \
             "/legal|/legal/pravne-informacie.html" \
             "/legal/|/legal/pravne-informacie.html"; do
             path="${spec%%|*}"

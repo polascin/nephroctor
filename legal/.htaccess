@@ -4,6 +4,8 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteRule ^$ /legal/pravne-informacie.html [R=301,L]
+    RewriteRule ^privacy\.html$ /legal/ochrana-osobnych-udajov.html [R=301,L]
+    RewriteRule ^terms\.html$ /legal/podmienky-pouzivania.html [R=301,L]
 </IfModule>
 
 <IfModule mod_dir.c>
