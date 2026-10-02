@@ -50,7 +50,14 @@ AddDefaultCharset utf-8
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # 1. Consolidate every alias onto https://nephroctor.com in a single hop.
+    # 1. Direct legal shortcuts across all domains and aliases in a single hop.
+    RewriteRule ^privacy/?$ https://nephroctor.com/legal/ochrana-osobnych-udajov.html [R=301,L]
+    RewriteRule ^terms/?$ https://nephroctor.com/legal/podmienky-pouzivania.html [R=301,L]
+    RewriteRule ^cookies/?$ https://nephroctor.com/legal/cookies.html [R=301,L]
+    RewriteRule ^legal/privacy\.html$ https://nephroctor.com/legal/ochrana-osobnych-udajov.html [R=301,L]
+    RewriteRule ^legal/terms\.html$ https://nephroctor.com/legal/podmienky-pouzivania.html [R=301,L]
+
+    # 2. Consolidate every alias onto https://nephroctor.com in a single hop.
     #    www.nephroctor.com resolves to this same webspace and was answering 200
     #    with byte-identical content, i.e. the whole site under a second address.
     #    nephroctor.sk and nephroctor.eu are currently redirected upstream by the
@@ -60,7 +67,7 @@ AddDefaultCharset utf-8
     RewriteCond %{HTTP_HOST} ^(www\.nephroctor\.com|(www\.)?nephroctor\.(sk|eu))$ [NC]
     RewriteRule ^ https://nephroctor.com%{REQUEST_URI} [R=301,L]
 
-    # 2. Force HTTPS on the canonical host.
+    # 3. Force HTTPS on the canonical host.
     RewriteCond %{HTTPS} !=on
     RewriteCond %{HTTP:X-Forwarded-Proto} !https
     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
@@ -69,7 +76,7 @@ AddDefaultCharset utf-8
 # --- Legal URL shortcuts ----------------------------------------------------
 # Canonical URLs stay the Slovak .html files listed in the sitemap. English
 # lives in the same documents via ?lang=en; there are no separate EN files.
-# /privacy, /terms, /legal/privacy.html and /legal/terms.html would 404
+# /privacy, /terms, /cookies, /legal/privacy.html and /legal/terms.html would 404
 # because nothing is at those paths; /legal is a real directory whose
 # listing is blocked (403).
 #
@@ -81,6 +88,7 @@ AddDefaultCharset utf-8
 <IfModule mod_alias.c>
     RedirectMatch 301 ^/privacy/?$ /legal/ochrana-osobnych-udajov.html
     RedirectMatch 301 ^/terms/?$ /legal/podmienky-pouzivania.html
+    RedirectMatch 301 ^/cookies/?$ /legal/cookies.html
     RedirectMatch 301 ^/legal/privacy\.html$ /legal/ochrana-osobnych-udajov.html
     RedirectMatch 301 ^/legal/terms\.html$ /legal/podmienky-pouzivania.html
     RedirectMatch 301 ^/legal/?$ /legal/pravne-informacie.html

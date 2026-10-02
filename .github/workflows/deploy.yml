@@ -107,6 +107,7 @@ jobs:
           for spec in \
             "/privacy|/legal/ochrana-osobnych-udajov.html" \
             "/terms|/legal/podmienky-pouzivania.html" \
+            "/cookies|/legal/cookies.html" \
             "/legal/privacy.html|/legal/ochrana-osobnych-udajov.html" \
             "/legal/terms.html|/legal/podmienky-pouzivania.html" \
             "/legal|/legal/pravne-informacie.html" \
