@@ -34,7 +34,7 @@ AddDefaultCharset utf-8
     #   inline before first paint to avoid a flash of the wrong colour scheme,
     #   and static hosting cannot issue per-request nonces. Everything else is
     #   locked to same-origin: the site loads no third-party asset at all.
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; form-action 'none'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://*.clarity.ms; style-src 'self'; img-src 'self' data: https://*.clarity.ms https://c.bing.com; font-src 'self'; connect-src 'self' https://*.clarity.ms; form-action 'none'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
 
     # HSTS. Deliberately without includeSubDomains and without preload so that
     # a subdomain served over plain HTTP is not locked out. Raise only after
