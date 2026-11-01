@@ -69,7 +69,41 @@ jobs:
           fail=0
           # A browser User-Agent is required: the host's bot protection answers
           # bare curl with HTTP 466, which would fail the check spuriously.
+          # Bursts from Actions IPs often get HTTP 429; retry with backoff and
+          # fail only after retries are exhausted (deploy itself may be fine).
           UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+          curl_status() {
+            # curl_status <url> [header-file]
+            # Prints the final HTTP status code. Retries 429/466 with exponential
+            # backoff (5s, 10s, 20s, 40s) up to 5 attempts.
+            local url="$1" hdr_file="${2:-}"
+            local attempt=1 max=5 delay=5 status
+            while true; do
+              if [ -n "$hdr_file" ]; then
+                : > "$hdr_file"
+                status=$(curl -s -D "$hdr_file" -o /dev/null -A "$UA" -w "%{http_code}" "$url" || echo "000")
+              else
+                status=$(curl -s -o /dev/null -A "$UA" -w "%{http_code}" "$url" || echo "000")
+              fi
+              case "$status" in
+                429|466)
+                  if [ "$attempt" -ge "$max" ]; then
+                    printf '%s\n' "$status"
+                    return 0
+                  fi
+                  echo "::warning::$url returned $status (attempt $attempt/$max); retrying in ${delay}s"
+                  sleep "$delay"
+                  delay=$((delay * 2))
+                  [ "$delay" -gt 60 ] && delay=60
+                  attempt=$((attempt + 1))
+                  ;;
+                *)
+                  printf '%s\n' "$status"
+                  return 0
+                  ;;
+              esac
+            done
+          }
           for path in / \
                       /robots.txt \
                       /sitemap.xml \
@@ -85,19 +119,13 @@ jobs:
                       /legal/pravne-informacie.html \
                       /legal/pristupnost.html \
                       /legal/zdravotne-upozornenie.html; do
-            # One retry after a pause: the host throttles bursts with HTTP 429,
-            # so a first-attempt 429 means rate limiting, not a broken deploy.
-            STATUS=$(curl -s -o /dev/null -A "$UA" -w "%{http_code}" "https://nephroctor.com$path")
-            if [ "$STATUS" = "429" ]; then
-              sleep 15
-              STATUS=$(curl -s -o /dev/null -A "$UA" -w "%{http_code}" "https://nephroctor.com$path")
-            fi
+            STATUS=$(curl_status "https://nephroctor.com$path")
             printf '%-45s %s\n' "$path" "$STATUS"
             if [ "$STATUS" != "200" ]; then
               echo "::error::$path returned $STATUS instead of 200"
               fail=1
             fi
-            sleep 3
+            sleep 5
           done
           # Legal shortcuts must 301 onto the canonical Slovak HTML documents.
           # /legal and /legal/ are both checked (slashless directory vs slash).
@@ -115,11 +143,7 @@ jobs:
             path="${spec%%|*}"
             expected="${spec##*|}"
             hdr=$(mktemp)
-            STATUS=$(curl -s -D "$hdr" -o /dev/null -A "$UA" -w "%{http_code}" "https://nephroctor.com$path")
-            if [ "$STATUS" = "429" ]; then
-              sleep 15
-              STATUS=$(curl -s -D "$hdr" -o /dev/null -A "$UA" -w "%{http_code}" "https://nephroctor.com$path")
-            fi
+            STATUS=$(curl_status "https://nephroctor.com$path" "$hdr")
             LOCATION=$(tr -d '\r' < "$hdr" | awk 'BEGIN{IGNORECASE=1} /^location:/{print $2; exit}')
             rm -f "$hdr"
             printf '%-45s %s -> %s\n' "$path" "$STATUS" "$LOCATION"
@@ -130,7 +154,7 @@ jobs:
               echo "::error::$path Location was '$LOCATION', expected to contain $expected"
               fail=1
             fi
-            sleep 3
+            sleep 5
           done
           exit $fail
 
