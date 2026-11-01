@@ -65,25 +65,32 @@ jobs:
 
       - name: Smoke check
         run: |
-          sleep 5
+          sleep 15
           fail=0
           # A browser User-Agent is required: the host's bot protection answers
           # bare curl with HTTP 466, which would fail the check spuriously.
           # Bursts from Actions IPs often get HTTP 429; retry with backoff and
           # fail only after retries are exhausted (deploy itself may be fine).
+          # Warnings MUST go to stderr: STATUS=$(curl_status …) would otherwise
+          # capture "::warning::…" lines and fail even after a final 200/301
+          # (seen on run 41280258152: "returned …200 instead of 200").
           UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
           curl_status() {
             # curl_status <url> [header-file]
-            # Prints the final HTTP status code. Retries 429/466 with exponential
-            # backoff (5s, 10s, 20s, 40s) up to 5 attempts.
+            # Prints only the final HTTP status code on stdout. Retries 429/466
+            # with exponential backoff (10s…60s) up to 8 attempts.
             local url="$1" hdr_file="${2:-}"
-            local attempt=1 max=5 delay=5 status
+            local attempt=1 max=8 delay=10 status
             while true; do
               if [ -n "$hdr_file" ]; then
                 : > "$hdr_file"
-                status=$(curl -s -D "$hdr_file" -o /dev/null -A "$UA" -w "%{http_code}" "$url" || echo "000")
+                status=$(curl -s -D "$hdr_file" -o /dev/null -A "$UA" \
+                  --connect-timeout 15 --max-time 45 \
+                  -w "%{http_code}" "$url" || echo "000")
               else
-                status=$(curl -s -o /dev/null -A "$UA" -w "%{http_code}" "$url" || echo "000")
+                status=$(curl -s -o /dev/null -A "$UA" \
+                  --connect-timeout 15 --max-time 45 \
+                  -w "%{http_code}" "$url" || echo "000")
               fi
               case "$status" in
                 429|466)
@@ -91,7 +98,7 @@ jobs:
                     printf '%s\n' "$status"
                     return 0
                   fi
-                  echo "::warning::$url returned $status (attempt $attempt/$max); retrying in ${delay}s"
+                  echo "::warning::$url returned $status (attempt $attempt/$max); retrying in ${delay}s" >&2
                   sleep "$delay"
                   delay=$((delay * 2))
                   [ "$delay" -gt 60 ] && delay=60
@@ -125,7 +132,7 @@ jobs:
               echo "::error::$path returned $STATUS instead of 200"
               fail=1
             fi
-            sleep 5
+            sleep 10
           done
           # Legal shortcuts must 301 onto the canonical Slovak HTML documents.
           # /legal and /legal/ are both checked (slashless directory vs slash).
@@ -154,7 +161,7 @@ jobs:
               echo "::error::$path Location was '$LOCATION', expected to contain $expected"
               fail=1
             fi
-            sleep 5
+            sleep 10
           done
           exit $fail
 
