@@ -9,7 +9,25 @@
     const project = config.dataset.project;
     const external = config.dataset.consent === "external";
     const key = "clarity-consent-v1-" + project;
-    const sk = document.documentElement.lang.startsWith("sk");
+    // Read lang at paint time: homepage/legal switchers update <html lang>
+    // after this deferred script first ran. Czech mirrors legal.js (SK copy).
+    const useSlovakCopy = () => {
+        const lang = String(document.documentElement.lang || "sk").toLowerCase().split("-")[0];
+        return lang === "sk" || lang === "cs";
+    };
+    const copy = () => {
+        const sk = useSlovakCopy();
+        return {
+            settings: sk ? "Nastavenia analytiky" : "Analytics settings",
+            title: sk ? "Voliteľná analytika" : "Optional analytics",
+            desc: sk
+                ? "S vaším súhlasom používame Microsoft Clarity na meranie návštevnosti, kliknutí, posúvania a záznamov používania verejných stránok. Text je maskovaný. Bez súhlasu sa Clarity nenačíta. Reklamný súhlas zostáva vypnutý. Voľbu môžete kedykoľvek zmeniť v nastaveniach analytiky."
+                : "With your consent, we use Microsoft Clarity for visits, clicks, scrolling and session recordings on public pages. Text is masked. Clarity does not load without consent. Advertising consent stays denied. You can change your choice in Analytics settings at any time.",
+            privacy: sk ? "Ochrana súkromia" : "Privacy policy",
+            decline: sk ? "Odmietnuť" : "Decline",
+            accept: sk ? "Povoliť analytiku" : "Allow analytics"
+        };
+    };
     let loaded = false;
     let banner;
     let settings;
@@ -108,6 +126,10 @@
     cssUrl.search = scriptUrl.search;
     css.href = cssUrl.href;
     document.head.appendChild(css);
+    function paintSettings() {
+        if (!settings) return;
+        settings.textContent = copy().settings;
+    }
     settings = document.createElement("button");
     settings.type = "button";
     settings.className = "clarity-settings";
@@ -115,14 +137,24 @@
     settings.setAttribute("aria-haspopup", "dialog");
     settings.setAttribute("aria-expanded", "false");
     settings.setAttribute("aria-controls", "clarity-consent-dialog");
-    settings.textContent = sk ? "Nastavenia analytiky" : "Analytics settings";
-    settings.addEventListener("click", () => show(true));
+    paintSettings();
+    settings.addEventListener("click", () => {
+        paintSettings();
+        show(true);
+    });
     (document.querySelector("footer") || document.body).appendChild(settings);
+    if (typeof MutationObserver === "function") {
+        new MutationObserver(paintSettings).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["lang"]
+        });
+    }
     function show(fromSettings = false) {
         if (banner) {
             if (fromSettings) banner.querySelector("button").focus();
             return;
         }
+        const t = copy();
         dismissible = fromSettings;
         previousFocus = fromSettings ? document.activeElement : null;
         banner = document.createElement("section");
@@ -134,25 +166,24 @@
         banner.setAttribute("aria-describedby", "clarity-consent-desc");
         banner.tabIndex = -1;
         settings.setAttribute("aria-expanded", "true");
+        paintSettings();
         const title = document.createElement("h2");
         title.id = "clarity-consent-title";
-        title.textContent = sk ? "Voliteľná analytika" : "Optional analytics";
+        title.textContent = t.title;
         const text = document.createElement("p");
         text.id = "clarity-consent-desc";
-        text.textContent = sk
-            ? "S vaším súhlasom používame Microsoft Clarity na meranie návštevnosti, kliknutí, posúvania a záznamov používania verejných stránok. Text je maskovaný. Bez súhlasu sa Clarity nenačíta. Reklamný súhlas zostáva vypnutý. Voľbu môžete kedykoľvek zmeniť v nastaveniach analytiky."
-            : "With your consent, we use Microsoft Clarity for visits, clicks, scrolling and session recordings on public pages. Text is masked. Clarity does not load without consent. Advertising consent stays denied. You can change your choice in Analytics settings at any time.";
+        text.textContent = t.desc;
         const link = document.createElement("a");
         link.href = config.dataset.privacy || "/legal/ochrana-osobnych-udajov.html";
-        link.textContent = sk ? "Ochrana súkromia" : "Privacy policy";
+        link.textContent = t.privacy;
         const decline = document.createElement("button");
         decline.type = "button";
-        decline.textContent = sk ? "Odmietnuť" : "Decline";
+        decline.textContent = t.decline;
         decline.addEventListener("click", () => apply(false));
         const accept = document.createElement("button");
         accept.type = "button";
         accept.setAttribute("data-choice", "allow");
-        accept.textContent = sk ? "Povoliť analytiku" : "Allow analytics";
+        accept.textContent = t.accept;
         accept.addEventListener("click", () => apply(true));
         banner.append(title, text, link, decline, accept);
         banner.addEventListener("keydown", onKeyDown);
