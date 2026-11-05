@@ -7,7 +7,7 @@
          hreflang annotations in its <head>. -->
     <url>
         <loc>https://nephroctor.com/</loc>
-        <lastmod>2026-08-16</lastmod>
+        <lastmod>2026-11-05</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
         <xhtml:link rel="alternate" hreflang="x-default" href="https://nephroctor.com/"/>
@@ -39,7 +39,7 @@
 
     <url>
         <loc>https://nephroctor.com/legal/ochrana-osobnych-udajov.html</loc>
-        <lastmod>2026-08-16</lastmod>
+        <lastmod>2026-11-05</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.5</priority>
         <xhtml:link rel="alternate" hreflang="x-default" href="https://nephroctor.com/legal/ochrana-osobnych-udajov.html"/>
@@ -49,7 +49,7 @@
 
     <url>
         <loc>https://nephroctor.com/legal/cookies.html</loc>
-        <lastmod>2026-08-16</lastmod>
+        <lastmod>2026-11-05</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.4</priority>
         <xhtml:link rel="alternate" hreflang="x-default" href="https://nephroctor.com/legal/cookies.html"/>

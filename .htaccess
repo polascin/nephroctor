@@ -26,8 +26,9 @@ AddDefaultCharset utf-8
     # Send the origin only, and only to equally secure destinations.
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
 
-    # The site needs none of these browser features.
-    Header always set Permissions-Policy "geolocation=(), camera=(), microphone=(), payment=(), usb=(), interest-cohort=()"
+    # The site needs none of these browser features. interest-cohort covers
+    # legacy FLoC; browsing-topics covers the Topics API that replaced it.
+    Header always set Permissions-Policy "geolocation=(), camera=(), microphone=(), payment=(), usb=(), interest-cohort=(), browsing-topics=()"
 
     # Content Security Policy.
     #   script-src keeps 'unsafe-inline' because the theme bootstrap must run
@@ -56,6 +57,8 @@ AddDefaultCharset utf-8
     RewriteRule ^privacy/?$ https://nephroctor.com/legal/ochrana-osobnych-udajov.html [R=301,L]
     RewriteRule ^terms/?$ https://nephroctor.com/legal/podmienky-pouzivania.html [R=301,L]
     RewriteRule ^cookies/?$ https://nephroctor.com/legal/cookies.html [R=301,L]
+    RewriteRule ^accessibility/?$ https://nephroctor.com/legal/pristupnost.html [R=301,L]
+    RewriteRule ^pristupnost/?$ https://nephroctor.com/legal/pristupnost.html [R=301,L]
     RewriteRule ^legal/privacy\.html$ https://nephroctor.com/legal/ochrana-osobnych-udajov.html [R=301,L]
     RewriteRule ^legal/terms\.html$ https://nephroctor.com/legal/podmienky-pouzivania.html [R=301,L]
 
@@ -78,9 +81,9 @@ AddDefaultCharset utf-8
 # --- Legal URL shortcuts ----------------------------------------------------
 # Canonical URLs stay the Slovak .html files listed in the sitemap. English
 # lives in the same documents via ?lang=en; there are no separate EN files.
-# /privacy, /terms, /cookies, /legal/privacy.html and /legal/terms.html would 404
-# because nothing is at those paths; /legal is a real directory whose
-# listing is blocked (403).
+# /privacy, /terms, /cookies, /accessibility, /pristupnost, /legal/privacy.html
+# and /legal/terms.html would 404 because nothing is at those paths; /legal is
+# a real directory whose listing is blocked (403).
 #
 # RedirectMatch, not Redirect: Apache Redirect is prefix-based and would
 # turn /legal/cookies.html into /legal/pravne-informacie.html/cookies.html.
@@ -93,6 +96,8 @@ AddDefaultCharset utf-8
     RedirectMatch 301 ^/privacy/?$ /legal/ochrana-osobnych-udajov.html
     RedirectMatch 301 ^/terms/?$ /legal/podmienky-pouzivania.html
     RedirectMatch 301 ^/cookies/?$ /legal/cookies.html
+    RedirectMatch 301 ^/accessibility/?$ /legal/pristupnost.html
+    RedirectMatch 301 ^/pristupnost/?$ /legal/pristupnost.html
     RedirectMatch 301 ^/legal/privacy\.html$ /legal/ochrana-osobnych-udajov.html
     RedirectMatch 301 ^/legal/terms\.html$ /legal/podmienky-pouzivania.html
     RedirectMatch 301 ^/legal/?$ /legal/pravne-informacie.html
