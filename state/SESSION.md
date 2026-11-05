@@ -1,18 +1,18 @@
 # SESSION – Nephroctor improvement loop
 
-Last updated: 2026-11-06 (loop iter 16)
+Last updated: 2026-11-06 (loop iter 17)
 
 ## HEAD
 
-See latest commit on `origin/main` after iter-16 push.
+See latest commit on `origin/main` after iter-17 push.
 
 ## Latest handoff
 
-`.codex/handoffs/` – iter-16 handoff written at end of this iteration.
+`.codex/handoffs/` – iter-17 handoff written at end of this iteration.
 
 ## Just completed
 
-Iter 16: full `.audit/*` + `test_clarity.cjs` green. Real bug: Clarity consent `storage` handler left the first-run dialog open after another tab declined. Fixed cross-tab sync; cache-bust `?v=a6b08f84514b`. Skipped `.sk`/`.eu` panel and further EN legal redirects.
+Iter 17: full `.audit/*` + `test_clarity.cjs` + new `check_theme_logic.js` green. Real bug: `theme-color` followed OS `prefers-color-scheme` media metas while the page theme uses `data-theme` / `nephroctor-theme`, so browser chrome stayed wrong after an explicit toggle; theme also did not sync across tabs. Fixed bootstrap + toggle `syncThemeColor` and `storage` listener on index and legal. Skipped `.sk`/`.eu` panel and further EN legal redirects.
 
 ## Next iteration priority
 
@@ -20,5 +20,5 @@ WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to do
 
 ## Deploys this session
 
-- Prior: iter-15 Deploy success (`03b326b`)
-- Iter 16: see handoff after push
+- Prior: iter-16 Deploy success (`5594332`)
+- Iter 17: see handoff after push

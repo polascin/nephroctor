@@ -17,9 +17,11 @@ const SOURCE = fs.readFileSync(path.join(ROOT, 'assets', 'legal.js'), 'utf8');
 function el(attrs = {}) {
   return {
     _attrs: { ...attrs }, hidden: false, innerHTML: '', textContent: '', _listeners: {},
-    children: [],
+    children: [], parentNode: null,
     setAttribute(k, v) { this._attrs[k] = String(v); },
     getAttribute(k) { return k in this._attrs ? this._attrs[k] : null; },
+    removeAttribute(k) { delete this._attrs[k]; },
+    hasAttribute(k) { return k in this._attrs; },
     addEventListener(ev, fn) { (this._listeners[ev] = this._listeners[ev] || []).push(fn); },
     appendChild(child) { this.children.push(child); return child; },
     click() { (this._listeners.click || []).forEach((f) => f()); },
@@ -50,9 +52,28 @@ function run({ search, saved }) {
     getItem: (k) => (k in bag ? bag[k] : null),
     setItem: (k, v) => { bag[k] = v; },
   };
+  const winListeners = {};
+  const themeMetaLight = el({ name: 'theme-color', content: '#f8fafc', media: '(prefers-color-scheme: light)' });
+  const themeMetaDark = el({ name: 'theme-color', content: '#0f172a', media: '(prefers-color-scheme: dark)' });
+  const headNode = {
+    children: [themeMetaLight, themeMetaDark],
+    querySelectorAll(sel) {
+      if (sel === 'meta[name="theme-color"]') {
+        return this.children.filter((n) => n.getAttribute('name') === 'theme-color');
+      }
+      return [];
+    },
+  };
+  themeMetaLight.parentNode = headNode;
+  themeMetaDark.parentNode = headNode;
+  headNode.removeChild = function (child) {
+    this.children = this.children.filter((n) => n !== child);
+  };
   global.window = {
     location: { search, pathname: '/legal/cookies.html' },
     matchMedia: () => ({ matches: false }),
+    addEventListener(ev, fn) { (winListeners[ev] = winListeners[ev] || []).push(fn); },
+    _listeners: winListeners,
   };
   global.history = { replaceState() {} };
   global.requestAnimationFrame = (fn) => fn();
@@ -60,6 +81,7 @@ function run({ search, saved }) {
   global.document = {
     documentElement: docEl,
     body: bodyNode,
+    head: headNode,
     title: '',
     createElement: () => el(),
     getElementById: (id) => (id === 'theme-toggle' ? toggle : null),
@@ -87,6 +109,8 @@ function run({ search, saved }) {
     pressed: [btnSk, btnEn]
       .filter((b) => b.getAttribute('aria-pressed') === 'true')
       .map((b) => b.getAttribute('data-doc-lang')),
+    winListeners,
+    head: headNode,
   };
 }
 
@@ -155,6 +179,26 @@ for (const [label, input, expected] of CASES) {
     const ok = shows === 'sk' && announce === 'Jazyk dokumentu: slovenčina';
     if (!ok) failures++;
     console.log(`  ${ok ? 'OK  ' : 'FAIL'} ${label.padEnd(31)} shows=${shows} announce=${JSON.stringify(announce)}`);
+  } catch (err) {
+    failures++;
+    console.log(`  FAIL ${label.padEnd(31)} THREW: ${err.message}`);
+  }
+}
+
+/* Cross-tab theme storage collapses theme-color to the effective page theme. */
+{
+  const label = 'storage theme syncs color';
+  try {
+    const result = run({ search: '', saved: null });
+    const handlers = (result.winListeners && result.winListeners.storage) || [];
+    handlers.forEach((fn) => fn({ key: 'nephroctor-theme', newValue: 'dark' }));
+    const metas = result.head.querySelectorAll('meta[name="theme-color"]');
+    const ok = docEl.getAttribute('data-theme') === 'dark'
+      && metas.length === 1
+      && metas[0].getAttribute('content') === '#0f172a'
+      && !metas[0].hasAttribute('media');
+    if (!ok) failures++;
+    console.log(`  ${ok ? 'OK  ' : 'FAIL'} ${label.padEnd(31)} theme=${docEl.getAttribute('data-theme')} metas=${metas.length} content=${metas[0] && metas[0].getAttribute('content')}`);
   } catch (err) {
     failures++;
     console.log(`  FAIL ${label.padEnd(31)} THREW: ${err.message}`);

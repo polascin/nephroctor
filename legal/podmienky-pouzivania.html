@@ -30,6 +30,21 @@
                     document.documentElement.setAttribute('data-theme', 'dark');
                 }
             } catch (e) { /* localStorage unavailable */ }
+            /* theme-color must match data-theme, not only OS prefers-color-scheme. */
+            try {
+                var theme = document.documentElement.getAttribute('data-theme');
+                var dark = theme === 'dark' || (theme !== 'light' && window.matchMedia
+                    && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                var color = dark ? '#0f172a' : '#f8fafc';
+                var metas = document.querySelectorAll('meta[name="theme-color"]');
+                if (metas.length) {
+                    metas[0].removeAttribute('media');
+                    metas[0].setAttribute('content', color);
+                    for (var i = 1; i < metas.length; i++) {
+                        metas[i].parentNode.removeChild(metas[i]);
+                    }
+                }
+            } catch (e2) { /* theme-color meta unavailable */ }
         })();
     </script>
 

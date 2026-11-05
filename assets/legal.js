@@ -57,6 +57,19 @@
         return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
     }
 
+    /* Browser chrome (address bar / PWA) follows OS media metas by default;
+       keep a single theme-color in sync with the effective page theme. */
+    function syncThemeColor() {
+        var color = isDark() ? '#0f172a' : '#f8fafc';
+        var metas = document.head.querySelectorAll('meta[name="theme-color"]');
+        if (!metas.length) return;
+        metas[0].removeAttribute('media');
+        metas[0].setAttribute('content', color);
+        for (var i = 1; i < metas.length; i++) {
+            metas[i].parentNode.removeChild(metas[i]);
+        }
+    }
+
     function paintToggle() {
         if (!toggle) return;
         var dark = isDark();
@@ -65,6 +78,7 @@
             + (dark ? SUN : MOON) + '</svg>';
         toggle.setAttribute('aria-label', label);
         toggle.setAttribute('title', label);
+        syncThemeColor();
     }
 
     if (toggle) {
@@ -75,6 +89,20 @@
             paintToggle();
         });
     }
+
+    /* Cross-tab theme: storage fires in other tabs only. */
+    window.addEventListener('storage', function (e) {
+        if (e.key !== 'nephroctor-theme') return;
+        if (e.newValue === 'dark' || e.newValue === 'light') {
+            document.documentElement.setAttribute('data-theme', e.newValue);
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        }
+        paintToggle();
+    });
 
     /* --- SK / EN document switch ---------------------------------------- */
     var blocks = document.querySelectorAll('[data-lang-block]');
