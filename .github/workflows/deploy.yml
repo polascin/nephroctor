@@ -154,8 +154,10 @@ jobs:
             attempt=1
             delay=15
             while true; do
+              # identity encoding: grep must see plain text, not a gzip payload.
               STATUS=$(curl -s -A "$UA" \
                 -H 'Accept: text/css,application/javascript,*/*;q=0.8' \
+                -H 'Accept-Encoding: identity' \
                 --connect-timeout 10 --max-time 20 \
                 -o "$body" -w "%{http_code}" \
                 "https://nephroctor.com$path" || echo "000")
