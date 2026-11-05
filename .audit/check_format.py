@@ -19,13 +19,15 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 # Hand-maintained site files: 4-space indent is the convention.
-SITE = ['index.html', 'assets/site.css', 'assets/legal.js'] + \
+SITE = ['index.html', 'assets/site.css', 'assets/legal.js',
+        'assets/clarity-consent.js', 'assets/clarity-consent.css'] + \
        [f'legal/{p.name}' for p in sorted((ROOT / 'legal').glob('*.html'))]
 # Config and tooling: whitespace hygiene only, each has its own idiom.
 OTHER = ['robots.txt', 'site.webmanifest', 'sitemap.xml', '.htaccess',
          'legal/.htaccess'] + \
         [f'.audit/{p.name}' for p in sorted((ROOT / '.audit').glob('*.py'))] + \
-        [f'.audit/{p.name}' for p in sorted((ROOT / '.audit').glob('*.js'))]
+        [f'.audit/{p.name}' for p in sorted((ROOT / '.audit').glob('*.js'))] + \
+        [f'.audit/{p.name}' for p in sorted((ROOT / '.audit').glob('*.cjs'))]
 
 
 def repo_line_endings() -> dict:

@@ -34,7 +34,9 @@ jobs:
         run: |
           fail=0
           for f in index.html robots.txt sitemap.xml site.webmanifest favicon.ico .htaccess \
-                   assets/site.css assets/legal.js assets/logo.webp assets/og-image.jpg \
+                   assets/site.css assets/legal.js \
+                   assets/clarity-consent.js assets/clarity-consent.css \
+                   assets/logo.webp assets/og-image.jpg \
                    assets/favicon.ico assets/apple-touch-icon.png \
                    assets/fonts/inter-latin.woff2 assets/fonts/inter-latin-ext.woff2 \
                    legal/.htaccess \
