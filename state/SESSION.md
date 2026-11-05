@@ -1,18 +1,18 @@
 # SESSION – Nephroctor improvement loop
 
-Last updated: 2026-11-05 (loop iter 3)
+Last updated: 2026-11-05 (loop iter 4)
 
 ## HEAD
 
-`728af04` on `main`.
+Pending commit for CSS/JS revalidation + Clarity smoke markers (after `0e3f3fc`).
 
 ## Latest handoff
 
-`.codex/handoffs/2026-11-05-201442-nephroctor-loop-iter-3.md`
+`.codex/handoffs/2026-11-05-201442-nephroctor-loop-iter-3.md` (iter 4 handoff follows deploy).
 
 ## Just completed
 
-Production browser check after Allow analytics: Clarity tag + scripts + collect load; 0 CSP violations under current `style-src 'self'`. No CSP change. Theme-aware `clarity-consent.css` (site tokens) + Allow `data-choice="allow"` + contrast audit cases.
+Iter 3 Clarity CSP done (0 violations). Iter 4: stop day-long stale Clarity CSS/JS after deploy — `.htaccess` no-cache/must-revalidate for html|css|js; propagate script query to consent CSS; smoke body markers for Clarity assets.
 
 ## Next iteration priority
 
@@ -20,5 +20,5 @@ WebSupport panel: `nephroctor.sk` / `.eu` domain alias (path-preserving) instead
 
 ## Deploys this session
 
-- Prior: `#42086419433` `b2ef95a`, `#42087289244` `47e6372`, `#42089100917` `65f8299`, `#42089231894` `8512b3f`
-- https://github.com/polascin/nephroctor/actions/runs/42092187784 success (`728af04`; Smoke + security headers)
+- https://github.com/polascin/nephroctor/actions/runs/42092187784 success (`728af04`)
+- https://github.com/polascin/nephroctor/actions/runs/42094228783 (`0e3f3fc` handoff; verify after smoke)

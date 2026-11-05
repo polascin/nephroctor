@@ -97,14 +97,14 @@ AddDefaultCharset utf-8
 </IfModule>
 
 # --- Caching ----------------------------------------------------------------
-# Filenames are not content-hashed, so CSS/JS get a short TTL while fonts and
-# images – which are replaced only deliberately – get a long one.
+# Filenames are not content-hashed. HTML/CSS/JS must revalidate (ETag) so a
+# deploy is visible immediately; fonts and images keep long TTLs.
 <IfModule mod_expires.c>
     ExpiresActive On
     ExpiresDefault                          "access plus 1 day"
     ExpiresByType text/html                 "access plus 0 seconds"
-    ExpiresByType text/css                  "access plus 1 day"
-    ExpiresByType application/javascript    "access plus 1 day"
+    ExpiresByType text/css                  "access plus 0 seconds"
+    ExpiresByType application/javascript    "access plus 0 seconds"
     ExpiresByType font/woff2                "access plus 1 year"
     ExpiresByType image/webp                "access plus 30 days"
     ExpiresByType image/png                 "access plus 30 days"
@@ -114,7 +114,7 @@ AddDefaultCharset utf-8
 </IfModule>
 
 <IfModule mod_headers.c>
-    <FilesMatch "\.(html)$">
+    <FilesMatch "\.(html|css|js)$">
         Header set Cache-Control "no-cache, must-revalidate"
     </FilesMatch>
     <FilesMatch "\.woff2$">

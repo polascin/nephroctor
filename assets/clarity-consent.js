@@ -83,7 +83,12 @@
     }
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = new URL("clarity-consent.css", config.src).href;
+    // Keep any ?v= (or other) query from the script URL so CSS is not stuck on
+    // a day-long browser cache when the loader itself was cache-busted.
+    const scriptUrl = new URL(config.src, location.href);
+    const cssUrl = new URL("clarity-consent.css", scriptUrl);
+    cssUrl.search = scriptUrl.search;
+    css.href = cssUrl.href;
     document.head.appendChild(css);
     const settings = document.createElement("button");
     settings.type = "button";

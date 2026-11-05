@@ -2,17 +2,20 @@ const vm = require('node:vm');
 const fs = require('node:fs');
 const assert = require('node:assert/strict');
 const code = fs.readFileSync(__dirname + '/../assets/clarity-consent.js', 'utf8');
-function run({path='/',query='',stored=null,external=false}={}) {
+function run({path='/',query='',stored=null,external=false,src='https://example.com/js/clarity-consent.js'}={}) {
  const elements=[], events={}, cookies=[];
  const make=tag=>({tag,focus(){},children:[],dataset:{},setAttribute(k,v){this[k]=v},appendChild(e){this.children.push(e);elements.push(e)},append(...es){es.forEach(e=>this.appendChild(e))},addEventListener(k,fn){this[k]=fn},removeEventListener(){},remove(){this.removed=true},querySelector(sel){return this.children.find(c=>!sel||c.tag===sel||(sel==='button'&&c.tag==='button'))||{focus(){}}},querySelectorAll(sel){return this.children.filter(c=>sel.includes('button')?c.tag==='button':sel.includes('a')?c.tag==='a':true)}});
  const head=make('head'),body=make('body');let value=stored,reloads=0;
- const document={currentScript:{dataset:{project:'abc123',consent:external?'external':'',paths:'/,/index.php'},src:'https://example.com/js/clarity-consent.js'},head,body,documentElement:{lang:'sk'},createElement:make,querySelector(){return null},get cookie(){return ''},set cookie(c){cookies.push(c)}};
+ const document={currentScript:{dataset:{project:'abc123',consent:external?'external':'',paths:'/,/index.php'},src},head,body,documentElement:{lang:'sk'},createElement:make,querySelector(){return null},get cookie(){return ''},set cookie(c){cookies.push(c)}};
  const window={addEventListener(k,fn){events[k]=fn}};
- const location={pathname:path,search:query,hostname:'sub.example.com',reload(){reloads++}};
+ const location={pathname:path,search:query,hostname:'sub.example.com',href:'https://sub.example.com'+path+query,reload(){reloads++}};
  vm.runInNewContext(code,{document,window,location,localStorage:{getItem(){return value},setItem(k,v){value=v}},URL,URLSearchParams,Date});
- return {elements,events,window,body,cookies,get reloads(){return reloads},get value(){return value},scripts:()=>elements.filter(e=>e.tag==='script')};
+ return {elements,events,window,body,cookies,get reloads(){return reloads},get value(){return value},scripts:()=>elements.filter(e=>e.tag==='script'),links:()=>elements.filter(e=>e.tag==='link')};
 }
 let s=run();assert.equal(s.scripts().length,0);
+const css=s.links().find(e=>e.rel==='stylesheet');assert.ok(css);assert.equal(css.href,'https://example.com/js/clarity-consent.css');
+s=run({src:'https://example.com/js/clarity-consent.js?v=theme1'});assert.equal(s.links().find(e=>e.rel==='stylesheet').href,'https://example.com/js/clarity-consent.css?v=theme1');
+s=run();
 const dialog=s.elements.find(e=>e.role==='dialog');
 assert.ok(dialog);assert.equal(dialog['aria-modal'],'true');assert.equal(dialog['aria-labelledby'],'clarity-consent-title');assert.equal(dialog['aria-describedby'],'clarity-consent-desc');assert.equal(typeof dialog.keydown,'function');
 let accept=s.elements.find(e=>e.textContent==='Povoliť analytiku');assert.equal(accept['data-choice']||accept.getAttribute?.('data-choice'),'allow');accept.click();assert.equal(s.scripts().length,1);assert.equal(s.scripts()[0].src,'https://www.clarity.ms/tag/abc123');assert.equal(s.body['data-clarity-mask'],'true');assert.equal(s.window.clarity.q[0][1].ad_Storage,'denied');

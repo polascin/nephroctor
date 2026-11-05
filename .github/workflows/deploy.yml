@@ -141,6 +141,60 @@ jobs:
             esac
             sleep 5
           done
+          # Status-only smoke can miss a stuck origin copy of Clarity assets.
+          # One request each: write body + status; treat 429/466 as warning.
+          sleep 5
+          for spec in \
+            "assets/clarity-consent.js|aria-modal" \
+            "assets/clarity-consent.css|color-card"; do
+            path="/${spec%%|*}"
+            needle="${spec##*|}"
+            body=$(mktemp)
+            STATUS=000
+            attempt=1
+            delay=15
+            while true; do
+              STATUS=$(curl -s -A "$UA" \
+                -H 'Accept: text/css,application/javascript,*/*;q=0.8' \
+                --connect-timeout 10 --max-time 20 \
+                -o "$body" -w "%{http_code}" \
+                "https://nephroctor.com$path" || echo "000")
+              case "$STATUS" in
+                429|466)
+                  if [ "$attempt" -ge 4 ]; then
+                    break
+                  fi
+                  echo "::warning::$path returned $STATUS (attempt $attempt/4); retrying in ${delay}s" >&2
+                  sleep "$delay"
+                  delay=$((delay * 2))
+                  [ "$delay" -gt 30 ] && delay=30
+                  attempt=$((attempt + 1))
+                  ;;
+                *)
+                  break
+                  ;;
+              esac
+            done
+            case "$STATUS" in
+              200)
+                if grep -q "$needle" "$body"; then
+                  printf '%-45s %s (has %s)\n' "$path" "$STATUS" "$needle"
+                else
+                  echo "::error::$path HTTP 200 but missing marker '$needle' (stale or wrong payload)"
+                  fail=1
+                fi
+                ;;
+              429|466)
+                echo "::warning::$path still $STATUS after retries (WAF); skip content marker"
+                ;;
+              *)
+                echo "::error::$path returned $STATUS instead of 200"
+                fail=1
+                ;;
+            esac
+            rm -f "$body"
+            sleep 5
+          done
           # Legal shortcuts must 301 onto the canonical Slovak HTML documents.
           # A shell heredoc cannot be used here: unindented EOF bodies break
           # the YAML block scalar (GitHub Actions reports a syntax error).
