@@ -24,6 +24,31 @@
     var MOON = '<path d="M9 2c-1.05 0-2.05.16-3 .46 1.89 1 3.18 2.99 3.18 5.27 0 3.31-2.69 6-6 6-.71 0-1.39-.13-2.02-.36C3.92 18.86 8.56 22 14 22c5.52 0 10-4.48 10-10S19.52 2 14 2c-.63 0-1.24.06-1.83.17C11.06 2.06 10.04 2 9 2z"/>';
 
     var docLang = 'sk';
+    var LANG_ANNOUNCE = {
+        sk: 'Jazyk dokumentu: slovenčina',
+        en: 'Document language: English'
+    };
+
+    /* Polite status for user-initiated SK/EN switches (not the initial paint). */
+    var liveRegion = document.createElement('div');
+    liveRegion.className = 'visually-hidden';
+    liveRegion.setAttribute('role', 'status');
+    liveRegion.setAttribute('aria-live', 'polite');
+    liveRegion.setAttribute('aria-atomic', 'true');
+    if (document.body) {
+        document.body.appendChild(liveRegion);
+    }
+
+    function announceLang(lang) {
+        var msg = LANG_ANNOUNCE[lang] || LANG_ANNOUNCE.sk;
+        liveRegion.textContent = '';
+        var paint = function () { liveRegion.textContent = msg; };
+        if (typeof requestAnimationFrame === 'function') {
+            requestAnimationFrame(paint);
+        } else {
+            paint();
+        }
+    }
 
     function isDark() {
         var explicit = document.documentElement.getAttribute('data-theme');
@@ -57,6 +82,7 @@
 
     function showVersion(lang, updateUrl) {
         if (lang !== 'en') lang = 'sk';
+        var changed = docLang !== lang;
         docLang = lang;
 
         Array.prototype.forEach.call(blocks, function (el) {
@@ -78,6 +104,7 @@
                     ? window.location.pathname
                     : window.location.pathname + '?lang=en');
             } catch (e) { /* replaceState unavailable (e.g. file:// origin) */ }
+            if (changed) announceLang(lang);
         }
     }
 

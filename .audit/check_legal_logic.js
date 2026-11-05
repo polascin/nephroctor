@@ -16,10 +16,12 @@ const SOURCE = fs.readFileSync(path.join(ROOT, 'assets', 'legal.js'), 'utf8');
 
 function el(attrs = {}) {
   return {
-    _attrs: { ...attrs }, hidden: false, innerHTML: '', _listeners: {},
+    _attrs: { ...attrs }, hidden: false, innerHTML: '', textContent: '', _listeners: {},
+    children: [],
     setAttribute(k, v) { this._attrs[k] = String(v); },
     getAttribute(k) { return k in this._attrs ? this._attrs[k] : null; },
     addEventListener(ev, fn) { (this._listeners[ev] = this._listeners[ev] || []).push(fn); },
+    appendChild(child) { this.children.push(child); return child; },
     click() { (this._listeners.click || []).forEach((f) => f()); },
   };
 }
@@ -53,9 +55,13 @@ function run({ search, saved }) {
     matchMedia: () => ({ matches: false }),
   };
   global.history = { replaceState() {} };
+  global.requestAnimationFrame = (fn) => fn();
+  const bodyNode = el();
   global.document = {
     documentElement: docEl,
+    body: bodyNode,
     title: '',
+    createElement: () => el(),
     getElementById: (id) => (id === 'theme-toggle' ? toggle : null),
     querySelector: (sel) => {
       const m = sel.match(/^\[data-title-(\w+)\]$/);
@@ -69,11 +75,15 @@ function run({ search, saved }) {
   };
 
   eval(SOURCE);
+  const live = bodyNode.children.find(
+    (n) => n.getAttribute('role') === 'status' && n.getAttribute('aria-live') === 'polite',
+  );
   return {
     visible: skBlock.hidden ? 'en' : 'sk',
     navVisible: skNav.hidden ? 'en' : 'sk',
     lang: docEl.lang,
     title: global.document.title,
+    liveRegion: live || null,
     pressed: [btnSk, btnEn]
       .filter((b) => b.getAttribute('aria-pressed') === 'true')
       .map((b) => b.getAttribute('data-doc-lang')),
@@ -106,11 +116,49 @@ for (const [label, input, expected] of CASES) {
     && result.navVisible === expected
     && result.lang === expected
     && result.pressed.length === 1
-    && result.pressed[0] === expected;
+    && result.pressed[0] === expected
+    && result.liveRegion
+    && result.liveRegion.textContent === '';
   if (!ok) failures++;
   console.log(`  ${ok ? 'OK  ' : 'FAIL'} ${label.padEnd(31)} `
     + `shows=${result.visible} nav=${result.navVisible} lang=${result.lang} pressed=${result.pressed}`
     + (ok ? '' : `  (expected ${expected})`));
+}
+
+/* User-initiated switch must announce; re-clicking the same language must not. */
+{
+  const label = 'click EN announces once';
+  try {
+    const result = run({ search: '', saved: null });
+    btnEn.click();
+    const first = result.liveRegion && result.liveRegion.textContent;
+    btnEn.click();
+    const second = result.liveRegion && result.liveRegion.textContent;
+    const shows = skBlock.hidden ? 'en' : 'sk';
+    const ok = shows === 'en'
+      && first === 'Document language: English'
+      && second === first;
+    if (!ok) failures++;
+    console.log(`  ${ok ? 'OK  ' : 'FAIL'} ${label.padEnd(31)} shows=${shows} announce=${JSON.stringify(first)}`);
+  } catch (err) {
+    failures++;
+    console.log(`  FAIL ${label.padEnd(31)} THREW: ${err.message}`);
+  }
+}
+{
+  const label = 'click SK announces Slovak';
+  try {
+    const result = run({ search: '?lang=en', saved: null });
+    btnSk.click();
+    const shows = skBlock.hidden ? 'en' : 'sk';
+    const announce = result.liveRegion && result.liveRegion.textContent;
+    const ok = shows === 'sk' && announce === 'Jazyk dokumentu: slovenčina';
+    if (!ok) failures++;
+    console.log(`  ${ok ? 'OK  ' : 'FAIL'} ${label.padEnd(31)} shows=${shows} announce=${JSON.stringify(announce)}`);
+  } catch (err) {
+    failures++;
+    console.log(`  FAIL ${label.padEnd(31)} THREW: ${err.message}`);
+  }
 }
 
 console.log('\nlegal document switch:', failures ? `FAILED (${failures})` : 'all cases correct');
