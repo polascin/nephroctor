@@ -141,14 +141,19 @@ jobs:
             esac
             sleep 5
           done
-          # Status-only smoke can miss a stuck origin copy of Clarity assets.
-          # One request each: write body + status; treat 429/466 as warning.
+          # Clarity marker smoke. Bare asset URLs can stay stuck in the host
+          # OpenResty edge for up to a day after a prior max-age=86400 response
+          # even when origin already has the new bytes and no-cache headers
+          # (failed run 42095934437). Bust with ?v=$GITHUB_SHA so smoke hits
+          # origin; HTML pages ship their own content-hash ?v= for browsers.
           sleep 5
+          SHA_V="${GITHUB_SHA:-smoke}"
           for spec in \
             "assets/clarity-consent.js|aria-modal" \
             "assets/clarity-consent.css|color-card"; do
-            path="/${spec%%|*}"
+            asset="${spec%%|*}"
             needle="${spec##*|}"
+            path="/${asset}?v=${SHA_V}"
             body=$(mktemp)
             STATUS=000
             attempt=1
@@ -158,6 +163,8 @@ jobs:
               STATUS=$(curl -s -A "$UA" \
                 -H 'Accept: text/css,application/javascript,*/*;q=0.8' \
                 -H 'Accept-Encoding: identity' \
+                -H 'Cache-Control: no-cache' \
+                -H 'Pragma: no-cache' \
                 --connect-timeout 10 --max-time 20 \
                 -o "$body" -w "%{http_code}" \
                 "https://nephroctor.com$path" || echo "000")
