@@ -1,18 +1,18 @@
 # SESSION – Nephroctor improvement loop
 
-Last updated: 2026-11-05 (loop iter 14)
+Last updated: 2026-11-06 (loop iter 15)
 
 ## HEAD
 
-See latest commit on `origin/main` after iter-14 push.
+See latest commit on `origin/main` after iter-15 push.
 
 ## Latest handoff
 
-`.codex/handoffs/` – iter-14 handoff written at end of this iteration.
+`.codex/handoffs/` – iter-15 handoff written at end of this iteration.
 
 ## Just completed
 
-Iter 14: skipped alias verify (panel still open). In-repo: `/imprint` and `/legal/imprint.html` 301 → `/legal/pravne-informacie.html`; `/cookie-policy` and `/legal/cookie-policy.html` 301 → `/legal/cookies.html` (query `?lang=en` preserved). No higher-severity in-repo bug found.
+Iter 15: full `.audit/*` pass green. No higher-severity functional bug. Small a11y hardening: hide Clarity settings button and consent dialog in `@media print` (matches accessibility statement claim). Cache-bust `clarity-consent.js?v=6675117dce`. Skipped `.sk`/`.eu` panel.
 
 ## Next iteration priority
 
@@ -20,5 +20,5 @@ WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to do
 
 ## Deploys this session
 
-- Prior: iter-13 Deploy success (`1407eca`)
-- Iter 14: see handoff after push
+- Prior: iter-14 Deploy success (`c9cc9fb`)
+- Iter 15: see handoff after push

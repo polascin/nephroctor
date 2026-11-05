@@ -86,3 +86,12 @@
         margin: 0.5rem 0;
     }
 }
+
+/* Match site.css print chrome: settings control and open dialog must not print. */
+@media print {
+    .clarity-settings,
+    .clarity-consent,
+    .clarity-consent-status {
+        display: none !important;
+    }
+}

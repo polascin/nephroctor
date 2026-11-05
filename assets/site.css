@@ -569,7 +569,10 @@ a:focus-visible {
     .doc-lang,
     .lang-section,
     .skip-link,
-    .back-link {
+    .back-link,
+    .clarity-settings,
+    .clarity-consent,
+    .clarity-consent-status {
         display: none !important;
     }
 
