@@ -90,7 +90,9 @@ nefailuje Deploy (payload už bol nahratý).
 
 `.htaccess` už obsahuje path-preserving **301** (napr. `/privacy` →
 `/legal/ochrana-osobnych-udajov.html`, `/accessibility` a `/legal/accessibility.html` →
-`/legal/pristupnost.html`, `/health-notice` / `/disclaimer` / `/zdravotne-upozornenie` →
+`/legal/pristupnost.html`, `/imprint` a `/legal/imprint.html` →
+`/legal/pravne-informacie.html`, `/cookie-policy` a `/legal/cookie-policy.html` →
+`/legal/cookies.html`, `/health-notice` / `/disclaimer` / `/zdravotne-upozornenie` →
 `/legal/zdravotne-upozornenie.html` na `https://nephroctor.com`). Dnes však
 OpenResty na hostingu ešte pred Apache odpovedá **302** na
 `https://nephroctor.com` **bez cesty** (path drop). To sa z repozitária ani cez
