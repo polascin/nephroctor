@@ -4,7 +4,7 @@ Last updated: 2026-11-05 (loop iter 3)
 
 ## HEAD
 
-See latest commit on `main` after theme-aware consent CSS (this session).
+`728af04` on `main`.
 
 ## Latest handoff
 
@@ -21,4 +21,4 @@ WebSupport panel: `nephroctor.sk` / `.eu` domain alias (path-preserving) instead
 ## Deploys this session
 
 - Prior: `#42086419433` `b2ef95a`, `#42087289244` `47e6372`, `#42089100917` `65f8299`, `#42089231894` `8512b3f`
-- Iter 3 deploy: recorded in handoff after push
+- https://github.com/polascin/nephroctor/actions/runs/42092187784 success (`728af04`; Smoke + security headers)

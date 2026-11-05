@@ -5,7 +5,7 @@
 - Generated At: 2026-11-05T20:14:42+01:00
 - Project Root: D:\Dev\nephroctor
 - Git Branch: main
-- Head Commit: (filled after commit; see Recent Commits)
+- Head Commit: 728af0421b2b3ce61edb5b08990f23daa9e5c5cf
 - Production: https://nephroctor.com
 - Prior handoff: `.codex/handoffs/2026-11-05-195700-nephroctor-loop-iter-2.md`
 
@@ -39,7 +39,8 @@ Local static server on `http://127.0.0.1:8791/` was responding (200). Port 8792 
 
 - Local: `check_format`, `check_contrast`, `check_assets`, `test_clarity.cjs` → PASS.
 - Production pre-change browser: Clarity post-consent Network OK; 0 CSP violations.
-- Deploy / production curl after push: filled below after watch.
+- Deploy `728af04` run https://github.com/polascin/nephroctor/actions/runs/42092187784: **success** (SFTP done ~10m16s). Smoke check **success**; Report security headers **success**. (`gh run watch` briefly hit API 403 rate limit mid-poll; conclusion rechecked after reset.)
+- Production curl (browser UA): `/` 200 + CSP/HSTS/nosniff/DENY; cache-busted `/assets/clarity-consent.css` contains `var(--color-card)`; JS contains `data-choice`. Note: `Cache-Control: max-age=86400` on CSS/JS means unbusted requests may show prior bytes briefly.
 
 ## Not Yet Validated
 
@@ -80,7 +81,7 @@ Local static server on `http://127.0.0.1:8791/` was responding (200). Port 8792 
 
 ## Recent Commits
 
-- (this) fix(ui): theme-aware Clarity consent banner using site tokens
+- 728af04 fix(ui): theme Clarity consent banner to site tokens
 - 914711f docs(handoff): complete nephroctor loop iter-2 after consent a11y deploy
 - 8512b3f fix(a11y): add aria-modal and focus trap to Clarity consent dialog
 - 65f8299 docs(audit): record Beh #14 deploy results and Clarity dialog a11y
