@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cookies a lokálne úložisko | Nephroctor</title>
-    <meta name="description" content="Microsoft Clarity po analytickom súhlase, cookies a nastavenia súkromia na nephroctor.com.">
+    <meta name="description" content="Technické localStorage, voliteľný Microsoft Clarity po súhlase, cookies a návod na vymazanie na nephroctor.com.">
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
@@ -51,20 +51,187 @@
             <article class="content-card" id="doc-sk" data-lang-block="sk" lang="sk">
                 <div class="doc-header">
                     <h1>Cookies a lokálne úložisko</h1>
-                    <p class="doc-meta">Aktualizované 1. novembra 2026 · verzia 1.1</p>
+                    <p class="doc-meta">Aktualizované 5. novembra 2026 · verzia 1.2</p>
                 </div>
 
-                <div class="prose"><h2>Microsoft Clarity a analytický súhlas</h2><p>Na verejných stránkach používame Microsoft Clarity iba po výslovnom analytickom súhlase. Zaznamenáva návštevy, kliknutia, posúvanie a priebeh používania s maskovaným textom, aby sme mohli web zlepšovať. Údaje prijíma Microsoft. Reklamný súhlas zostáva vypnutý. Bez súhlasu sa služba nenačíta.</p><p>Voľbu ukladáme v lokálnom úložisku na 180 dní. Cookies <code>_clck</code> a <code>_clsk</code> rozlišujú návštevníkov a spájajú zobrazenia do relácií. Súhlas môžete kedykoľvek odvolať tlačidlom Nastavenia analytiky. Meranie sa zastaví a dostupné cookies Clarity sa odstránia. Technické predvoľby jazyka a témy zostávajú samostatné.</p><p>Podrobnosti o spracúvaní údajov vrátane medzinárodných prenosov: <a href="https://privacy.microsoft.com/privacystatement">ochrana súkromia Microsoft</a> a <a href="https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-cookies">cookies Clarity</a>.</p>
+                <div class="prose">
+                    <div class="callout">
+                        <p><strong>Zhrnutie:</strong> bez vášho súhlasu stránka <strong>nepoužíva analytické cookies</strong>. Technické predvoľby jazyka a témy ukladá len v <code>localStorage</code>. Microsoft Clarity sa načíta výhradne po výslovnom analytickom súhlase; reklamný súhlas zostáva vypnutý. Voľbu môžete kedykoľvek zmeniť tlačidlom Nastavenia analytiky.</p>
+                    </div>
+
+                    <h2>1. Čo sú cookies a lokálne úložisko</h2>
+                    <p><strong>Cookies</strong> sú malé súbory, ktoré webová stránka uloží vo vašom prehliadači a ktoré sa <em>pri každej ďalšej požiadavke automaticky odosielajú späť na server</em>. Práve preto sa dajú zneužiť na sledovanie.</p>
+                    <p><strong>Lokálne úložisko</strong> (<code>localStorage</code>) je tiež priestor v prehliadači, ale jeho obsah sa <em>na server nikdy neodosiela</em> – prečítať ho môže výlučne kód stránky bežiaci vo vašom zariadení.</p>
+
+                    <h2>2. Čo táto stránka ukladá</h2>
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr><th>Názov</th><th>Typ</th><th>Účel</th><th>Platnosť</th><th>Súhlas</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>nephroctor-theme</code></td>
+                                    <td>localStorage</td>
+                                    <td>Zapamätá si, či ste zvolili svetlý alebo tmavý režim zobrazenia.</td>
+                                    <td>do vymazania používateľom</td>
+                                    <td>nevyžaduje sa</td>
+                                </tr>
+                                <tr>
+                                    <td><code>nephroctor-lang</code></td>
+                                    <td>localStorage</td>
+                                    <td>Zapamätá si zvolený jazyk stránky, aby ste ho nemuseli vyberať pri každej návšteve.</td>
+                                    <td>do vymazania používateľom</td>
+                                    <td>nevyžaduje sa</td>
+                                </tr>
+                                <tr>
+                                    <td><code>clarity-consent-v1-z6syb9ejim</code></td>
+                                    <td>localStorage</td>
+                                    <td>Zapamätá vašu voľbu analytického súhlasu (povolenie alebo odmietnutie) pre Microsoft Clarity.</td>
+                                    <td>180 dní od voľby, alebo do vymazania</td>
+                                    <td>ukladá sa až po vašej voľbe v lište alebo v nastaveniach</td>
+                                </tr>
+                                <tr>
+                                    <td><code>_clck</code>, <code>_clsk</code></td>
+                                    <td>cookie (Clarity)</td>
+                                    <td>Po súhlase rozlišujú návštevníkov a spájajú zobrazenia do relácií. Text na stránke je maskovaný.</td>
+                                    <td>podľa dokumentácie Microsoft Clarity</td>
+                                    <td>vyžaduje sa analytický súhlas</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>Hodnoty <code>nephroctor-theme</code> a <code>nephroctor-lang</code> sú výhradne zobrazovacie preferencie, neobsahujú identifikátory ani osobné údaje a neumožňujú sledovanie naprieč webovými stránkami. Kľúč súhlasu Clarity obsahuje len príznak povolenia alebo odmietnutia a čas vypršania; bez súhlasu sa skript Clarity nenačíta a cookies Clarity nevzniknú.</p>
+
+                    <h2>3. Microsoft Clarity a analytický súhlas</h2>
+                    <p>Na verejných stránkach (<code>/</code>, dokumenty o cookies a ochrane osobných údajov) môžeme po výslovnom súhlase použiť Microsoft Clarity na meranie návštevnosti, kliknutí, posúvania a priebehu používania. Údaje prijíma Microsoft. Reklamný súhlas zostáva vypnutý. Bez súhlasu sa služba nenačíta.</p>
+                    <p>Súhlas môžete kedykoľvek odvolať tlačidlom Nastavenia analytiky. Meranie sa zastaví a dostupné cookies Clarity sa odstránia. Technické predvoľby jazyka a témy zostávajú samostatné.</p>
+                    <p>Podrobnosti o spracúvaní údajov vrátane medzinárodných prenosov: <a href="https://privacy.microsoft.com/privacystatement" target="_blank" rel="noopener noreferrer">ochrana súkromia Microsoft</a> a <a href="https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-cookies" target="_blank" rel="noopener noreferrer">cookies Clarity</a>. Ďalšie informácie podľa GDPR sú v dokumente <a href="ochrana-osobnych-udajov.html">Zásady spracúvania osobných údajov</a>.</p>
+
+                    <h2>4. Prečo technické predvoľby nevyžadujú súhlas</h2>
+                    <p>Podľa § 109 ods. 8 zákona č. 452/2021 Z. z. o elektronických komunikáciách (transpozícia článku 5 ods. 3 smernice 2002/58/ES) sa súhlas <strong>nevyžaduje</strong>, ak je uloženie údajov nevyhnutné na poskytnutie služby, ktorú používateľ výslovne požadoval. Uloženie zvoleného jazyka a farebného režimu je takýmto prípadom: bez neho by sa vaša voľba pri každom načítaní stránky stratila.</p>
+                    <p>Analytické cookies Clarity a načítanie skriptu tretiej strany sú voliteľné; preto sa zobrazuje lišta so súhlasom, kým si nevyberiete.</p>
+
+                    <h2>5. Čo stránka inak nepoužíva</h2>
+                    <ul>
+                        <li>žiadne reklamné, remarketingové ani sledovacie pixely,</li>
+                        <li>žiadne sociálne pluginy (tlačidlá „Páči sa mi“, vložené príspevky),</li>
+                        <li>žiadne vložené videá ani mapy z cudzích domén,</li>
+                        <li>žiadne externé písma ani knižnice z CDN na základných súboroch webu,</li>
+                        <li>žiadne profilovanie ani automatizované individuálne rozhodovanie podľa článku 22 GDPR.</li>
+                    </ul>
+
+                    <h3>Písmo Inter je hosťované lokálne</h3>
+                    <p>Písmo Inter sa načítava priamo z domény nephroctor.com, nie zo služby Google Fonts. Vaša IP adresa sa preto pri načítaní písma <strong>neodovzdáva spoločnosti Google</strong>. Písmo je použité na základe licencie SIL Open Font License 1.1. Clarity je jediná voliteľná externá služba a načíta sa len po súhlase.</p>
+
+                    <h2>6. Ako uložené hodnoty a cookies vymazať</h2>
+                    <p>Analytický súhlas odvoláte tlačidlom Nastavenia analytiky na stránkach, kde sa lišta zobrazuje. Technické predvoľby a zvyšné údaje stránky vymažete v prehliadači:</p>
+                    <ul>
+                        <li><strong>Chrome / Edge:</strong> Nastavenia › Ochrana súkromia a zabezpečenie › Vymazať údaje prehliadania › „Cookies a ďalšie údaje stránok“.</li>
+                        <li><strong>Firefox:</strong> Nastavenia › Súkromie a bezpečnosť › Cookies a údaje stránok › Spravovať údaje.</li>
+                        <li><strong>Safari:</strong> Nastavenia › Súkromie › Spravovať údaje webových stránok.</li>
+                    </ul>
+                    <p>Po vymazaní sa stránka zobrazí v predvolenom jazyku a v režime podľa nastavení vášho systému; lišta so súhlasom sa môže znova zobraziť. Ak používate režim súkromného prehliadania alebo máte ukladanie zablokované, stránka funguje bez obmedzení – vaša voľba sa len nezapamätá do ďalšej návštevy.</p>
+
+                    <h2>7. Serverové logy</h2>
+                    <p>Nezávisle od lokálneho úložiska zaznamenáva webový server bežné technické údaje o prístupe (IP adresa, čas, požadovaná adresa). Ide o štandardnú a nevyhnutnú súčasť prevádzky webu; podrobnosti nájdete v dokumente <a href="ochrana-osobnych-udajov.html">Zásady spracúvania osobných údajov</a>.</p>
+
+                    <h2>8. Zmeny</h2>
+                    <p>Pri zmene technológií alebo právnych predpisov tento dokument aktualizujeme. Aktuálne znenie je vždy na tejto adrese; dátum a verzia sú v záhlaví.</p>
                 </div>
             </article>
 
             <article class="content-card" id="doc-en" data-lang-block="en" lang="en" hidden>
                 <div class="doc-header">
                     <h1>Cookies and local storage</h1>
-                    <p class="doc-meta">Updated 1 November 2026 · version 1.1</p>
+                    <p class="doc-meta">Updated 5 November 2026 · version 1.2</p>
                 </div>
 
-                <div class="prose"><h2>Microsoft Clarity and analytics consent</h2><p>We use Microsoft Clarity on public pages only after explicit analytics consent. It records visits, clicks, scrolling and sessions with masked text to help us improve the website. Microsoft receives the data. Advertising consent stays denied. The service does not load without consent.</p><p>Your choice is stored in local storage for 180 days. The cookies <code>_clck</code> and <code>_clsk</code> distinguish visitors and connect page views into sessions. You can withdraw consent using Analytics settings at any time. Collection stops and accessible Clarity cookies are removed. Language and theme preferences remain separate.</p><p>For details about processing, including international transfers, see the <a href="https://privacy.microsoft.com/privacystatement">Microsoft Privacy Statement</a> and <a href="https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-cookies">Clarity cookie documentation</a>.</p>
+                <div class="prose">
+                    <div class="callout">
+                        <p><strong>Summary:</strong> without your consent this site uses <strong>no analytics cookies</strong>. Language and theme preferences are stored only in <code>localStorage</code>. Microsoft Clarity loads only after explicit analytics consent; advertising consent stays denied. You can change your choice at any time via Analytics settings.</p>
+                        <p>The <strong>Slovak version is the legally binding one</strong>; this is a courtesy translation.</p>
+                    </div>
+
+                    <h2>1. Cookies versus local storage</h2>
+                    <p><strong>Cookies</strong> are small files a website stores in your browser which are <em>automatically sent back to the server with every subsequent request</em>. That is precisely what makes them usable for tracking.</p>
+                    <p><strong>Local storage</strong> (<code>localStorage</code>) is also browser-side storage, but its contents are <em>never sent to the server</em> – only page code running on your own device can read it.</p>
+
+                    <h2>2. What this site stores</h2>
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr><th>Name</th><th>Type</th><th>Purpose</th><th>Lifetime</th><th>Consent</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>nephroctor-theme</code></td>
+                                    <td>localStorage</td>
+                                    <td>Remembers whether you chose the light or dark display mode.</td>
+                                    <td>until you delete it</td>
+                                    <td>not required</td>
+                                </tr>
+                                <tr>
+                                    <td><code>nephroctor-lang</code></td>
+                                    <td>localStorage</td>
+                                    <td>Remembers your chosen site language so you need not select it on every visit.</td>
+                                    <td>until you delete it</td>
+                                    <td>not required</td>
+                                </tr>
+                                <tr>
+                                    <td><code>clarity-consent-v1-z6syb9ejim</code></td>
+                                    <td>localStorage</td>
+                                    <td>Remembers your analytics consent choice (allow or decline) for Microsoft Clarity.</td>
+                                    <td>180 days from the choice, or until deleted</td>
+                                    <td>written only after you choose in the banner or settings</td>
+                                </tr>
+                                <tr>
+                                    <td><code>_clck</code>, <code>_clsk</code></td>
+                                    <td>cookie (Clarity)</td>
+                                    <td>After consent, distinguish visitors and connect page views into sessions. Page text is masked.</td>
+                                    <td>per Microsoft Clarity documentation</td>
+                                    <td>analytics consent required</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p><code>nephroctor-theme</code> and <code>nephroctor-lang</code> hold display preferences only. They contain no identifiers or personal data and enable no cross-site tracking. The Clarity consent key stores only the allow/deny flag and an expiry; without consent the Clarity script does not load and Clarity cookies are not set.</p>
+
+                    <h2>3. Microsoft Clarity and analytics consent</h2>
+                    <p>On public pages (<code>/</code>, the cookies and privacy documents) we may use Microsoft Clarity after explicit consent to measure visits, clicks, scrolling and session behaviour. Microsoft receives the data. Advertising consent stays denied. The service does not load without consent.</p>
+                    <p>You can withdraw consent at any time using Analytics settings. Collection stops and accessible Clarity cookies are removed. Language and theme preferences remain separate.</p>
+                    <p>For processing details, including international transfers, see the <a href="https://privacy.microsoft.com/privacystatement" target="_blank" rel="noopener noreferrer">Microsoft Privacy Statement</a> and <a href="https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-cookies" target="_blank" rel="noopener noreferrer">Clarity cookie documentation</a>. Further GDPR information is in the <a href="ochrana-osobnych-udajov.html?lang=en">Privacy policy</a>.</p>
+
+                    <h2>4. Why technical preferences do not need consent</h2>
+                    <p>Under Section 109(8) of Act No. 452/2021 Coll. on electronic communications (transposing Article 5(3) of Directive 2002/58/EC), consent is <strong>not required</strong> where storage is strictly necessary to provide a service explicitly requested by the user. Remembering your language and colour scheme is exactly such a case: without it, your choice would be lost on every page load.</p>
+                    <p>Clarity analytics cookies and the third-party script are optional; that is why a consent banner appears until you choose.</p>
+
+                    <h2>5. What the site otherwise does not use</h2>
+                    <ul>
+                        <li>no advertising, remarketing or tracking pixels,</li>
+                        <li>no social plugins (like buttons, embedded posts),</li>
+                        <li>no embedded videos or maps from foreign domains,</li>
+                        <li>no external fonts or CDN-hosted libraries for core website assets,</li>
+                        <li>no profiling and no automated individual decision-making within the meaning of Article 22 GDPR.</li>
+                    </ul>
+
+                    <h3>The Inter typeface is self-hosted</h3>
+                    <p>Inter is loaded directly from nephroctor.com, not from Google Fonts. Your IP address is therefore <strong>not disclosed to Google</strong> when the font loads. The typeface is used under the SIL Open Font License 1.1. Clarity is the only optional external service and loads only after consent.</p>
+
+                    <h2>6. How to delete stored values and cookies</h2>
+                    <p>Withdraw analytics consent with Analytics settings on pages that show the banner. Delete technical preferences and remaining site data in the browser:</p>
+                    <ul>
+                        <li><strong>Chrome / Edge:</strong> Settings › Privacy and security › Delete browsing data › „Cookies and other site data“.</li>
+                        <li><strong>Firefox:</strong> Settings › Privacy &amp; Security › Cookies and Site Data › Manage Data.</li>
+                        <li><strong>Safari:</strong> Settings › Privacy › Manage Website Data.</li>
+                    </ul>
+                    <p>After deletion the site opens in the default language and follows your system colour scheme; the consent banner may appear again. If you browse privately or have storage blocked, the site works without restriction – your choice simply is not remembered for the next visit.</p>
+
+                    <h2>7. Server logs</h2>
+                    <p>Independently of local storage, the web server records ordinary technical access data (IP address, timestamp, requested URL). This is a standard and necessary part of operating a website; see the <a href="ochrana-osobnych-udajov.html?lang=en">Privacy policy</a> for details.</p>
+
+                    <h2>8. Changes</h2>
+                    <p>If technologies or legal requirements change, we update this document. The current version is always at this address; the date and version appear in the header.</p>
                 </div>
             </article>
         </main>

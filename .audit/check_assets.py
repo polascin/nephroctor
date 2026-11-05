@@ -88,8 +88,8 @@ def check_metadata():
 
 
 def check_no_third_party():
-    """No subresource may come from another origin: that is what keeps the site
-    free of a consent banner and keeps visitor IPs off third-party servers."""
+    """Static markup must not hard-load third-party subresources. Consent-gated
+    Clarity may appear only inside assets/clarity-consent.js after explicit OK."""
     sources = [ROOT / 'index.html'] + sorted((ROOT / 'legal').glob('*.html'))
     sources += [ROOT / 'assets' / 'site.css', ROOT / 'assets' / 'legal.js']
 
@@ -107,11 +107,23 @@ def check_no_third_party():
             linked.add(url.split('/')[2])
 
     third_party = loaded - OWN_HOSTS
-    check('no third-party subresource origin', not third_party, f' -> {sorted(third_party)}')
+    check('no hard-coded third-party subresource origin', not third_party, f' -> {sorted(third_party)}')
     print(f'       outbound link hosts (not loaded): {", ".join(sorted(linked))}')
 
     css = (ROOT / 'assets' / 'site.css').read_text(encoding='utf-8')
     check('no Google Fonts reference in CSS', 'fonts.googleapis' not in css and 'fonts.gstatic' not in css)
+
+    consent = (ROOT / 'assets' / 'clarity-consent.js').read_text(encoding='utf-8')
+    clarity_hosts = sorted({
+        url.split('/')[2]
+        for url in re.findall(r'https?://[^\s"\'`]+', consent)
+        if 'clarity.ms' in url
+    })
+    check('Clarity loads only from clarity-consent.js after consent',
+          'www.clarity.ms' in clarity_hosts and 'clarity("consentv2"' in consent,
+          f' -> {clarity_hosts}')
+    check('Clarity advertising storage stays denied',
+          'ad_Storage: "denied"' in consent)
 
 
 def check_icons():

@@ -32,8 +32,10 @@ AddDefaultCharset utf-8
     # Content Security Policy.
     #   script-src keeps 'unsafe-inline' because the theme bootstrap must run
     #   inline before first paint to avoid a flash of the wrong colour scheme,
-    #   and static hosting cannot issue per-request nonces. Everything else is
-    #   locked to same-origin: the site loads no third-party asset at all.
+    #   and static hosting cannot issue per-request nonces. Core assets stay
+    #   same-origin. Clarity (script/connect/img, plus Bing beacon images) is
+    #   allowed only so the consent-gated loader in clarity-consent.js can run
+    #   after the visitor opts in; without consent that script never loads.
     Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://*.clarity.ms; style-src 'self'; img-src 'self' data: https://*.clarity.ms https://c.bing.com; font-src 'self'; connect-src 'self' https://*.clarity.ms; form-action 'none'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
 
     # HSTS. Deliberately without includeSubDomains and without preload so that

@@ -52,7 +52,7 @@
             <article class="content-card" id="doc-sk" data-lang-block="sk" lang="sk">
                 <div class="doc-header">
                     <h1>Zásady spracúvania osobných údajov</h1>
-                    <p class="doc-meta">Aktualizované 1. novembra 2026 · verzia 1.1</p>
+                    <p class="doc-meta">Aktualizované 5. novembra 2026 · verzia 1.2</p>
                 </div>
 
                 <div class="prose"><h2>Microsoft Clarity a analytický súhlas</h2><p>Na verejných stránkach používame Microsoft Clarity iba po výslovnom analytickom súhlase. Zaznamenáva návštevy, kliknutia, posúvanie a priebeh používania s maskovaným textom, aby sme mohli web zlepšovať. Údaje prijíma Microsoft. Reklamný súhlas zostáva vypnutý. Bez súhlasu sa služba nenačíta.</p><p>Voľbu ukladáme v lokálnom úložisku na 180 dní. Cookies <code>_clck</code> a <code>_clsk</code> rozlišujú návštevníkov a spájajú zobrazenia do relácií. Súhlas môžete kedykoľvek odvolať tlačidlom Nastavenia analytiky. Meranie sa zastaví a dostupné cookies Clarity sa odstránia. Technické predvoľby jazyka a témy zostávajú samostatné.</p><p>Podrobnosti o spracúvaní údajov vrátane medzinárodných prenosov: <a href="https://privacy.microsoft.com/privacystatement">ochrana súkromia Microsoft</a> a <a href="https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-cookies">cookies Clarity</a>.</p>
@@ -111,12 +111,13 @@
                     </div>
 
                     <h2>4. Lokálne úložisko prehliadača</h2>
-                    <p>Bez analytického súhlasu webová stránka <strong>nepoužíva analytické cookies</strong>. Vo vašom prehliadači ukladá dve technické hodnoty v tzv. <code>localStorage</code>:</p>
+                    <p>Bez analytického súhlasu webová stránka <strong>nepoužíva analytické cookies</strong>. Vo vašom prehliadači môže byť v <code>localStorage</code>:</p>
                     <ul>
-                        <li><code>nephroctor-theme</code> – zvolený svetlý alebo tmavý režim zobrazenia,</li>
-                        <li><code>nephroctor-lang</code> – zvolený jazyk stránky.</li>
+                        <li><code>nephroctor-theme</code> – zvolený svetlý alebo tmavý režim zobrazenia (technická predvoľba),</li>
+                        <li><code>nephroctor-lang</code> – zvolený jazyk stránky (technická predvoľba),</li>
+                        <li><code>clarity-consent-v1-z6syb9ejim</code> – vaša voľba analytického súhlasu (povolenie alebo odmietnutie) pre Microsoft Clarity, ukladaná až po vašom rozhodnutí na 180 dní.</li>
                     </ul>
-                    <p>Tieto hodnoty <strong>zostávajú výlučne vo vašom zariadení</strong>, neodosielajú sa na server, neumožňujú vašu identifikáciu ani sledovanie naprieč stránkami. Ide o úložisko nevyhnutné na poskytnutie služby, ktorú ste výslovne požadovali, preto sa naň podľa § 109 ods. 8 zákona č. 452/2021 Z. z. o elektronických komunikáciách nevyžaduje súhlas. Podrobnosti a návod na vymazanie nájdete v dokumente <a href="cookies.html">Cookies a lokálne úložisko</a>.</p>
+                    <p>Technické predvoľby témy a jazyka <strong>zostávajú výlučne vo vašom zariadení</strong>, neodosielajú sa na server, neumožňujú vašu identifikáciu ani sledovanie naprieč stránkami. Ide o úložisko nevyhnutné na poskytnutie služby, ktorú ste výslovne požadovali, preto sa naň podľa § 109 ods. 8 zákona č. 452/2021 Z. z. o elektronických komunikáciách nevyžaduje súhlas. Kľúč súhlasu Clarity neobsahuje identifikátory návštevníka; bez povolenia sa skript Clarity nenačíta. Podrobnosti, cookies <code>_clck</code> / <code>_clsk</code> po súhlase a návod na vymazanie nájdete v dokumente <a href="cookies.html">Cookies a lokálne úložisko</a>.</p>
 
                     <h2>5. Čo <em>ne</em>spracúvame</h2>
                     <ul>
@@ -130,6 +131,7 @@
                     <h2>6. Komu môžu byť údaje sprístupnené</h2>
                     <ul>
                         <li><strong>Poskytovateľ hostingu</strong> v postavení sprostredkovateľa podľa článku 28 GDPR: spoločnosť <strong>Websupport s. r. o.</strong>, Karadžičova 12, 821 08 Bratislava, Slovenská republika, IČO 36 421 928, DIČ 202 186 9234, IČ DPH SK2021869234, zapísaná v obchodnom registri Mestského súdu Bratislava III, vložka č. 63270/B. Servery sú umiestnené v Európskej únii.</li>
+                        <li><strong>Microsoft</strong> (Microsoft Clarity), ak ste udelili analytický súhlas: údaje o návšteve a používaní verejných stránok podľa vyhlásenia o ochrane súkromia Microsoft. Bez súhlasu sa služba nenačíta a údaje sa Microsoftu neodosielajú.</li>
                         <li><strong>Orgány verejnej moci</strong>, ak nám povinnosť poskytnúť údaje vyplýva zo zákona.</li>
                     </ul>
                     <p>Osobné údaje nepredávame, neprenajímame ani inak neposkytujeme tretím stranám na marketingové účely.</p>
@@ -176,7 +178,7 @@
             <article class="content-card" id="doc-en" data-lang-block="en" lang="en" hidden>
                 <div class="doc-header">
                     <h1>Privacy policy</h1>
-                    <p class="doc-meta">Updated 1 November 2026 · version 1.1</p>
+                    <p class="doc-meta">Updated 5 November 2026 · version 1.2</p>
                 </div>
 
                 <div class="prose"><h2>Microsoft Clarity and analytics consent</h2><p>We use Microsoft Clarity on public pages only after explicit analytics consent. It records visits, clicks, scrolling and sessions with masked text to help us improve the website. Microsoft receives the data. Advertising consent stays denied. The service does not load without consent.</p><p>Your choice is stored in local storage for 180 days. The cookies <code>_clck</code> and <code>_clsk</code> distinguish visitors and connect page views into sessions. You can withdraw consent using Analytics settings at any time. Collection stops and accessible Clarity cookies are removed. Language and theme preferences remain separate.</p><p>For details about processing, including international transfers, see the <a href="https://privacy.microsoft.com/privacystatement">Microsoft Privacy Statement</a> and <a href="https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-cookies">Clarity cookie documentation</a>.</p>
@@ -239,12 +241,13 @@
                     </div>
 
                     <h2>4. Browser local storage</h2>
-                    <p>Without analytics consent, the website uses <strong>no analytics cookies</strong>. It stores two technical values in your browser's <code>localStorage</code>:</p>
+                    <p>Without analytics consent, the website uses <strong>no analytics cookies</strong>. Your browser's <code>localStorage</code> may hold:</p>
                     <ul>
-                        <li><code>nephroctor-theme</code> – your light or dark display preference,</li>
-                        <li><code>nephroctor-lang</code> – your chosen site language.</li>
+                        <li><code>nephroctor-theme</code> – your light or dark display preference (technical preference),</li>
+                        <li><code>nephroctor-lang</code> – your chosen site language (technical preference),</li>
+                        <li><code>clarity-consent-v1-z6syb9ejim</code> – your analytics consent choice (allow or decline) for Microsoft Clarity, stored only after you decide, for 180 days.</li>
                     </ul>
-                    <p>These values <strong>remain solely on your device</strong>, are never transmitted to the server, and permit neither identification nor cross-site tracking. As storage strictly necessary to provide a service you explicitly requested, it is exempt from the consent requirement under Section 109(8) of Act No. 452/2021 Coll. on electronic communications. See <a href="cookies.html?lang=en">Cookies and local storage</a> for details and removal instructions.</p>
+                    <p>Theme and language preferences <strong>remain solely on your device</strong>, are never transmitted to the server, and permit neither identification nor cross-site tracking. As storage strictly necessary to provide a service you explicitly requested, they are exempt from the consent requirement under Section 109(8) of Act No. 452/2021 Coll. on electronic communications. The Clarity consent key holds no visitor identifiers; without your permission the Clarity script does not load. For details, the <code>_clck</code> / <code>_clsk</code> cookies after consent, and removal instructions, see <a href="cookies.html?lang=en">Cookies and local storage</a>.</p>
 
                     <h2>5. What we do <em>not</em> process</h2>
                     <ul>
@@ -258,6 +261,7 @@
                     <h2>6. Recipients</h2>
                     <ul>
                         <li><strong>Hosting provider</strong> acting as a processor under Article 28 GDPR: <strong>Websupport s. r. o.</strong>, Karadžičova 12, 821 08 Bratislava, Slovak Republic, company ID 36 421 928, tax ID 202 186 9234, VAT ID SK2021869234, registered in the Commercial Register of the Bratislava III City Court, insert no. 63270/B. Servers are located in the European Union.</li>
+                        <li><strong>Microsoft</strong> (Microsoft Clarity), if you gave analytics consent: visit and usage data for public pages under the Microsoft Privacy Statement. Without consent the service does not load and no data are sent to Microsoft.</li>
                         <li><strong>Public authorities</strong>, where disclosure is required by law.</li>
                     </ul>
                     <p>We do not sell, rent or otherwise disclose personal data to third parties for marketing purposes.</p>
