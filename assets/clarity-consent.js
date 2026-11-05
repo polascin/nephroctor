@@ -122,6 +122,7 @@
         decline.addEventListener("click", () => apply(false));
         const accept = document.createElement("button");
         accept.type = "button";
+        accept.setAttribute("data-choice", "allow");
         accept.textContent = sk ? "Povoliť analytiku" : "Allow analytics";
         accept.addEventListener("click", () => apply(true));
         banner.append(title, text, link, decline, accept);

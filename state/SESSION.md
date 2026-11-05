@@ -1,26 +1,24 @@
 # SESSION – Nephroctor improvement loop
 
-Last updated: 2026-11-05 (loop iter 2)
+Last updated: 2026-11-05 (loop iter 3)
 
 ## HEAD
 
-`8512b3f` on `main` (state). A11y dialog code: `65f8299`.
+See latest commit on `main` after theme-aware consent CSS (this session).
 
 ## Latest handoff
 
-`.codex/handoffs/2026-11-05-195700-nephroctor-loop-iter-2.md`
+`.codex/handoffs/2026-11-05-201442-nephroctor-loop-iter-3.md`
 
 ## Just completed
 
-Consent dialog a11y (`aria-modal`, Tab trap, Escape only from settings reopen, focus restore). Audits + `test_clarity.cjs` PASS. Deploys `#42089100917` and `#42089231894` success. Production clarity-consent.js serves new a11y attributes.
+Production browser check after Allow analytics: Clarity tag + scripts + collect load; 0 CSP violations under current `style-src 'self'`. No CSP change. Theme-aware `clarity-consent.css` (site tokens) + Allow `data-choice="allow"` + contrast audit cases.
 
 ## Next iteration priority
 
-Browser-verify Clarity after Accept (Network + CSP `style-src`). Theme-aware consent banner CSS.
+WebSupport panel: `nephroctor.sk` / `.eu` domain alias (path-preserving) instead of upstream 302 that drops path. Or local SFTP deploy replacement if hosting access becomes available.
 
 ## Deploys this session
 
-- https://github.com/polascin/nephroctor/actions/runs/42086419433 success (`b2ef95a`)
-- https://github.com/polascin/nephroctor/actions/runs/42087289244 success (`47e6372`)
-- https://github.com/polascin/nephroctor/actions/runs/42089100917 success (`65f8299` a11y + audit Nasadenie)
-- https://github.com/polascin/nephroctor/actions/runs/42089231894 success (`8512b3f`)
+- Prior: `#42086419433` `b2ef95a`, `#42087289244` `47e6372`, `#42089100917` `65f8299`, `#42089231894` `8512b3f`
+- Iter 3 deploy: recorded in handoff after push
