@@ -4,15 +4,15 @@ Last updated: 2026-11-05 (loop iter 2)
 
 ## HEAD
 
-Pending commit after iter 2 a11y fix on top of `5834486` (handoff) / `47e6372` (Beh #14).
+`8512b3f` on `main` (state). A11y dialog code: `65f8299`.
 
 ## Latest handoff
 
-`.codex/handoffs/` – create iter-2 handoff after deploy verify (this session).
+`.codex/handoffs/2026-11-05-195700-nephroctor-loop-iter-2.md`
 
 ## Just completed
 
-Consent dialog a11y: `aria-modal`, describedby, Tab focus trap, Escape only when reopened from Analytics settings, focus restore. Audits + `test_clarity.cjs` PASS locally. Beh #14 deploy `#42087289244` success (smoke + security headers; WAF 429 noise on some CI checks).
+Consent dialog a11y (`aria-modal`, Tab trap, Escape only from settings reopen, focus restore). Audits + `test_clarity.cjs` PASS. Deploys `#42089100917` and `#42089231894` success. Production clarity-consent.js serves new a11y attributes.
 
 ## Next iteration priority
 
@@ -22,4 +22,5 @@ Browser-verify Clarity after Accept (Network + CSP `style-src`). Theme-aware con
 
 - https://github.com/polascin/nephroctor/actions/runs/42086419433 success (`b2ef95a`)
 - https://github.com/polascin/nephroctor/actions/runs/42087289244 success (`47e6372`)
-- (iter 2 a11y push: pending)
+- https://github.com/polascin/nephroctor/actions/runs/42089100917 success (`65f8299` a11y + audit Nasadenie)
+- https://github.com/polascin/nephroctor/actions/runs/42089231894 success (`8512b3f`)
