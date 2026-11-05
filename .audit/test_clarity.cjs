@@ -13,7 +13,7 @@ function run({path='/',query='',stored=null,external=false,src='https://example.
  const window={addEventListener(k,fn){events[k]=fn},MutationObserver:function(cb){this.cb=cb;this.observe=()=>{observers.push(cb)}}};
  const location={pathname:path,search:query,hostname:'sub.example.com',href:'https://sub.example.com'+path+query,reload(){reloads++}};
  vm.runInNewContext(code,{document,window,location,localStorage:{getItem(){return value},setItem(k,v){value=v}},URL,URLSearchParams,Date,MutationObserver:window.MutationObserver});
- return {elements,events,window,body,documentElement,observers,cookies,get reloads(){return reloads},get value(){return value},scripts:()=>elements.filter(e=>e.tag==='script'),links:()=>elements.filter(e=>e.tag==='link')};
+ return {elements,events,window,body,documentElement,observers,cookies,get reloads(){return reloads},get value(){return value},set value(v){value=v},scripts:()=>elements.filter(e=>e.tag==='script'),links:()=>elements.filter(e=>e.tag==='link')};
 }
 let s=run();assert.equal(s.scripts().length,0);
 const css=s.links().find(e=>e.rel==='stylesheet');assert.ok(css);assert.equal(css.href,'https://example.com/js/clarity-consent.css');
@@ -52,4 +52,26 @@ s.observers.forEach(cb=>cb());
 assert.ok(s.elements.find(e=>e.textContent==='Voliteľná analytika'));
 assert.ok(s.elements.find(e=>e.textContent==='Povoliť analytiku'));
 assert.equal(live.textContent,'Nastavenia analytiky');
-console.log('PASS: consent gating, a11y dialog (inert/privacy fallback), live lang copy + status announce, project ID, masking, revocation, cookies, expiry, duplicate prevention, private paths and tokens.');
+// Cross-tab storage: decline closes open first-run banner without reload; grant loads Clarity; clear reloads when loaded / re-prompts when not.
+s=run();
+assert.ok(s.elements.find(e=>e.role==='dialog'));
+s.value=JSON.stringify({granted:false,expires:Date.now()+10000});
+s.events.storage({key:'clarity-consent-v1-abc123'});
+assert.ok(s.elements.find(e=>e.role==='dialog').removed);
+assert.equal(s.scripts().length,0);assert.equal(s.reloads,0);
+s=run();
+s.value=JSON.stringify({granted:true,expires:Date.now()+10000});
+s.events.storage({key:'clarity-consent-v1-abc123'});
+assert.equal(s.scripts().length,1);assert.equal(s.reloads,0);
+s=run({stored:JSON.stringify({granted:true,expires:Date.now()+10000})});
+assert.equal(s.scripts().length,1);
+s.value=null;
+s.events.storage({key:'clarity-consent-v1-abc123'});
+assert.equal(s.reloads,1);
+s=run();
+assert.ok(s.elements.find(e=>e.role==='dialog'));
+s.value=null;
+s.events.storage({key:'clarity-consent-v1-abc123'});
+assert.ok(s.elements.filter(e=>e.role==='dialog'&&!e.removed).length>=1);
+assert.equal(s.reloads,0);
+console.log('PASS: consent gating, a11y dialog (inert/privacy fallback), live lang copy + status announce, cross-tab storage sync, project ID, masking, revocation, cookies, expiry, duplicate prevention, private paths and tokens.');

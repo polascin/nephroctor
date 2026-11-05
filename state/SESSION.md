@@ -1,18 +1,18 @@
 # SESSION – Nephroctor improvement loop
 
-Last updated: 2026-11-06 (loop iter 15)
+Last updated: 2026-11-06 (loop iter 16)
 
 ## HEAD
 
-See latest commit on `origin/main` after iter-15 push.
+See latest commit on `origin/main` after iter-16 push.
 
 ## Latest handoff
 
-`.codex/handoffs/` – iter-15 handoff written at end of this iteration.
+`.codex/handoffs/` – iter-16 handoff written at end of this iteration.
 
 ## Just completed
 
-Iter 15: full `.audit/*` pass green. No higher-severity functional bug. Small a11y hardening: hide Clarity settings button and consent dialog in `@media print` (matches accessibility statement claim). Cache-bust `clarity-consent.js?v=6675117dce`. Skipped `.sk`/`.eu` panel.
+Iter 16: full `.audit/*` + `test_clarity.cjs` green. Real bug: Clarity consent `storage` handler left the first-run dialog open after another tab declined. Fixed cross-tab sync; cache-bust `?v=a6b08f84514b`. Skipped `.sk`/`.eu` panel and further EN legal redirects.
 
 ## Next iteration priority
 
@@ -20,5 +20,5 @@ WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to do
 
 ## Deploys this session
 
-- Prior: iter-14 Deploy success (`c9cc9fb`)
-- Iter 15: see handoff after push
+- Prior: iter-15 Deploy success (`03b326b`)
+- Iter 16: see handoff after push

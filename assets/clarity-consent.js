@@ -230,10 +230,22 @@
     const stored = read();
     if (stored && stored.expires > Date.now() && typeof stored.granted === "boolean") apply(stored.granted, false);
     else show();
+    // Cross-tab sync: storage fires in other tabs only. A decline/expiry that
+    // landed while this tab still showed the first-run banner used to leave the
+    // dialog open because the old path only reloaded when Clarity was already loaded.
     window.addEventListener("storage", e => {
         if (e.key !== key) return;
         const value = read();
-        if (!value || !value.granted || value.expires <= Date.now()) { if (loaded) location.reload(); }
-        else apply(true, false);
+        if (value && typeof value.granted === "boolean" && value.expires > Date.now()) {
+            if (value.granted) apply(true, false);
+            else if (loaded) location.reload();
+            else closeBanner();
+            return;
+        }
+        if (loaded) location.reload();
+        else {
+            closeBanner();
+            show();
+        }
     });
 })();
