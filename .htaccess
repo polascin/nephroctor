@@ -87,6 +87,8 @@ AddDefaultCharset utf-8
 # RewriteRule cannot intercept slashless /legal — Apache hands that URL to
 # mod_dir (DirectorySlash) before per-directory rewrite runs.
 # Query strings (?lang=en) are preserved on the 301.
+# /security.txt is a convenience alias for RFC 9116 /.well-known/security.txt
+# (basename security.txt is not blocked by the dotfile FilesMatch below).
 <IfModule mod_alias.c>
     RedirectMatch 301 ^/privacy/?$ /legal/ochrana-osobnych-udajov.html
     RedirectMatch 301 ^/terms/?$ /legal/podmienky-pouzivania.html
@@ -94,6 +96,7 @@ AddDefaultCharset utf-8
     RedirectMatch 301 ^/legal/privacy\.html$ /legal/ochrana-osobnych-udajov.html
     RedirectMatch 301 ^/legal/terms\.html$ /legal/podmienky-pouzivania.html
     RedirectMatch 301 ^/legal/?$ /legal/pravne-informacie.html
+    RedirectMatch 301 ^/security\.txt$ /.well-known/security.txt
 </IfModule>
 
 # --- Caching ----------------------------------------------------------------

@@ -19,7 +19,7 @@ s=run();
 const dialog=s.elements.find(e=>e.role==='dialog');
 assert.ok(dialog);assert.equal(dialog['aria-modal'],'true');assert.equal(dialog['aria-labelledby'],'clarity-consent-title');assert.equal(dialog['aria-describedby'],'clarity-consent-desc');assert.equal(typeof dialog.keydown,'function');
 const privacy=s.elements.find(e=>e.tag==='a');assert.equal(privacy.href,'/legal/ochrana-osobnych-udajov.html');
-const settingsBtn=s.elements.find(e=>e.textContent==='Nastavenia analytiky');assert.equal(settingsBtn['aria-haspopup']||settingsBtn.attrs?.['aria-haspopup'],'dialog');
+const settingsBtn=s.elements.find(e=>e.textContent==='Nastavenia analytiky');assert.equal(settingsBtn['aria-haspopup']||settingsBtn.attrs?.['aria-haspopup'],'dialog');assert.equal(settingsBtn['aria-expanded']||settingsBtn.attrs?.['aria-expanded'],'true');assert.equal(settingsBtn['aria-controls']||settingsBtn.attrs?.['aria-controls'],'clarity-consent-dialog');assert.equal(dialog.id,'clarity-consent-dialog');
 let accept=s.elements.find(e=>e.textContent==='Povoliť analytiku');assert.equal(accept['data-choice']||accept.getAttribute?.('data-choice'),'allow');accept.click();assert.equal(s.scripts().length,1);assert.equal(s.scripts()[0].src,'https://www.clarity.ms/tag/abc123');assert.equal(s.body['data-clarity-mask'],'true');assert.equal(s.window.clarity.q[0][1].ad_Storage,'denied');
 s.elements.find(e=>e.textContent==='Nastavenia analytiky').click();s.elements.filter(e=>e.textContent==='Odmietnuť').at(-1).click();assert.equal(s.reloads,1);assert.equal(JSON.parse(s.value).granted,false);assert.ok(s.cookies.some(c=>c.includes('Domain=.example.com')));
 s=run();s.elements.find(e=>e.textContent==='Odmietnuť').click();assert.equal(s.scripts().length,0);

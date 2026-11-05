@@ -12,6 +12,7 @@
     const sk = document.documentElement.lang.startsWith("sk");
     let loaded = false;
     let banner;
+    let settings;
     let previousFocus = null;
     let dismissible = false;
     const read = () => { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } };
@@ -38,6 +39,7 @@
         setBackgroundInert(false);
         banner.remove();
         banner = null;
+        if (settings) settings.setAttribute("aria-expanded", "false");
         const restore = previousFocus;
         previousFocus = null;
         dismissible = false;
@@ -106,10 +108,13 @@
     cssUrl.search = scriptUrl.search;
     css.href = cssUrl.href;
     document.head.appendChild(css);
-    const settings = document.createElement("button");
+    settings = document.createElement("button");
     settings.type = "button";
     settings.className = "clarity-settings";
+    settings.id = "clarity-settings";
     settings.setAttribute("aria-haspopup", "dialog");
+    settings.setAttribute("aria-expanded", "false");
+    settings.setAttribute("aria-controls", "clarity-consent-dialog");
     settings.textContent = sk ? "Nastavenia analytiky" : "Analytics settings";
     settings.addEventListener("click", () => show(true));
     (document.querySelector("footer") || document.body).appendChild(settings);
@@ -121,12 +126,14 @@
         dismissible = fromSettings;
         previousFocus = fromSettings ? document.activeElement : null;
         banner = document.createElement("section");
+        banner.id = "clarity-consent-dialog";
         banner.className = "clarity-consent";
         banner.setAttribute("role", "dialog");
         banner.setAttribute("aria-modal", "true");
         banner.setAttribute("aria-labelledby", "clarity-consent-title");
         banner.setAttribute("aria-describedby", "clarity-consent-desc");
         banner.tabIndex = -1;
+        settings.setAttribute("aria-expanded", "true");
         const title = document.createElement("h2");
         title.id = "clarity-consent-title";
         title.textContent = sk ? "Voliteľná analytika" : "Optional analytics";

@@ -21,6 +21,8 @@ jobs:
           cp .htaccess deploy/
           cp -r assets deploy/
           cp -r legal deploy/
+          mkdir -p deploy/.well-known
+          cp .well-known/security.txt deploy/.well-known/
           # logo-transparent.* is kept in the repository for history but is not
           # used by any page: it is RGB with no alpha channel and carries a
           # transparency checkerboard baked into its pixels (see Beh #7).
@@ -42,7 +44,8 @@ jobs:
                    legal/.htaccess \
                    legal/ochrana-osobnych-udajov.html legal/cookies.html \
                    legal/podmienky-pouzivania.html legal/pravne-informacie.html \
-                   legal/pristupnost.html legal/zdravotne-upozornenie.html; do
+                   legal/pristupnost.html legal/zdravotne-upozornenie.html \
+                   .well-known/security.txt; do
             if [ ! -s "deploy/$f" ]; then
               echo "::error::missing or empty in deploy payload: $f"
               fail=1
