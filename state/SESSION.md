@@ -1,25 +1,24 @@
 # SESSION – Nephroctor improvement loop
 
-Last updated: 2026-11-05 (loop iter 5)
+Last updated: 2026-11-05 (loop iter 6)
 
 ## HEAD
 
-`9b163b5` on `origin/main` (iter-5 fix `6e87685` already deployed).
+See latest commit on `origin/main` after iter-6 push.
 
 ## Latest handoff
 
-`.codex/handoffs/2026-11-05-211049-nephroctor-loop-iter-5.md`
+`.codex/handoffs/` – iter-6 handoff written at end of this iteration.
 
 ## Just completed
 
-Iter 4 cache/revalidate landed but Smoke failed on OpenResty-stale bare Clarity URLs. Iter 5: HTML `?v=ec7132f34a` + smoke `?v=$GITHUB_SHA`; Deploy `42098466229` success; production markers verified.
+Iter 6: confirmed `.sk`/`.eu` still OpenResty 302 path-drop; SSH `websupport` has no nephroctor.com webroot. In-repo: consent dialog `inert` + privacy fallback + WAF-lighter Smoke + panel alias docs/`tools/verify-domain-aliases.ps1`.
 
 ## Next iteration priority
 
-WebSupport panel: `nephroctor.sk` / `.eu` domain alias (path-preserving) instead of upstream 302 that drops path. Or local SFTP deploy replacement if hosting access becomes available.
+WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to domain alias of `nephroctor.com`, then run `tools/verify-domain-aliases.ps1`. Or local SFTP deploy if hosting credentials become available on this machine.
 
 ## Deploys this session
 
-- https://github.com/polascin/nephroctor/actions/runs/42095934437 failure (`eb74479`)
-- https://github.com/polascin/nephroctor/actions/runs/42098123693 success (`8b12f39`)
-- https://github.com/polascin/nephroctor/actions/runs/42098466229 success (`6e87685`; Smoke + security headers)
+- Prior: `42098466229` success (`6e87685`)
+- Iter 6: see handoff after push

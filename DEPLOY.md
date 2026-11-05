@@ -82,4 +82,41 @@ Stránka funguje aj bez nich, ale prichádza o CSP, HSTS a ochranu proti clickja
 
 Bot-ochrana hostingu odpovedá na požiadavky bez prehliadačového `User-Agent`
 kódom **HTTP 466**. Workflow preto posiela plnohodnotný `User-Agent` — bez neho by
-kontrola padala aj pri úplne funkčnej stránke.
+kontrola padala aj pri úplne funkčnej stránke. Actions IP často dostávajú HTTP 429;
+Smoke preto používa malú sadu kritických HTML ciest, backoff a pri vyčerpaní 429/466
+nefailuje Deploy (payload už bol nahratý).
+
+## Doménové aliasy nephroctor.sk a nephroctor.eu (panel WebSupport)
+
+`.htaccess` už obsahuje path-preserving **301** (napr. `/privacy` →
+`/legal/ochrana-osobnych-udajov.html` na `https://nephroctor.com`). Dnes však
+OpenResty na hostingu ešte pred Apache odpovedá **302** na `https://nephroctor.com`
+**bez cesty** (path drop). To sa z repozitára ani cez SSH alias `websupport`
+(účet polascin.net, nie nephroctor.com) nedá zmeniť.
+
+### Presné kroky v zákazníckom paneli
+
+1. Prihláste sa do [admin.websupport.sk](https://admin.websupport.sk/).
+2. Otvorte hosting / službu viazanú na **nephroctor.com** (nie iný web v tom istom
+   zákazníckom účte).
+3. Pre každú z domén **nephroctor.sk** a **nephroctor.eu** (aj `www.` ak sú samostatne):
+   - Ak je nastavené **Presmerovanie webu** / HTTP redirect na `https://nephroctor.com`,
+     **vypnite** ho.
+   - Nastavte **Doménový alias** (parkovanie / alias na ten istý webpriestor ako
+     nephroctor.com), nie HTTP redirect. Alias musí smerovať na ten istý document root
+     (`/web` alebo ekvivalent), kde beží `.htaccess` z tohto repozitára.
+4. Počkajte na propagáciu DNS/SSL (minúty až desiatky minút; HTTPS certifikát pre
+   alias môže panel vystaviť samostatne).
+5. Overenie z lokálneho stroja (prehliadačový User-Agent je povinný):
+
+```powershell
+# Jednorazovo (alebo): powershell -NoProfile -ExecutionPolicy Bypass -File tools/verify-domain-aliases.ps1
+$ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+curl.exe -sI -A $ua 'https://nephroctor.sk/privacy'
+curl.exe -sI -A $ua 'https://nephroctor.eu/terms'
+```
+
+Očakávané po úspešnom aliasovaní: **HTTP 301** s
+`Location: https://nephroctor.com/legal/ochrana-osobnych-udajov.html` (resp. terms),
+jeden skok, cesta zachovaná. Stále **302** na holé `https://nephroctor.com` znamená,
+že panel stále používa HTTP redirect namiesto aliasu.

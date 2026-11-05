@@ -121,11 +121,9 @@ jobs:
               esac
             done
           }
-          # Critical set only (full payload verified pre-SFTP). Keeps worst-case
-          # wait under a few minutes even when every path is rate-limited.
+          # Critical HTML only (robots/CSS already verified in the payload step).
+          # Dropping those two GETs cuts Actions WAF 429 pressure; cool-down 8s.
           for path in / \
-                      /robots.txt \
-                      /assets/site.css \
                       /legal/ochrana-osobnych-udajov.html; do
             STATUS=$(curl_status "https://nephroctor.com$path")
             printf '%-45s %s\n' "$path" "$STATUS"
@@ -139,7 +137,7 @@ jobs:
                 fail=1
                 ;;
             esac
-            sleep 5
+            sleep 8
           done
           # Clarity marker smoke. Bare asset URLs can stay stuck in the host
           # OpenResty edge for up to a day after a prior max-age=86400 response
@@ -202,7 +200,7 @@ jobs:
                 ;;
             esac
             rm -f "$body"
-            sleep 5
+            sleep 8
           done
           # Legal shortcuts must 301 onto the canonical Slovak HTML documents.
           # A shell heredoc cannot be used here: unindented EOF bodies break
@@ -233,16 +231,30 @@ jobs:
                 fail=1
                 ;;
             esac
-            sleep 5
+            sleep 8
           done
           exit $fail
 
       - name: Report security headers
         if: always()
         run: |
-          sleep 3
+          sleep 10
           UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
           # Informational only: .htaccess may be ignored if AllowOverride is off.
-          curl -sI -A "$UA" https://nephroctor.com/ \
-            | grep -iE '^(content-security-policy|x-content-type-options|referrer-policy|permissions-policy|strict-transport-security|x-frame-options):' \
-            || echo "::warning::No security headers seen – check that .htaccess is honoured by the host"
+          # Retry briefly: Actions IPs often get 429 right after Smoke GETs.
+          attempt=1
+          while [ "$attempt" -le 3 ]; do
+            hdr=$(mktemp)
+            code=$(curl -s -D "$hdr" -o /dev/null -A "$UA" --connect-timeout 10 --max-time 20 \
+              -w "%{http_code}" https://nephroctor.com/ || echo "000")
+            if [ "$code" = "200" ] && grep -qiE '^(content-security-policy|x-content-type-options|referrer-policy|permissions-policy|strict-transport-security|x-frame-options):' "$hdr"; then
+              grep -iE '^(content-security-policy|x-content-type-options|referrer-policy|permissions-policy|strict-transport-security|x-frame-options):' "$hdr"
+              rm -f "$hdr"
+              exit 0
+            fi
+            echo "::warning::security-header probe HTTP $code (attempt $attempt/3)"
+            rm -f "$hdr"
+            sleep 15
+            attempt=$((attempt + 1))
+          done
+          echo "::warning::No security headers seen – check that .htaccess is honoured by the host (or WAF throttled Actions IP)"

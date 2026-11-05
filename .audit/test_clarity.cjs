@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const code = fs.readFileSync(__dirname + '/../assets/clarity-consent.js', 'utf8');
 function run({path='/',query='',stored=null,external=false,src='https://example.com/js/clarity-consent.js'}={}) {
  const elements=[], events={}, cookies=[];
- const make=tag=>({tag,focus(){},children:[],dataset:{},setAttribute(k,v){this[k]=v},appendChild(e){this.children.push(e);elements.push(e)},append(...es){es.forEach(e=>this.appendChild(e))},addEventListener(k,fn){this[k]=fn},removeEventListener(){},remove(){this.removed=true},querySelector(sel){return this.children.find(c=>!sel||c.tag===sel||(sel==='button'&&c.tag==='button'))||{focus(){}}},querySelectorAll(sel){return this.children.filter(c=>sel.includes('button')?c.tag==='button':sel.includes('a')?c.tag==='a':true)}});
+ const make=tag=>({tag,focus(){},children:[],dataset:{},attrs:{},setAttribute(k,v){this[k]=v;this.attrs[k]=String(v)},getAttribute(k){return Object.prototype.hasOwnProperty.call(this.attrs,k)?this.attrs[k]:null},hasAttribute(k){return Object.prototype.hasOwnProperty.call(this.attrs,k)},removeAttribute(k){delete this.attrs[k];delete this[k]},appendChild(e){this.children.push(e);elements.push(e)},append(...es){es.forEach(e=>this.appendChild(e))},addEventListener(k,fn){this[k]=fn},removeEventListener(){},remove(){this.removed=true},querySelector(sel){return this.children.find(c=>!sel||c.tag===sel||(sel==='button'&&c.tag==='button'))||{focus(){}}},querySelectorAll(sel){return this.children.filter(c=>sel.includes('button')?c.tag==='button':sel.includes('a')?c.tag==='a':true)}});
  const head=make('head'),body=make('body');let value=stored,reloads=0;
  const document={currentScript:{dataset:{project:'abc123',consent:external?'external':'',paths:'/,/index.php'},src},head,body,documentElement:{lang:'sk'},createElement:make,querySelector(){return null},get cookie(){return ''},set cookie(c){cookies.push(c)}};
  const window={addEventListener(k,fn){events[k]=fn}};
@@ -18,6 +18,8 @@ s=run({src:'https://example.com/js/clarity-consent.js?v=theme1'});assert.equal(s
 s=run();
 const dialog=s.elements.find(e=>e.role==='dialog');
 assert.ok(dialog);assert.equal(dialog['aria-modal'],'true');assert.equal(dialog['aria-labelledby'],'clarity-consent-title');assert.equal(dialog['aria-describedby'],'clarity-consent-desc');assert.equal(typeof dialog.keydown,'function');
+const privacy=s.elements.find(e=>e.tag==='a');assert.equal(privacy.href,'/legal/ochrana-osobnych-udajov.html');
+const settingsBtn=s.elements.find(e=>e.textContent==='Nastavenia analytiky');assert.equal(settingsBtn['aria-haspopup']||settingsBtn.attrs?.['aria-haspopup'],'dialog');
 let accept=s.elements.find(e=>e.textContent==='Povoliť analytiku');assert.equal(accept['data-choice']||accept.getAttribute?.('data-choice'),'allow');accept.click();assert.equal(s.scripts().length,1);assert.equal(s.scripts()[0].src,'https://www.clarity.ms/tag/abc123');assert.equal(s.body['data-clarity-mask'],'true');assert.equal(s.window.clarity.q[0][1].ad_Storage,'denied');
 s.elements.find(e=>e.textContent==='Nastavenia analytiky').click();s.elements.filter(e=>e.textContent==='Odmietnuť').at(-1).click();assert.equal(s.reloads,1);assert.equal(JSON.parse(s.value).granted,false);assert.ok(s.cookies.some(c=>c.includes('Domain=.example.com')));
 s=run();s.elements.find(e=>e.textContent==='Odmietnuť').click();assert.equal(s.scripts().length,0);
@@ -26,4 +28,4 @@ assert.equal(run({query:'?token=private'}).elements.length,0);
 s=run({stored:JSON.stringify({granted:true,expires:Date.now()-1})});assert.equal(s.scripts().length,0);
 s=run({stored:JSON.stringify({granted:true,expires:Date.now()+10000})});assert.equal(s.scripts().length,1);
 s=run({external:true});assert.equal(s.scripts().length,0);s.events['site:analytics-consent']({detail:true});s.events['site:analytics-consent']({detail:true});assert.equal(s.scripts().length,1);s.events['site:analytics-consent']({detail:false});assert.equal(s.reloads,1);
-console.log('PASS: consent gating, a11y dialog, project ID, masking, revocation, cookies, expiry, duplicate prevention, private paths and tokens.');
+console.log('PASS: consent gating, a11y dialog (inert/privacy fallback), project ID, masking, revocation, cookies, expiry, duplicate prevention, private paths and tokens.');

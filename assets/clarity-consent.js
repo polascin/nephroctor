@@ -17,9 +17,25 @@
     const read = () => { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } };
     const save = granted => { try { localStorage.setItem(key, JSON.stringify({granted, expires: Date.now() + 180 * 86400000})); } catch { /* Consent still applies for this page. */ } };
     const focusable = root => [...root.querySelectorAll("a[href], button:not([disabled])")].filter(el => !el.hasAttribute("disabled"));
+    function setBackgroundInert(on) {
+        // aria-modal alone does not stop AT/virtual-cursor traversal of the page.
+        // Mark every other body child inert while the dialog is open (HTML inert).
+        for (const el of document.body.children) {
+            if (el === banner) continue;
+            if (on) {
+                if (el.hasAttribute("data-clarity-inert")) continue;
+                el.setAttribute("data-clarity-inert", "1");
+                el.inert = true;
+            } else if (el.getAttribute("data-clarity-inert") === "1") {
+                el.inert = false;
+                el.removeAttribute("data-clarity-inert");
+            }
+        }
+    }
     function closeBanner() {
         if (!banner) return;
         banner.removeEventListener("keydown", onKeyDown);
+        setBackgroundInert(false);
         banner.remove();
         banner = null;
         const restore = previousFocus;
@@ -93,6 +109,7 @@
     const settings = document.createElement("button");
     settings.type = "button";
     settings.className = "clarity-settings";
+    settings.setAttribute("aria-haspopup", "dialog");
     settings.textContent = sk ? "Nastavenia analytiky" : "Analytics settings";
     settings.addEventListener("click", () => show(true));
     (document.querySelector("footer") || document.body).appendChild(settings);
@@ -119,7 +136,7 @@
             ? "S vaším súhlasom používame Microsoft Clarity na meranie návštevnosti, kliknutí, posúvania a záznamov používania verejných stránok. Text je maskovaný. Bez súhlasu sa Clarity nenačíta. Reklamný súhlas zostáva vypnutý. Voľbu môžete kedykoľvek zmeniť v nastaveniach analytiky."
             : "With your consent, we use Microsoft Clarity for visits, clicks, scrolling and session recordings on public pages. Text is masked. Clarity does not load without consent. Advertising consent stays denied. You can change your choice in Analytics settings at any time.";
         const link = document.createElement("a");
-        link.href = config.dataset.privacy || "/privacy.php";
+        link.href = config.dataset.privacy || "/legal/ochrana-osobnych-udajov.html";
         link.textContent = sk ? "Ochrana súkromia" : "Privacy policy";
         const decline = document.createElement("button");
         decline.type = "button";
@@ -133,6 +150,7 @@
         banner.append(title, text, link, decline, accept);
         banner.addEventListener("keydown", onKeyDown);
         document.body.appendChild(banner);
+        setBackgroundInert(true);
         if (fromSettings) decline.focus();
         else banner.focus();
     }
