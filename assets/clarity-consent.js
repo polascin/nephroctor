@@ -12,8 +12,42 @@
     const sk = document.documentElement.lang.startsWith("sk");
     let loaded = false;
     let banner;
+    let previousFocus = null;
+    let dismissible = false;
     const read = () => { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } };
     const save = granted => { try { localStorage.setItem(key, JSON.stringify({granted, expires: Date.now() + 180 * 86400000})); } catch { /* Consent still applies for this page. */ } };
+    const focusable = root => [...root.querySelectorAll("a[href], button:not([disabled])")].filter(el => !el.hasAttribute("disabled"));
+    function closeBanner() {
+        if (!banner) return;
+        banner.removeEventListener("keydown", onKeyDown);
+        banner.remove();
+        banner = null;
+        const restore = previousFocus;
+        previousFocus = null;
+        dismissible = false;
+        if (restore && typeof restore.focus === "function") restore.focus();
+    }
+    function onKeyDown(event) {
+        if (!banner) return;
+        if (event.key === "Escape") {
+            if (!dismissible) return;
+            event.preventDefault();
+            closeBanner();
+            return;
+        }
+        if (event.key !== "Tab") return;
+        const items = focusable(banner);
+        if (!items.length) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+        }
+    }
     function apply(granted, persist = true) {
         if (persist && !external) save(granted);
         if (granted) {
@@ -41,7 +75,7 @@
             // Stop the already loaded SDK, including its cookieless mode.
             if (loaded && persist) location.reload();
         }
-        if (banner) { banner.remove(); banner = null; }
+        closeBanner();
     }
     if (external) {
         window.addEventListener("site:analytics-consent", e => apply(e.detail === true));
@@ -57,16 +91,25 @@
     settings.textContent = sk ? "Nastavenia analytiky" : "Analytics settings";
     settings.addEventListener("click", () => show(true));
     (document.querySelector("footer") || document.body).appendChild(settings);
-    function show(focus = false) {
-        if (banner) { if (focus) banner.querySelector("button").focus(); return; }
+    function show(fromSettings = false) {
+        if (banner) {
+            if (fromSettings) banner.querySelector("button").focus();
+            return;
+        }
+        dismissible = fromSettings;
+        previousFocus = fromSettings ? document.activeElement : null;
         banner = document.createElement("section");
         banner.className = "clarity-consent";
         banner.setAttribute("role", "dialog");
+        banner.setAttribute("aria-modal", "true");
         banner.setAttribute("aria-labelledby", "clarity-consent-title");
+        banner.setAttribute("aria-describedby", "clarity-consent-desc");
+        banner.tabIndex = -1;
         const title = document.createElement("h2");
         title.id = "clarity-consent-title";
         title.textContent = sk ? "Voliteľná analytika" : "Optional analytics";
         const text = document.createElement("p");
+        text.id = "clarity-consent-desc";
         text.textContent = sk
             ? "S vaším súhlasom používame Microsoft Clarity na meranie návštevnosti, kliknutí, posúvania a záznamov používania verejných stránok. Text je maskovaný. Bez súhlasu sa Clarity nenačíta. Reklamný súhlas zostáva vypnutý. Voľbu môžete kedykoľvek zmeniť v nastaveniach analytiky."
             : "With your consent, we use Microsoft Clarity for visits, clicks, scrolling and session recordings on public pages. Text is masked. Clarity does not load without consent. Advertising consent stays denied. You can change your choice in Analytics settings at any time.";
@@ -82,8 +125,10 @@
         accept.textContent = sk ? "Povoliť analytiku" : "Allow analytics";
         accept.addEventListener("click", () => apply(true));
         banner.append(title, text, link, decline, accept);
+        banner.addEventListener("keydown", onKeyDown);
         document.body.appendChild(banner);
-        if (focus) decline.focus();
+        if (fromSettings) decline.focus();
+        else banner.focus();
     }
     const stored = read();
     if (stored && stored.expires > Date.now() && typeof stored.granted === "boolean") apply(stored.granted, false);
