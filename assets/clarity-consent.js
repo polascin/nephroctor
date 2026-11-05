@@ -126,9 +126,42 @@
     cssUrl.search = scriptUrl.search;
     css.href = cssUrl.href;
     document.head.appendChild(css);
-    function paintSettings() {
+    // Polite status for settings-label language changes (MutationObserver path).
+    const liveRegion = document.createElement("div");
+    liveRegion.className = "clarity-consent-status";
+    liveRegion.setAttribute("role", "status");
+    liveRegion.setAttribute("aria-live", "polite");
+    liveRegion.setAttribute("aria-atomic", "true");
+    function announceSettings(label) {
+        liveRegion.textContent = "";
+        // Clearing then setting helps some screen readers re-announce.
+        const paint = () => { liveRegion.textContent = label; };
+        if (typeof requestAnimationFrame === "function") requestAnimationFrame(paint);
+        else paint();
+    }
+    function paintSettings(announce = false) {
         if (!settings) return;
-        settings.textContent = copy().settings;
+        const next = copy().settings;
+        const changed = settings.textContent !== next;
+        settings.textContent = next;
+        if (announce && changed) announceSettings(next);
+    }
+    function paintBanner() {
+        if (!banner) return;
+        const t = copy();
+        const title = banner.querySelector("#clarity-consent-title");
+        const text = banner.querySelector("#clarity-consent-desc");
+        const link = banner.querySelector("a[href]");
+        const buttons = banner.querySelectorAll("button");
+        if (title) title.textContent = t.title;
+        if (text) text.textContent = t.desc;
+        if (link) link.textContent = t.privacy;
+        if (buttons[0]) buttons[0].textContent = t.decline;
+        if (buttons[1]) buttons[1].textContent = t.accept;
+    }
+    function onDocumentLangChange() {
+        paintSettings(true);
+        paintBanner();
     }
     settings = document.createElement("button");
     settings.type = "button";
@@ -143,14 +176,16 @@
         show(true);
     });
     (document.querySelector("footer") || document.body).appendChild(settings);
+    document.body.appendChild(liveRegion);
     if (typeof MutationObserver === "function") {
-        new MutationObserver(paintSettings).observe(document.documentElement, {
+        new MutationObserver(onDocumentLangChange).observe(document.documentElement, {
             attributes: true,
             attributeFilter: ["lang"]
         });
     }
     function show(fromSettings = false) {
         if (banner) {
+            paintBanner();
             if (fromSettings) banner.querySelector("button").focus();
             return;
         }

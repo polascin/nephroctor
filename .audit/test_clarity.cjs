@@ -4,14 +4,16 @@ const assert = require('node:assert/strict');
 const code = fs.readFileSync(__dirname + '/../assets/clarity-consent.js', 'utf8');
 function run({path='/',query='',stored=null,external=false,src='https://example.com/js/clarity-consent.js',lang='sk'}={}) {
  const elements=[], events={}, cookies=[];
- const make=tag=>({tag,focus(){},children:[],dataset:{},attrs:{},setAttribute(k,v){this[k]=v;this.attrs[k]=String(v)},getAttribute(k){return Object.prototype.hasOwnProperty.call(this.attrs,k)?this.attrs[k]:null},hasAttribute(k){return Object.prototype.hasOwnProperty.call(this.attrs,k)},removeAttribute(k){delete this.attrs[k];delete this[k]},appendChild(e){this.children.push(e);elements.push(e)},append(...es){es.forEach(e=>this.appendChild(e))},addEventListener(k,fn){this[k]=fn},removeEventListener(){},remove(){this.removed=true},querySelector(sel){return this.children.find(c=>!sel||c.tag===sel||(sel==='button'&&c.tag==='button'))||{focus(){}}},querySelectorAll(sel){return this.children.filter(c=>sel.includes('button')?c.tag==='button':sel.includes('a')?c.tag==='a':true)}});
+ const match=(el,sel)=>{if(!sel)return true;if(sel.startsWith('#'))return el.id===sel.slice(1);if(sel==='button'||sel==='a'||sel==='h2'||sel==='p')return el.tag===sel;if(sel.startsWith('a['))return el.tag==='a';if(sel.includes('button'))return el.tag==='button';return el.tag===sel||el.id===sel};
+ const make=tag=>({tag,focus(){},children:[],dataset:{},attrs:{},setAttribute(k,v){this[k]=v;this.attrs[k]=String(v)},getAttribute(k){return Object.prototype.hasOwnProperty.call(this.attrs,k)?this.attrs[k]:null},hasAttribute(k){return Object.prototype.hasOwnProperty.call(this.attrs,k)},removeAttribute(k){delete this.attrs[k];delete this[k]},appendChild(e){this.children.push(e);elements.push(e)},append(...es){es.forEach(e=>this.appendChild(e))},addEventListener(k,fn){this[k]=fn},removeEventListener(){},remove(){this.removed=true},querySelector(sel){return this.children.find(c=>match(c,sel))||(sel&&sel.startsWith('#')?null:{focus(){}})},querySelectorAll(sel){return this.children.filter(c=>match(c,sel))}});
  const head=make('head'),body=make('body');let value=stored,reloads=0;
  const documentElement={lang};
  const document={currentScript:{dataset:{project:'abc123',consent:external?'external':'',paths:'/,/index.php'},src},head,body,documentElement,createElement:make,querySelector(){return null},get cookie(){return ''},set cookie(c){cookies.push(c)}};
- const window={addEventListener(k,fn){events[k]=fn},MutationObserver:function(cb){this.observe=()=>{};this.cb=cb}};
+ const observers=[];
+ const window={addEventListener(k,fn){events[k]=fn},MutationObserver:function(cb){this.cb=cb;this.observe=()=>{observers.push(cb)}}};
  const location={pathname:path,search:query,hostname:'sub.example.com',href:'https://sub.example.com'+path+query,reload(){reloads++}};
  vm.runInNewContext(code,{document,window,location,localStorage:{getItem(){return value},setItem(k,v){value=v}},URL,URLSearchParams,Date,MutationObserver:window.MutationObserver});
- return {elements,events,window,body,documentElement,cookies,get reloads(){return reloads},get value(){return value},scripts:()=>elements.filter(e=>e.tag==='script'),links:()=>elements.filter(e=>e.tag==='link')};
+ return {elements,events,window,body,documentElement,observers,cookies,get reloads(){return reloads},get value(){return value},scripts:()=>elements.filter(e=>e.tag==='script'),links:()=>elements.filter(e=>e.tag==='link')};
 }
 let s=run();assert.equal(s.scripts().length,0);
 const css=s.links().find(e=>e.rel==='stylesheet');assert.ok(css);assert.equal(css.href,'https://example.com/js/clarity-consent.css');
@@ -34,9 +36,20 @@ s=run({lang:'en'});assert.ok(s.elements.find(e=>e.textContent==='Analytics setti
 s=run({lang:'cs'});assert.ok(s.elements.find(e=>e.textContent==='Nastavenia analytiky'));assert.ok(s.elements.find(e=>e.textContent==='Voliteľná analytika'));
 s=run({lang:'sk',stored:JSON.stringify({granted:true,expires:Date.now()+10000})});
 assert.equal(s.elements.find(e=>e.id==='clarity-settings').textContent,'Nastavenia analytiky');
+const live=s.elements.find(e=>e.attrs?.['aria-live']==='polite'||e['aria-live']==='polite');
+assert.ok(live);assert.equal(live.attrs?.['role']||live.role,'status');assert.equal(live.attrs?.['aria-atomic']||live['aria-atomic'],'true');
+assert.ok(s.observers.length>=1);
 s.documentElement.lang='en';
-s.elements.find(e=>e.id==='clarity-settings').click();
+s.observers.forEach(cb=>cb());
 assert.equal(s.elements.find(e=>e.id==='clarity-settings').textContent,'Analytics settings');
+assert.equal(live.textContent,'Analytics settings');
+s.elements.find(e=>e.id==='clarity-settings').click();
 assert.ok(s.elements.find(e=>e.textContent==='Optional analytics'));
 assert.ok(s.elements.find(e=>e.textContent==='Allow analytics'));
-console.log('PASS: consent gating, a11y dialog (inert/privacy fallback), live lang copy, project ID, masking, revocation, cookies, expiry, duplicate prevention, private paths and tokens.');
+// Open dialog follows live lang without rebuild.
+s.documentElement.lang='sk';
+s.observers.forEach(cb=>cb());
+assert.ok(s.elements.find(e=>e.textContent==='Voliteľná analytika'));
+assert.ok(s.elements.find(e=>e.textContent==='Povoliť analytiku'));
+assert.equal(live.textContent,'Nastavenia analytiky');
+console.log('PASS: consent gating, a11y dialog (inert/privacy fallback), live lang copy + status announce, project ID, masking, revocation, cookies, expiry, duplicate prevention, private paths and tokens.');

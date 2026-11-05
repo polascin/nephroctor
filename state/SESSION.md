@@ -1,18 +1,18 @@
 # SESSION – Nephroctor improvement loop
 
-Last updated: 2026-11-05 (loop iter 8)
+Last updated: 2026-11-05 (loop iter 9)
 
 ## HEAD
 
-See latest commit on `origin/main` after iter-8 push.
+See latest commit on `origin/main` after iter-9 push.
 
 ## Latest handoff
 
-`.codex/handoffs/` – iter-8 handoff written at end of this iteration.
+`.codex/handoffs/` – iter-9 handoff written at end of this iteration.
 
 ## Just completed
 
-Iter 8: re-checked `.sk`/`.eu` aliases (still OpenResty 302 path-drop). In-repo: Clarity consent dialog/settings copy follows live `<html lang>` (SK+CS → Slovak), MutationObserver on `lang`, tests for EN/CS/switch, accessibility statement v1.2, Clarity `?v=d4f57b87e0`.
+Iter 9: quick alias verify still FAIL (panel). In-repo: Clarity consent announces settings-label language changes via `aria-live="polite"` status region; open dialog repaints on `lang` change; tests for MutationObserver path; accessibility statement v1.3; Clarity `?v=fc2b729f6f`.
 
 ## Next iteration priority
 
@@ -20,5 +20,5 @@ WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to do
 
 ## Deploys this session
 
-- Prior: iter-7 Deploy success (`a674380`)
-- Iter 8: see handoff after push
+- Prior: iter-8 Deploy success (`ebe6f07`)
+- Iter 9: see handoff after push
