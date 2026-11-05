@@ -1,18 +1,18 @@
 # SESSION – Nephroctor improvement loop
 
-Last updated: 2026-11-05 (loop iter 10)
+Last updated: 2026-11-05 (loop iter 11)
 
 ## HEAD
 
-See latest commit on `origin/main` after iter-10 push.
+See latest commit on `origin/main` after iter-11 push.
 
 ## Latest handoff
 
-`.codex/handoffs/` – iter-10 handoff written at end of this iteration.
+`.codex/handoffs/` – iter-11 handoff written at end of this iteration.
 
 ## Just completed
 
-Iter 10: quick alias verify still FAIL (panel). In-repo (non-Clarity): `/accessibility` and `/pristupnost` 301 → `/legal/pristupnost.html`; Permissions-Policy adds `browsing-topics=()`; sitemap `lastmod` refreshed for home/privacy/cookies to 2026-11-05.
+Iter 11: skipped alias verify (panel still open). In-repo (non-Clarity): `/health-notice`, `/disclaimer`, `/zdravotne-upozornenie` and EN legal aliases `/legal/disclaimer.html`, `/legal/health-notice.html` → 301 → `/legal/zdravotne-upozornenie.html`.
 
 ## Next iteration priority
 
@@ -20,5 +20,5 @@ WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to do
 
 ## Deploys this session
 
-- Prior: iter-9 Deploy success (`ca2bcd9`)
-- Iter 10: see handoff after push
+- Prior: iter-10 Deploy success (`dd94810`)
+- Iter 11: see handoff after push

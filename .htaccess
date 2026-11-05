@@ -59,8 +59,13 @@ AddDefaultCharset utf-8
     RewriteRule ^cookies/?$ https://nephroctor.com/legal/cookies.html [R=301,L]
     RewriteRule ^accessibility/?$ https://nephroctor.com/legal/pristupnost.html [R=301,L]
     RewriteRule ^pristupnost/?$ https://nephroctor.com/legal/pristupnost.html [R=301,L]
+    RewriteRule ^health-notice/?$ https://nephroctor.com/legal/zdravotne-upozornenie.html [R=301,L]
+    RewriteRule ^disclaimer/?$ https://nephroctor.com/legal/zdravotne-upozornenie.html [R=301,L]
+    RewriteRule ^zdravotne-upozornenie/?$ https://nephroctor.com/legal/zdravotne-upozornenie.html [R=301,L]
     RewriteRule ^legal/privacy\.html$ https://nephroctor.com/legal/ochrana-osobnych-udajov.html [R=301,L]
     RewriteRule ^legal/terms\.html$ https://nephroctor.com/legal/podmienky-pouzivania.html [R=301,L]
+    RewriteRule ^legal/disclaimer\.html$ https://nephroctor.com/legal/zdravotne-upozornenie.html [R=301,L]
+    RewriteRule ^legal/health-notice\.html$ https://nephroctor.com/legal/zdravotne-upozornenie.html [R=301,L]
 
     # 2. Consolidate every alias onto https://nephroctor.com in a single hop.
     #    www.nephroctor.com resolves to this same webspace and was answering 200
@@ -81,9 +86,10 @@ AddDefaultCharset utf-8
 # --- Legal URL shortcuts ----------------------------------------------------
 # Canonical URLs stay the Slovak .html files listed in the sitemap. English
 # lives in the same documents via ?lang=en; there are no separate EN files.
-# /privacy, /terms, /cookies, /accessibility, /pristupnost, /legal/privacy.html
-# and /legal/terms.html would 404 because nothing is at those paths; /legal is
-# a real directory whose listing is blocked (403).
+# /privacy, /terms, /cookies, /accessibility, /pristupnost, /health-notice,
+# /disclaimer, /zdravotne-upozornenie, /legal/privacy.html, /legal/terms.html,
+# /legal/disclaimer.html and /legal/health-notice.html would 404 because nothing
+# is at those paths; /legal is a real directory whose listing is blocked (403).
 #
 # RedirectMatch, not Redirect: Apache Redirect is prefix-based and would
 # turn /legal/cookies.html into /legal/pravne-informacie.html/cookies.html.
@@ -98,8 +104,13 @@ AddDefaultCharset utf-8
     RedirectMatch 301 ^/cookies/?$ /legal/cookies.html
     RedirectMatch 301 ^/accessibility/?$ /legal/pristupnost.html
     RedirectMatch 301 ^/pristupnost/?$ /legal/pristupnost.html
+    RedirectMatch 301 ^/health-notice/?$ /legal/zdravotne-upozornenie.html
+    RedirectMatch 301 ^/disclaimer/?$ /legal/zdravotne-upozornenie.html
+    RedirectMatch 301 ^/zdravotne-upozornenie/?$ /legal/zdravotne-upozornenie.html
     RedirectMatch 301 ^/legal/privacy\.html$ /legal/ochrana-osobnych-udajov.html
     RedirectMatch 301 ^/legal/terms\.html$ /legal/podmienky-pouzivania.html
+    RedirectMatch 301 ^/legal/disclaimer\.html$ /legal/zdravotne-upozornenie.html
+    RedirectMatch 301 ^/legal/health-notice\.html$ /legal/zdravotne-upozornenie.html
     RedirectMatch 301 ^/legal/?$ /legal/pravne-informacie.html
     RedirectMatch 301 ^/security\.txt$ /.well-known/security.txt
 </IfModule>

@@ -89,11 +89,12 @@ nefailuje Deploy (payload už bol nahratý).
 ## Doménové aliasy nephroctor.sk a nephroctor.eu (panel WebSupport)
 
 `.htaccess` už obsahuje path-preserving **301** (napr. `/privacy` →
-`/legal/ochrana-osobnych-udajov.html`, `/accessibility` → `/legal/pristupnost.html`
-na `https://nephroctor.com`). Dnes však OpenResty na hostingu ešte pred Apache
-odpovedá **302** na `https://nephroctor.com` **bez cesty** (path drop). To sa
-z repozitária ani cez SSH alias `websupport` (účet polascin.net, nie
-nephroctor.com) nedá zmeniť.
+`/legal/ochrana-osobnych-udajov.html`, `/accessibility` → `/legal/pristupnost.html`,
+`/health-notice` / `/disclaimer` / `/zdravotne-upozornenie` →
+`/legal/zdravotne-upozornenie.html` na `https://nephroctor.com`). Dnes však
+OpenResty na hostingu ešte pred Apache odpovedá **302** na
+`https://nephroctor.com` **bez cesty** (path drop). To sa z repozitária ani cez
+SSH alias `websupport` (účet polascin.net, nie nephroctor.com) nedá zmeniť.
 
 ### Presné kroky v zákazníckom paneli
 
