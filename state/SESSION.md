@@ -8,7 +8,7 @@ See latest commit on `origin/main` after iter-25 push (Clarity Tab trap on dialo
 
 ## Latest handoff
 
-`.codex/handoffs/2026-11-06-0332xx-nephroctor-loop-iter-25.md` (written after deploy)
+`.codex/handoffs/2026-11-06-034957-nephroctor-loop-iter-25.md`
 
 ## Just completed
 
@@ -21,4 +21,4 @@ WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to do
 ## Deploys this session
 
 - Prior: iter-24 Deploy success (`b98fa42`)
-- Iter 25: Deploy pending / see handoff
+- Iter 25: Deploy success (`9064941`, run 42151628402); Smoke + security headers OK
