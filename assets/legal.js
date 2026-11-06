@@ -97,12 +97,26 @@
             document.documentElement.setAttribute('data-theme', e.newValue);
         } else {
             document.documentElement.removeAttribute('data-theme');
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
         }
         paintToggle();
     });
+
+    /* Collapsed theme-color has no media query; when following the system,
+       keep chrome + icon in sync with live prefers-color-scheme changes. */
+    if (window.matchMedia) {
+        var colorScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        var onColorScheme = function () {
+            var storedTheme = store.get('nephroctor-theme');
+            if (storedTheme === 'dark' || storedTheme === 'light') return;
+            document.documentElement.removeAttribute('data-theme');
+            paintToggle();
+        };
+        if (typeof colorScheme.addEventListener === 'function') {
+            colorScheme.addEventListener('change', onColorScheme);
+        } else if (typeof colorScheme.addListener === 'function') {
+            colorScheme.addListener(onColorScheme);
+        }
+    }
 
     /* --- SK / EN document switch ---------------------------------------- */
     var blocks = document.querySelectorAll('[data-lang-block]');

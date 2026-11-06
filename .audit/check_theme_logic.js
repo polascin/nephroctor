@@ -1,5 +1,6 @@
 /* Theme-color must follow data-theme / stored preference, not only OS media.
-   Also verify cross-tab storage applies dark/light and clears back to system. */
+   Explicit storage locks the theme; cleared storage follows the system without
+   writing data-theme (so live prefers-color-scheme changes keep working). */
 'use strict';
 
 function isDark(docTheme, osDark) {
@@ -16,9 +17,17 @@ function syncMetas(metas, dark) {
   return [next[0]];
 }
 
-function applyStorage(newValue, osDark) {
+function applyStorage(newValue) {
   if (newValue === 'dark' || newValue === 'light') return newValue;
-  return osDark ? 'dark' : null;
+  return null;
+}
+
+function followSystem(osDark) {
+  const docTheme = applyStorage(null);
+  return syncMetas([
+    { media: '(prefers-color-scheme: light)', content: '#f8fafc' },
+    { media: '(prefers-color-scheme: dark)', content: '#0f172a' }
+  ], isDark(docTheme, osDark))[0].content;
 }
 
 function assert(cond, msg) {
@@ -48,9 +57,10 @@ metas = syncMetas([
 assert(metas.length === 1 && metas[0].content === '#0f172a',
   'dark page collapses theme-color to #0f172a');
 
-assert(applyStorage('light', true) === 'light', 'storage light applied under dark OS');
-assert(applyStorage('dark', false) === 'dark', 'storage dark applied under light OS');
-assert(applyStorage(null, true) === 'dark', 'cleared storage restores dark OS');
-assert(applyStorage(null, false) === null, 'cleared storage under light OS leaves unset');
+assert(applyStorage('light') === 'light', 'storage light applied');
+assert(applyStorage('dark') === 'dark', 'storage dark applied');
+assert(applyStorage(null) === null, 'cleared storage leaves system follow');
+assert(followSystem(true) === '#0f172a', 'system follow dark OS syncs theme-color');
+assert(followSystem(false) === '#f8fafc', 'system follow light OS syncs theme-color');
 
 console.log('theme logic: all cases correct');
