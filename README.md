@@ -29,7 +29,8 @@ apple-touch-icon.png  koreňová kópia (iOS home screen / implicitná požiadav
 apple-touch-icon-precomposed.png  koreňová kópia (staršie iOS)
 robots.txt            pravidlá pre crawlery + odkaz na sitemapu
 sitemap.xml           sitemapa s hreflang alternatívami pre 24 jazykov
-site.webmanifest      webový manifest
+site.webmanifest      webový manifest (odkazovaný z HTML)
+manifest.webmanifest  koreňová kópia (bežná sonda nástrojov / Lighthouse)
 .htaccess             bezpečnostné hlavičky, HTTPS redirect, cache, kompresia
 ```
 

@@ -67,7 +67,9 @@ def check_metadata():
             check('JSON-LD parses', False, f' -> {exc}')
 
     try:
-        manifest = json.loads((ROOT / 'site.webmanifest').read_text(encoding='utf-8'))
+        site_manifest = ROOT / 'site.webmanifest'
+        root_manifest = ROOT / 'manifest.webmanifest'
+        manifest = json.loads(site_manifest.read_text(encoding='utf-8'))
         check('web manifest parses', True)
         for icon in manifest['icons']:
             check(f'manifest icon exists {icon["src"]}', (ROOT / icon['src'].lstrip('/')).exists())
@@ -78,6 +80,12 @@ def check_metadata():
               manifest.get('theme_color') == manifest.get('background_color') == '#f8fafc',
               f' -> theme={manifest.get("theme_color")!r} '
               f'bg={manifest.get("background_color")!r}')
+        # Same pattern as root favicon / apple-touch: tools often probe this path.
+        check('root manifest.webmanifest present (common probe path)',
+              root_manifest.exists() and root_manifest.stat().st_size > 0)
+        if root_manifest.exists() and site_manifest.exists():
+            check('root manifest.webmanifest matches site.webmanifest',
+                  root_manifest.read_bytes() == site_manifest.read_bytes())
     except Exception as exc:                                    # noqa: BLE001
         check('web manifest parses', False, f' -> {exc}')
 

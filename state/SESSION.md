@@ -1,18 +1,19 @@
 # SESSION – Nephroctor improvement loop
 
-Last updated: 2026-11-06 (loop iter 26)
+Last updated: 2026-11-06 (loop iter 27, after killed iter-26 shell)
 
 ## HEAD
 
-See latest commit on `origin/main` after iter-26 push (root apple-touch icons).
+See latest commit on `origin/main` after iter-27 push (root `manifest.webmanifest`).
 
 ## Latest handoff
 
-`.codex/handoffs/2026-11-06-040502-nephroctor-loop-iter-26.md`
+`.codex/handoffs/` – iter-27 after completing stub iter-26 handoff.
 
 ## Just completed
 
-Iter 26: root `/apple-touch-icon.png` and `/apple-touch-icon-precomposed.png` copied from `assets/` (byte-identical), deploy payload + `check_assets` asserts. No higher-severity bug found; skipped `.sk`/`.eu` panel.
+Iter 26 verified live after loop kill: root apple-touch icons `5ca7810`, Deploy success, prod 200 PNG.
+Iter 27: root `/manifest.webmanifest` byte-identical to `site.webmanifest` (common probe was 404). Skipped `.sk`/`.eu` panel and legal redirects.
 
 ## Next iteration priority
 
@@ -20,5 +21,5 @@ WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to do
 
 ## Deploys this session
 
-- Prior: iter-25 Deploy success (`9064941`)
-- Iter 26: Deploy after root apple-touch icon fix
+- Iter 26: Deploy success `5ca7810` (apple-touch); handoff stub completed after kill
+- Iter 27: Deploy after root `manifest.webmanifest`

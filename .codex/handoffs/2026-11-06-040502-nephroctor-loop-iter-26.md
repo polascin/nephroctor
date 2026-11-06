@@ -3,77 +3,66 @@
 ## Metadata
 
 - Generated At: 2026-11-06T04:05:02+01:00
+- Completed At: 2026-11-06T04:12:00+01:00 (recovery after improve-loop shell kill)
 - Project Root: D:\Dev\nephroctor
 - Git Branch: main
-- Head Commit: (docs handoff after fix `5ca7810`)
+- Head Commit: 5ca7810
 - Production: https://nephroctor.com
 - Prior handoff: `.codex/handoffs/2026-11-06-034957-nephroctor-loop-iter-25.md`
 
 ## Original Goal
 
-Loop iteration 26 after AGENT_LOOP_TICK_nephroctor #25: one coherent real improvement (apple-touch redirect/copy OK if nothing better); prefer higher-severity bug if found; no legal redirects; skip `.sk`/`.eu` panel; rate-limit aware `gh`; commit/push/Deploy verify + production curl browser UA; complete handoff.
+Loop iteration 26 after AGENT_LOOP_TICK_nephroctor #25: audits/code review; one coherent real improvement (prefer functional/security/a11y; no more legal URL redirects unless broken inbound); skip `.sk`/`.eu` panel; rate-limit aware `gh`; commit/push/Deploy verify + production curl browser UA; complete handoff.
 
 ## Current State
 
-Iteration 26 complete. Working tree clean on `origin/main` after docs handoff. Fix `5ca7810` is live: root `/apple-touch-icon.png` and `/apple-touch-icon-precomposed.png` are byte-identical copies of `assets/apple-touch-icon.png` (same pattern as root `favicon.ico`). `.sk`/`.eu` still OpenResty **302** path-drop (panel blocker unchanged; skipped).
+Iteration 26 code and Deploy completed before the 20-minute improve loop shell died (exit 4294967295, externally killed) while watching Deploy / writing handoff. Stub handoff placeholders filled during recovery. Fix `5ca7810` is live: root apple-touch icons. `.sk`/`.eu` still OpenResty **302** path-drop (panel blocker; skipped).
 
 ## Completed This Session
 
-- Focused audit: assets/structure/clarity green; no higher-severity functional/security/a11y bug surfaced.
-- Prod probe before fix: `/apple-touch-icon.png` and `/apple-touch-icon-precomposed.png` **404**; `/assets/apple-touch-icon.png` and `/favicon.ico` **200**.
-- Root copies from `assets/apple-touch-icon.png` (SHA256 match).
-- `.github/workflows/deploy.yml`: stage + Verify deploy payload for both root icons (required; deploy uses explicit file list).
-- `.audit/check_assets.py`: presence + byte-identity asserts.
-- Docs: `.audit.md` iter-26, `DEPLOY.md`, `README.md`, `state/SESSION.md`, `state/TODO.md`.
+- Root `/apple-touch-icon.png` and `/apple-touch-icon-precomposed.png` copied from `assets/` (byte-identical).
+- Deploy payload + `check_assets` asserts for root apple-touch presence and match.
+- `DEPLOY.md`, `README.md`, `.audit.md`, `state/SESSION.md`, `state/TODO.md` updated.
+- Deploy watched to success (Smoke + Report security headers); Actions WAF 429 annotations with retries, not payload failure.
 
 ## Validated
 
-- Deploy `5ca7810` https://github.com/polascin/nephroctor/actions/runs/42153206194: **success**. Smoke check **success**. Report security headers **success** (Actions IP saw 429 annotations on some probes; Smoke still green; local prod headers verified).
+- Deploy `5ca7810` run 42153206194: **success**. Smoke check **success**. Report security headers **success** (with 429 probe warnings).
 - Production curl (browser UA):
-  - `/` **200**; CSP present; `X-Frame-Options: DENY`; `Permissions-Policy` includes `browsing-topics=()`
-  - `/apple-touch-icon.png` **200**, `image/png`, 10468 bytes
-  - `/apple-touch-icon-precomposed.png` **200**, `image/png`, 10468 bytes
-  - `/assets/apple-touch-icon.png` **200**, 10468 bytes
-  - `/favicon.ico` **200**
+  - `/` **200** HTML + security headers (CSP, X-Frame-Options DENY, Permissions-Policy browsing-topics)
+  - `/apple-touch-icon.png` **200** `image/png` length 10468
+  - `/apple-touch-icon-precomposed.png` **200** `image/png`
 
 ## Not Yet Validated
 
 - Panel alias change (requires human in WebSupport admin).
 - Local SFTP deploy path for nephroctor.com.
-- Manual iOS home-screen add (logic covered by prod 200 + audit asserts).
+- Optional follow-up noted in recovery: root `/manifest.webmanifest` was still **404** (HTML links `site.webmanifest`).
 
 ## Remaining Work
 
-- [ ] **Next priority (user panel):** WebSupport: switch `nephroctor.sk` / `.eu` from HTTP redirect to domain alias of `nephroctor.com`; then `powershell -NoProfile -ExecutionPolicy Bypass -File tools/verify-domain-aliases.ps1`.
-- [ ] Prefer a real functional/security/a11y bug next (root apple-touch icons done).
-- [ ] Local SFTP deploy replacement (blocked: no nephroctor.com on SSH `websupport`; secrets only in GitHub Actions).
+- [ ] **Next priority (user panel):** WebSupport domain alias for `.sk`/`.eu`; then `tools/verify-domain-aliases.ps1`.
+- [ ] Prefer a real functional/security/a11y bug next. Optional low: root `manifest.webmanifest` copy (taken in iter 27).
+- [ ] Local SFTP deploy replacement (blocked).
 - [ ] Clarity dashboard aggregate counters (informational).
 
 ## Decisions Made
 
-- Decision: Ship root apple-touch copies (not another legal URL alias).
-- Reason: No higher-severity bug found after audit/prod probe; job explicitly allowed apple-touch redirect/copy; iOS still probes root paths even when `<link rel="apple-touch-icon">` points at `/assets/…`.
-- Decision: Include `apple-touch-icon-precomposed.png` as the same bytes.
-- Reason: Prod also returned 404 for the legacy precomposed request; one coherent asset fix covers both implicit iOS probes.
-- Decision: Update deploy workflow payload list, not only the repo root.
-- Reason: Deploy stages an explicit file set; a root file not listed would never reach production.
+- Decision: Ship root apple-touch copies (same pattern as root `favicon.ico`).
+- Reason: Prod 404 on implicit iOS requests; no higher-severity bug found; legal redirects and `.sk`/`.eu` panel skipped per brief.
 
 ## Blockers / Open Questions
 
-- **`nephroctor.sk` / `.eu` path-preserving fix requires WebSupport customer panel** (no API from this agent; SSH cannot reconfigure domains).
+- **`nephroctor.sk` / `.eu` path-preserving fix requires WebSupport customer panel**.
 - Local deploy path for nephroctor.com still unavailable on this machine.
-- Commits need `C:\Python314\Scripts` on PATH for `ggshield`.
-- Parallel loop agents can race; pull before commit. Prefer sparse `gh` polling.
-- Actions WAF may still rate-limit Smoke/security-header probes (429 with retry); do not treat as payload failure when Smoke succeeds and local prod headers verify.
+- Actions WAF may rate-limit Smoke/security-header probes (429 with retry).
+- Improve loop shell can be externally killed mid-`gh run watch`; recovery must re-verify Deploy + complete handoff.
 
 ## Critical Files
 
-- `apple-touch-icon.png`, `apple-touch-icon-precomposed.png` (root)
-- `assets/apple-touch-icon.png`
-- `.github/workflows/deploy.yml`
-- `.audit/check_assets.py`
-- `.audit.md`, `DEPLOY.md`, `README.md`
-- `state/SESSION.md`, `state/TODO.md`
+- `apple-touch-icon.png`, `apple-touch-icon-precomposed.png`
+- `.github/workflows/deploy.yml`, `.audit/check_assets.py`
+- `DEPLOY.md`, `README.md`, `.audit.md`, state files
 
 ## Recent Commits
 
@@ -81,26 +70,16 @@ Iteration 26 complete. Working tree clean on `origin/main` after docs handoff. F
 - fa584bd docs(handoff): complete nephroctor loop iter-25 after Clarity Tab trap [skip ci]
 - 9064941 fix(a11y): keep Clarity Tab trap on dialog container focus
 
-## Modified Files
-
-- Root apple-touch PNGs, deploy workflow, check_assets, docs/state, this handoff
-
 ## Context To Load
 
 - This handoff
-- `.codex/handoffs/2026-11-06-034957-nephroctor-loop-iter-25.md`
-- `DEPLOY.md` (domain alias section)
-- `state/TODO.md`
-
-## Grok bots
-
-- Status: optional; not invoked this iteration.
+- Next: iter-27 handoff after `manifest.webmanifest`
 
 ## Next Command
 
 ```text
-git pull origin main
-# User: WebSupport panel → nephroctor.sk and nephroctor.eu as domain aliases of nephroctor.com (not HTTP redirect)
+# Prefer real functional/security/a11y bug; root apple-touch done
+# Optional low: root manifest.webmanifest (common probe 404)
+# User panel: nephroctor.sk / .eu as domain aliases (not HTTP redirect)
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/verify-domain-aliases.ps1
-# Prefer real functional/security/a11y bug next; root apple-touch icons done
 ```

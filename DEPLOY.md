@@ -53,7 +53,8 @@ Ak chcete nasadiť bez push:
 | `apple-touch-icon-precomposed.png` | koreňová kópia (staršie iOS)                        |
 | `robots.txt`       | pravidlá pre crawlery + odkaz na sitemapu                           |
 | `sitemap.xml`      | sitemapa s `hreflang` alternatívami                                 |
-| `site.webmanifest` | webový manifest (názov, ikony, farby)                               |
+| `site.webmanifest` | webový manifest (názov, ikony, farby); odkazovaný z HTML            |
+| `manifest.webmanifest` | koreňová kópia (bežná sonda nástrojov / Lighthouse)             |
 | `.htaccess`        | bezpečnostné hlavičky, HTTPS redirect, cache, kompresia             |
 
 Ostatné súbory (`.github/`, `.audit.md`, `.doaudit.md`, `.trunk/`, `LICENSE`,
