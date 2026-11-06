@@ -62,11 +62,11 @@
             <button type="button" data-doc-lang="en" aria-pressed="false" lang="en">English</button>
         </div>
 
-        <main id="main">
+        <main id="main" tabindex="-1">
             <article class="content-card" id="doc-sk" data-lang-block="sk" lang="sk">
                 <div class="doc-header">
                     <h1>Vyhlásenie o prístupnosti</h1>
-                    <p class="doc-meta">Aktualizované 6. novembra 2026 · verzia 1.5</p>
+                    <p class="doc-meta">Aktualizované 6. novembra 2026 · verzia 1.6</p>
                 </div>
 
                 <div class="prose">
@@ -79,7 +79,7 @@
                     <h2>2. Prijaté opatrenia</h2>
                     <ul>
                         <li>sémantické HTML5 s orientačnými bodmi <code>header</code>, <code>main</code>, <code>nav</code>, <code>footer</code> a jedným nadpisom <code>h1</code> na stránku, bez preskakovania úrovní nadpisov,</li>
-                        <li>odkaz „Preskočiť na obsah“ na začiatku stránky (WCAG 2.4.1), preložený do všetkých 24 jazykov,</li>
+                        <li>odkaz „Preskočiť na obsah“ na začiatku stránky (WCAG 2.4.1), preložený do všetkých 24 jazykov; cieľ <code>#main</code> má <code>tabindex="-1"</code>, aby sa fokus klávesnice po aktivácii skutočne presunul do hlavného obsahu,</li>
                         <li>viditeľný fokusový prstenec <code>3 px</code> s odstupom pre všetky interaktívne prvky (WCAG 2.4.7), obsluha výhradne z klávesnice je možná v plnom rozsahu,</li>
                         <li>dotykové ciele s minimálnou veľkosťou <code>44 × 44 px</code> (WCAG 2.5.5, úroveň AAA),</li>
                         <li>kontrast textu najmenej <code>4,5 : 1</code> v svetlom aj tmavom režime a kontrast netextových prvkov najmenej <code>3 : 1</code> (WCAG 1.4.3, 1.4.11); pomery sú počítané, nie odhadované – v auguste 2026 bol opravený kontrast bieleho textu na aktívnom tlačidle (z 2,46 : 1 na 4,87 : 1), farba symbolov v ikonách v tmavom režime (z 1,81 : 1 na 9,88 : 1) a svetlejší koniec prechodu v ikonách (z 2,46 : 1 na 3,48 : 1),</li>
@@ -119,7 +119,7 @@
             <article class="content-card" id="doc-en" data-lang-block="en" lang="en" hidden>
                 <div class="doc-header">
                     <h1>Accessibility statement</h1>
-                    <p class="doc-meta">Updated 6 November 2026 · version 1.5</p>
+                    <p class="doc-meta">Updated 6 November 2026 · version 1.6</p>
                 </div>
 
                 <div class="prose">
@@ -136,7 +136,7 @@
                     <h2>2. Measures taken</h2>
                     <ul>
                         <li>semantic HTML5 with <code>header</code>, <code>main</code>, <code>nav</code> and <code>footer</code> landmarks and a single <code>h1</code> per page, with no skipped heading levels,</li>
-                        <li>a „Skip to content“ link at the start of the page (WCAG 2.4.1), translated into all 24 languages,</li>
+                        <li>a „Skip to content“ link at the start of the page (WCAG 2.4.1), translated into all 24 languages; the <code>#main</code> target carries <code>tabindex="-1"</code> so keyboard focus actually moves into the main content after activation,</li>
                         <li>a visible <code>3 px</code> focus ring with offset on every interactive element (WCAG 2.4.7); the site is fully keyboard operable,</li>
                         <li>touch targets of at least <code>44 × 44 px</code> (WCAG 2.5.5, level AAA),</li>
                         <li>text contrast of at least <code>4.5 : 1</code> in both light and dark mode and non-text contrast of at least <code>3 : 1</code> (WCAG 1.4.3, 1.4.11); ratios are computed rather than estimated – in August 2026 we corrected white text on the active button (from 2.46 : 1 to 4.87 : 1), the icon glyph colour in dark mode (from 1.81 : 1 to 9.88 : 1) and the lighter end of the icon gradient (from 2.46 : 1 to 3.48 : 1),</li>

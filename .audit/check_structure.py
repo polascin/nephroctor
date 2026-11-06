@@ -20,11 +20,14 @@ class Page(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.stack, self.errors, self.ids, self.links, self.headings = [], [], [], [], []
         self.imgs_without_alt = 0
+        self.main_skip_ok = False
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
         if 'id' in a:
             self.ids.append(a['id'])
+        if tag == 'main' and a.get('id') == 'main' and a.get('tabindex') == '-1':
+            self.main_skip_ok = True
         if tag == 'a' and 'href' in a:
             self.links.append((a['href'], a.get('target'), a.get('rel')))
         if tag == 'link' and 'href' in a:
@@ -68,6 +71,11 @@ def audit(path: pathlib.Path):
 
     if page.imgs_without_alt:
         problems.append(f'{page.imgs_without_alt} <img> without alt')
+
+    # Skip-to-content targets #main; without tabindex=-1 many browsers scroll
+    # but leave keyboard focus on the skip link (WCAG 2.4.1 bypass fails).
+    if not page.main_skip_ok:
+        problems.append('<main id="main"> missing tabindex="-1" for skip-link focus')
 
     # Legal pages carry two h1 elements (the SK and EN versions of one document);
     # only one of them is ever visible.

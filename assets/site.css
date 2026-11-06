@@ -150,6 +150,13 @@ body {
     top: 0.5rem;
 }
 
+/* Skip-link target must be programmatically focusable (WCAG 2.4.1) so keyboard
+   focus actually moves into main after activation. tabindex="-1" keeps it out of
+   sequential tab order; hide the landmark-wide ring on that programmatic focus. */
+#main:focus {
+    outline: none;
+}
+
 /* --- Header / logo -------------------------------------------------------- */
 .header {
     text-align: center;
