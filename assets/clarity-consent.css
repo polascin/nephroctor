@@ -19,8 +19,14 @@
     right: 1rem;
     z-index: 2147483000;
     max-width: 56rem;
+    /* Scroll lock on html/body (iter 28) must not trap Allow/Decline below a
+       short viewport. Self-scroll on every width, not only phones. */
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
     margin: auto;
     padding: 1rem;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
     border: 2px solid var(--color-border);
     border-radius: var(--radius, 0.5rem);
     background: var(--color-card);
@@ -78,8 +84,6 @@
         left: 0.5rem;
         right: 0.5rem;
         bottom: 0.5rem;
-        max-height: 85vh;
-        overflow: auto;
     }
 
     .clarity-consent button {

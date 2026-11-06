@@ -155,4 +155,10 @@ s.value=null;
 s.events.storage({key:'clarity-consent-v1-abc123'});
 assert.ok(s.elements.filter(e=>e.role==='dialog'&&!e.removed).length>=1);
 assert.equal(s.reloads,0);
-console.log('PASS: consent gating, a11y dialog (inert/privacy fallback + Tab trap on container + scroll lock), live lang copy + status announce, cross-tab storage sync, project ID, masking, revocation, cookies, expiry, duplicate prevention, private paths and tokens.');
+// With document scroll locked, the dialog itself must remain scrollable on every
+// viewport (not only the phone media query), or Allow/Decline can sit off-screen.
+const consentCss = fs.readFileSync(__dirname + '/../assets/clarity-consent.css', 'utf8');
+const baseRule = consentCss.split('@media')[0];
+assert.match(baseRule, /max-height:\s*calc\(100(?:dvh|vh) - 2rem\)/);
+assert.match(baseRule, /overflow:\s*auto/);
+console.log('PASS: consent gating, a11y dialog (inert/privacy fallback + Tab trap on container + scroll lock + self-scroll), live lang copy + status announce, cross-tab storage sync, project ID, masking, revocation, cookies, expiry, duplicate prevention, private paths and tokens.');

@@ -1,18 +1,18 @@
 # SESSION – Nephroctor improvement loop
 
-Last updated: 2026-11-06 (loop iter 28)
+Last updated: 2026-11-06 (loop iter 29)
 
 ## HEAD
 
-`51499e6` on `origin/main` (Clarity modal scroll lock).
+Pending commit: Clarity dialog self-scroll (after `51499e6` scroll lock).
 
 ## Latest handoff
 
-`.codex/handoffs/2026-11-06-044244-nephroctor-loop-iter-28.md`
+`.codex/handoffs/2026-11-06-044244-nephroctor-loop-iter-28.md` (iter 29 handoff after deploy)
 
 ## Just completed
 
-Iter 28: lock document scroll while Clarity consent dialog is open (`setScrollLock` + `overscroll-behavior: contain`). Cache-bust `?v=2b163b588ee0`. Deploy success run 42157205770. Skipped `.sk`/`.eu` panel and legal redirects.
+Iter 29: make Clarity consent dialog self-scroll on every viewport width so Allow/Decline stay reachable after document scroll lock. Cache-bust `?v=78331b7675cf`. Skipped `.sk`/`.eu` panel and legal redirects.
 
 ## Next iteration priority
 
