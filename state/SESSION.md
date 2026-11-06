@@ -4,15 +4,15 @@ Last updated: 2026-11-06 (loop iter 29)
 
 ## HEAD
 
-Pending commit: Clarity dialog self-scroll (after `51499e6` scroll lock).
+`bce92c3` on `origin/main` (Clarity dialog self-scroll).
 
 ## Latest handoff
 
-`.codex/handoffs/2026-11-06-044244-nephroctor-loop-iter-28.md` (iter 29 handoff after deploy)
+`.codex/handoffs/2026-11-06-050030-nephroctor-loop-iter-29.md`
 
 ## Just completed
 
-Iter 29: make Clarity consent dialog self-scroll on every viewport width so Allow/Decline stay reachable after document scroll lock. Cache-bust `?v=78331b7675cf`. Skipped `.sk`/`.eu` panel and legal redirects.
+Iter 29: make Clarity consent dialog self-scroll on every viewport width so Allow/Decline stay reachable after document scroll lock. Cache-bust `?v=78331b7675cf`. Deploy success run 42158860197. Skipped `.sk`/`.eu` panel and legal redirects.
 
 ## Next iteration priority
 
@@ -23,3 +23,4 @@ WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to do
 - Iter 26: Deploy success `5ca7810` (apple-touch)
 - Iter 27: Deploy success `8494589` (manifest.webmanifest), run 42154902070
 - Iter 28: Deploy success `51499e6` (scroll lock), run 42157205770
+- Iter 29: Deploy success `bce92c3` (dialog self-scroll), run 42158860197
