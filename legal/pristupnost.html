@@ -66,7 +66,7 @@
             <article class="content-card" id="doc-sk" data-lang-block="sk" lang="sk">
                 <div class="doc-header">
                     <h1>Vyhlásenie o prístupnosti</h1>
-                    <p class="doc-meta">Aktualizované 6. novembra 2026 · verzia 1.6</p>
+                    <p class="doc-meta">Aktualizované 6. novembra 2026 · verzia 1.7</p>
                 </div>
 
                 <div class="prose">
@@ -90,7 +90,7 @@
                         <li>všetky obrázky majú zmysluplný atribút <code>alt</code>, dekoratívne ikony SVG sú skryté cez <code>aria-hidden="true"</code> a <code>focusable="false"</code>,</li>
                         <li>responzívne rozloženie od šírky 320 px bez vodorovného posúvania a bez straty obsahu pri 200 % zväčšení (WCAG 1.4.4, 1.4.10),</li>
                         <li>tlačová šablóna, ktorá skrýva ovládacie prvky a zachováva čitateľnosť dokumentov,</li>
-                        <li>dialóg voliteľnej analytiky (Microsoft Clarity) s <code>role="dialog"</code>, <code>aria-modal</code>, pascou fokusu, obnovou fokusu, atribútom <code>inert</code> na pozadí stránky a ovládaním cez <code>aria-expanded</code> / <code>aria-haspopup</code> na tlačidle nastavení; text dialógu a tlačidla nastavení sleduje aktuálny <code>lang</code> dokumentu (slovenčina aj čeština dostanú slovenskú kópiu) a zmena jazyka sa oznamuje cez <code>aria-live="polite"</code>; Clarity sa načíta až po výslovnom súhlase.</li>
+                        <li>dialóg voliteľnej analytiky (Microsoft Clarity) s <code>role="dialog"</code>, <code>aria-modal</code>, pascou fokusu, obnovou fokusu, atribútom <code>inert</code> na pozadí stránky (okrem regiónov <code>role="status"</code> / <code>aria-live</code>, aby ostali oznámenia dostupné) a ovládaním cez <code>aria-expanded</code> / <code>aria-haspopup</code> na tlačidle nastavení; text dialógu a tlačidla nastavení sleduje aktuálny <code>lang</code> dokumentu (slovenčina aj čeština dostanú slovenskú kópiu) a zmena jazyka sa oznamuje cez <code>aria-live="polite"</code>; Clarity sa načíta až po výslovnom súhlase.</li>
                     </ul>
 
                     <h2>3. Použité technológie</h2>
@@ -119,7 +119,7 @@
             <article class="content-card" id="doc-en" data-lang-block="en" lang="en" hidden>
                 <div class="doc-header">
                     <h1>Accessibility statement</h1>
-                    <p class="doc-meta">Updated 6 November 2026 · version 1.6</p>
+                    <p class="doc-meta">Updated 6 November 2026 · version 1.7</p>
                 </div>
 
                 <div class="prose">
@@ -147,7 +147,7 @@
                         <li>all images have a meaningful <code>alt</code> attribute; decorative SVG icons are hidden via <code>aria-hidden="true"</code> and <code>focusable="false"</code>,</li>
                         <li>responsive layout from 320 px wide with no horizontal scrolling and no loss of content at 200 % zoom (WCAG 1.4.4, 1.4.10),</li>
                         <li>a print stylesheet that hides controls and keeps documents readable,</li>
-                        <li>an optional analytics consent dialog (Microsoft Clarity) with <code>role="dialog"</code>, <code>aria-modal</code>, a focus trap, focus restoration, the HTML <code>inert</code> attribute on the page background, and <code>aria-expanded</code> / <code>aria-haspopup</code> on the settings control; dialog and settings copy follow the live document <code>lang</code> (Slovak and Czech receive the Slovak copy) and language changes are announced via <code>aria-live="polite"</code>; Clarity loads only after explicit consent.</li>
+                        <li>an optional analytics consent dialog (Microsoft Clarity) with <code>role="dialog"</code>, <code>aria-modal</code>, a focus trap, focus restoration, the HTML <code>inert</code> attribute on the page background (except <code>role="status"</code> / <code>aria-live</code> regions, so announcements stay available), and <code>aria-expanded</code> / <code>aria-haspopup</code> on the settings control; dialog and settings copy follow the live document <code>lang</code> (Slovak and Czech receive the Slovak copy) and language changes are announced via <code>aria-live="polite"</code>; Clarity loads only after explicit consent.</li>
                     </ul>
 
                     <h2>3. Technologies used</h2>

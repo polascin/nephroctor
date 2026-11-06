@@ -36,11 +36,23 @@
     const read = () => { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } };
     const save = granted => { try { localStorage.setItem(key, JSON.stringify({granted, expires: Date.now() + 180 * 86400000})); } catch { /* Consent still applies for this page. */ } };
     const focusable = root => [...root.querySelectorAll("a[href], button:not([disabled])")].filter(el => !el.hasAttribute("disabled"));
+    function isLiveStatusRegion(el) {
+        // Keep polite/assertive status regions available to AT while the dialog
+        // is open. Marking them inert (with the rest of the page) silenced
+        // Clarity settings-label announces and page-level aria-live updates
+        // (e.g. cross-tab language) for the duration of the modal.
+        if (!el || el === banner) return false;
+        const role = el.getAttribute("role");
+        if (role === "status" || role === "alert") return true;
+        const live = el.getAttribute("aria-live");
+        return !!(live && live !== "off");
+    }
     function setBackgroundInert(on) {
         // aria-modal alone does not stop AT/virtual-cursor traversal of the page.
-        // Mark every other body child inert while the dialog is open (HTML inert).
+        // Mark every other body child inert while the dialog is open (HTML inert),
+        // except live status regions that must keep announcing.
         for (const el of document.body.children) {
-            if (el === banner) continue;
+            if (el === banner || isLiveStatusRegion(el)) continue;
             if (on) {
                 if (el.hasAttribute("data-clarity-inert")) continue;
                 el.setAttribute("data-clarity-inert", "1");

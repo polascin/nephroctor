@@ -7,13 +7,16 @@ function run({path='/',query='',stored=null,external=false,src='https://example.
  const match=(el,sel)=>{if(!sel)return true;if(sel.startsWith('#'))return el.id===sel.slice(1);if(sel==='button'||sel==='a'||sel==='h2'||sel==='p')return el.tag===sel;if(sel.startsWith('a['))return el.tag==='a';if(sel.includes('button'))return el.tag==='button';return el.tag===sel||el.id===sel};
  const make=tag=>({tag,focus(){},children:[],dataset:{},attrs:{},setAttribute(k,v){this[k]=v;this.attrs[k]=String(v)},getAttribute(k){return Object.prototype.hasOwnProperty.call(this.attrs,k)?this.attrs[k]:null},hasAttribute(k){return Object.prototype.hasOwnProperty.call(this.attrs,k)},removeAttribute(k){delete this.attrs[k];delete this[k]},appendChild(e){this.children.push(e);elements.push(e)},append(...es){es.forEach(e=>this.appendChild(e))},addEventListener(k,fn){this[k]=fn},removeEventListener(){},remove(){this.removed=true},querySelector(sel){return this.children.find(c=>match(c,sel))||(sel&&sel.startsWith('#')?null:{focus(){}})},querySelectorAll(sel){return this.children.filter(c=>match(c,sel))}});
  const head=make('head'),body=make('body');let value=stored,reloads=0;
+ const pageMain=make('main');pageMain.id='main';
+ const pageStatus=make('div');pageStatus.className='visually-hidden';pageStatus.setAttribute('role','status');pageStatus.setAttribute('aria-live','polite');
+ body.appendChild(pageMain);body.appendChild(pageStatus);
  const documentElement={lang};
  const document={currentScript:{dataset:{project:'abc123',consent:external?'external':'',paths:'/,/index.php'},src},head,body,documentElement,createElement:make,querySelector(){return null},get cookie(){return ''},set cookie(c){cookies.push(c)}};
  const observers=[];
  const window={addEventListener(k,fn){events[k]=fn},MutationObserver:function(cb){this.cb=cb;this.observe=()=>{observers.push(cb)}}};
  const location={pathname:path,search:query,hostname:'sub.example.com',href:'https://sub.example.com'+path+query,reload(){reloads++}};
  vm.runInNewContext(code,{document,window,location,localStorage:{getItem(){return value},setItem(k,v){value=v}},URL,URLSearchParams,Date,MutationObserver:window.MutationObserver});
- return {elements,events,window,body,documentElement,observers,cookies,get reloads(){return reloads},get value(){return value},set value(v){value=v},scripts:()=>elements.filter(e=>e.tag==='script'),links:()=>elements.filter(e=>e.tag==='link')};
+ return {elements,events,window,body,pageMain,pageStatus,documentElement,observers,cookies,get reloads(){return reloads},get value(){return value},set value(v){value=v},scripts:()=>elements.filter(e=>e.tag==='script'),links:()=>elements.filter(e=>e.tag==='link')};
 }
 let s=run();assert.equal(s.scripts().length,0);
 const css=s.links().find(e=>e.rel==='stylesheet');assert.ok(css);assert.equal(css.href,'https://example.com/js/clarity-consent.css');
@@ -23,11 +26,19 @@ const dialog=s.elements.find(e=>e.role==='dialog');
 assert.ok(dialog);assert.equal(dialog['aria-modal'],'true');assert.equal(dialog['aria-labelledby'],'clarity-consent-title');assert.equal(dialog['aria-describedby'],'clarity-consent-desc');assert.equal(typeof dialog.keydown,'function');
 const privacy=s.elements.find(e=>e.tag==='a');assert.equal(privacy.href,'/legal/ochrana-osobnych-udajov.html');
 const settingsBtn=s.elements.find(e=>e.textContent==='Nastavenia analytiky');assert.equal(settingsBtn['aria-haspopup']||settingsBtn.attrs?.['aria-haspopup'],'dialog');assert.equal(settingsBtn['aria-expanded']||settingsBtn.attrs?.['aria-expanded'],'true');assert.equal(settingsBtn['aria-controls']||settingsBtn.attrs?.['aria-controls'],'clarity-consent-dialog');assert.equal(dialog.id,'clarity-consent-dialog');
+// Live status regions must stay non-inert so aria-live announces still reach AT;
+// interactive page chrome stays inert while the modal is open.
+const liveWhileOpen=s.elements.find(e=>e.className==='clarity-consent-status');
+assert.ok(liveWhileOpen);assert.notEqual(liveWhileOpen.inert,true);assert.equal(liveWhileOpen.getAttribute('data-clarity-inert'),null);
+assert.notEqual(s.pageStatus.inert,true);assert.equal(s.pageStatus.getAttribute('data-clarity-inert'),null);
+assert.equal(s.pageMain.inert,true);assert.equal(s.pageMain.getAttribute('data-clarity-inert'),'1');
+assert.equal(settingsBtn.inert,true);assert.equal(settingsBtn.getAttribute('data-clarity-inert'),'1');
 let accept=s.elements.find(e=>e.textContent==='Povoliť analytiku');assert.equal(accept['data-choice']||accept.getAttribute?.('data-choice'),'allow');accept.click();assert.equal(s.scripts().length,1);assert.equal(s.scripts()[0].src,'https://www.clarity.ms/tag/abc123');assert.equal(s.body['data-clarity-mask'],'true');assert.equal(s.window.clarity.q[0][1].ad_Storage,'denied');
 s.elements.find(e=>e.textContent==='Nastavenia analytiky').click();s.elements.filter(e=>e.textContent==='Odmietnuť').at(-1).click();assert.equal(s.reloads,1);assert.equal(JSON.parse(s.value).granted,false);assert.ok(s.cookies.some(c=>c.includes('Domain=.example.com')));
 s=run();s.elements.find(e=>e.textContent==='Odmietnuť').click();assert.equal(s.scripts().length,0);
-for(const path of ['/login.php','/calculator.php','/admin.php'])assert.equal(run({path}).elements.length,0);
-assert.equal(run({query:'?token=private'}).elements.length,0);
+const noClarity=r=>!r.elements.some(e=>e.id==='clarity-settings'||e.role==='dialog'||(e.tag==='script'&&String(e.src||'').includes('clarity.ms')));
+for(const path of ['/login.php','/calculator.php','/admin.php'])assert.ok(noClarity(run({path})));
+assert.ok(noClarity(run({query:'?token=private'})));
 s=run({stored:JSON.stringify({granted:true,expires:Date.now()-1})});assert.equal(s.scripts().length,0);
 s=run({stored:JSON.stringify({granted:true,expires:Date.now()+10000})});assert.equal(s.scripts().length,1);
 s=run({external:true});assert.equal(s.scripts().length,0);s.events['site:analytics-consent']({detail:true});s.events['site:analytics-consent']({detail:true});assert.equal(s.scripts().length,1);s.events['site:analytics-consent']({detail:false});assert.equal(s.reloads,1);
@@ -36,7 +47,7 @@ s=run({lang:'en'});assert.ok(s.elements.find(e=>e.textContent==='Analytics setti
 s=run({lang:'cs'});assert.ok(s.elements.find(e=>e.textContent==='Nastavenia analytiky'));assert.ok(s.elements.find(e=>e.textContent==='Voliteľná analytika'));
 s=run({lang:'sk',stored:JSON.stringify({granted:true,expires:Date.now()+10000})});
 assert.equal(s.elements.find(e=>e.id==='clarity-settings').textContent,'Nastavenia analytiky');
-const live=s.elements.find(e=>e.attrs?.['aria-live']==='polite'||e['aria-live']==='polite');
+const live=s.elements.find(e=>e.className==='clarity-consent-status');
 assert.ok(live);assert.equal(live.attrs?.['role']||live.role,'status');assert.equal(live.attrs?.['aria-atomic']||live['aria-atomic'],'true');
 assert.ok(s.observers.length>=1);
 s.documentElement.lang='en';

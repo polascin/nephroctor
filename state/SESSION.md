@@ -1,18 +1,18 @@
 # SESSION – Nephroctor improvement loop
 
-Last updated: 2026-11-06 (loop iter 23)
+Last updated: 2026-11-06 (loop iter 24)
 
 ## HEAD
 
-See latest commit on `origin/main` after iter-23 push (impressum aliases).
+See latest commit on `origin/main` after iter-24 push (Clarity inert vs aria-live).
 
 ## Latest handoff
 
-`.codex/handoffs/2026-11-06-030329-nephroctor-loop-iter-23.md`
+`.codex/handoffs/2026-11-06-030329-nephroctor-loop-iter-23.md` (superseded by iter-24 handoff after docs commit)
 
 ## Just completed
 
-Iter 23: DE discoverability aliases. `/impressum` and `/legal/impressum.html` 301 → `/legal/pravne-informacie.html` (parallel of working `/imprint`). No higher-severity in-repo functional bug found. Skipped `.sk`/`.eu` panel.
+Iter 24: Clarity consent `setBackgroundInert` no longer marks `role="status"` / `aria-live` regions inert, so polite announces stay available while the dialog is open. Cache-bust `?v=62105992024e`. Accessibility statement 1.7. Skipped `.sk`/`.eu` panel.
 
 ## Next iteration priority
 
@@ -20,5 +20,5 @@ WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to do
 
 ## Deploys this session
 
-- Prior: iter-22 Deploy success (`6b3154e`)
-- Iter 23: Deploy success (`ae4b0e6`, run 42146813511); Smoke + security headers OK
+- Prior: iter-23 Deploy success (`ae4b0e6`)
+- Iter 24: Deploy pending after push
