@@ -4,19 +4,63 @@ const assert = require('node:assert/strict');
 const code = fs.readFileSync(__dirname + '/../assets/clarity-consent.js', 'utf8');
 function run({path='/',query='',stored=null,external=false,src='https://example.com/js/clarity-consent.js',lang='sk'}={}) {
  const elements=[], events={}, cookies=[];
- const match=(el,sel)=>{if(!sel)return true;if(sel.startsWith('#'))return el.id===sel.slice(1);if(sel==='button'||sel==='a'||sel==='h2'||sel==='p')return el.tag===sel;if(sel.startsWith('a['))return el.tag==='a';if(sel.includes('button'))return el.tag==='button';return el.tag===sel||el.id===sel};
- const make=tag=>({tag,focus(){},children:[],dataset:{},attrs:{},setAttribute(k,v){this[k]=v;this.attrs[k]=String(v)},getAttribute(k){return Object.prototype.hasOwnProperty.call(this.attrs,k)?this.attrs[k]:null},hasAttribute(k){return Object.prototype.hasOwnProperty.call(this.attrs,k)},removeAttribute(k){delete this.attrs[k];delete this[k]},appendChild(e){this.children.push(e);elements.push(e)},append(...es){es.forEach(e=>this.appendChild(e))},addEventListener(k,fn){this[k]=fn},removeEventListener(){},remove(){this.removed=true},querySelector(sel){return this.children.find(c=>match(c,sel))||(sel&&sel.startsWith('#')?null:{focus(){}})},querySelectorAll(sel){return this.children.filter(c=>match(c,sel))}});
- const head=make('head'),body=make('body');let value=stored,reloads=0;
+ let value=stored, reloads=0, activeElement=null;
+ const match=(el,sel)=>{
+  if(!sel)return true;
+  if(sel.startsWith('#'))return el.id===sel.slice(1);
+  if(sel==='button'||sel==='a'||sel==='h2'||sel==='p')return el.tag===sel;
+  // Focusable list used by the Tab trap (before startsWith('a[') — that
+  // prefix also matches this compound selector and would drop buttons).
+  if(sel==='a[href], button:not([disabled])')return el.tag==='a'||el.tag==='button';
+  if(sel.startsWith('a['))return el.tag==='a';
+  if(sel.includes('button')&&!sel.includes(','))return el.tag==='button';
+  return el.tag===sel||el.id===sel;
+ };
+ const make=tag=>{
+  const el={
+   tag,
+   children:[],
+   dataset:{},
+   attrs:{},
+   focus(){activeElement=el;},
+   contains(node){
+    if(node===el)return true;
+    const walk=n=>n&&(n===node||(n.children||[]).some(walk));
+    return (el.children||[]).some(walk);
+   },
+   setAttribute(k,v){this[k]=v;this.attrs[k]=String(v);},
+   getAttribute(k){return Object.prototype.hasOwnProperty.call(this.attrs,k)?this.attrs[k]:null;},
+   hasAttribute(k){return Object.prototype.hasOwnProperty.call(this.attrs,k);},
+   removeAttribute(k){delete this.attrs[k];delete this[k];},
+   appendChild(e){this.children.push(e);elements.push(e);},
+   append(...es){es.forEach(e=>this.appendChild(e));},
+   addEventListener(k,fn){this[k]=fn;},
+   removeEventListener(){},
+   remove(){this.removed=true;},
+   querySelector(sel){return this.children.find(c=>match(c,sel))||(sel&&sel.startsWith('#')?null:{focus(){}});},
+   querySelectorAll(sel){return this.children.filter(c=>match(c,sel));}
+  };
+  return el;
+ };
+ const head=make('head'),body=make('body');
  const pageMain=make('main');pageMain.id='main';
  const pageStatus=make('div');pageStatus.className='visually-hidden';pageStatus.setAttribute('role','status');pageStatus.setAttribute('aria-live','polite');
  body.appendChild(pageMain);body.appendChild(pageStatus);
  const documentElement={lang};
- const document={currentScript:{dataset:{project:'abc123',consent:external?'external':'',paths:'/,/index.php'},src},head,body,documentElement,createElement:make,querySelector(){return null},get cookie(){return ''},set cookie(c){cookies.push(c)}};
+ const document={
+  currentScript:{dataset:{project:'abc123',consent:external?'external':'',paths:'/,/index.php'},src},
+  head,body,documentElement,createElement:make,querySelector(){return null},
+  get cookie(){return '';},set cookie(c){cookies.push(c);},
+  get activeElement(){return activeElement;}
+ };
  const observers=[];
- const window={addEventListener(k,fn){events[k]=fn},MutationObserver:function(cb){this.cb=cb;this.observe=()=>{observers.push(cb)}}};
- const location={pathname:path,search:query,hostname:'sub.example.com',href:'https://sub.example.com'+path+query,reload(){reloads++}};
- vm.runInNewContext(code,{document,window,location,localStorage:{getItem(){return value},setItem(k,v){value=v}},URL,URLSearchParams,Date,MutationObserver:window.MutationObserver});
- return {elements,events,window,body,pageMain,pageStatus,documentElement,observers,cookies,get reloads(){return reloads},get value(){return value},set value(v){value=v},scripts:()=>elements.filter(e=>e.tag==='script'),links:()=>elements.filter(e=>e.tag==='link')};
+ const window={addEventListener(k,fn){events[k]=fn;},MutationObserver:function(cb){this.cb=cb;this.observe=()=>{observers.push(cb);};}};
+ const location={pathname:path,search:query,hostname:'sub.example.com',href:'https://sub.example.com'+path+query,reload(){reloads++;}};
+ vm.runInNewContext(code,{document,window,location,localStorage:{getItem(){return value;},setItem(k,v){value=v;}},URL,URLSearchParams,Date,MutationObserver:window.MutationObserver});
+ return {elements,events,window,body,pageMain,pageStatus,documentElement,observers,cookies,document,
+  get activeElement(){return activeElement;},set activeElement(el){activeElement=el;},
+  get reloads(){return reloads;},get value(){return value;},set value(v){value=v;},
+  scripts:()=>elements.filter(e=>e.tag==='script'),links:()=>elements.filter(e=>e.tag==='link')};
 }
 let s=run();assert.equal(s.scripts().length,0);
 const css=s.links().find(e=>e.rel==='stylesheet');assert.ok(css);assert.equal(css.href,'https://example.com/js/clarity-consent.css');
@@ -33,6 +77,24 @@ assert.ok(liveWhileOpen);assert.notEqual(liveWhileOpen.inert,true);assert.equal(
 assert.notEqual(s.pageStatus.inert,true);assert.equal(s.pageStatus.getAttribute('data-clarity-inert'),null);
 assert.equal(s.pageMain.inert,true);assert.equal(s.pageMain.getAttribute('data-clarity-inert'),'1');
 assert.equal(settingsBtn.inert,true);assert.equal(settingsBtn.getAttribute('data-clarity-inert'),'1');
+// First-run focuses the dialog container; Shift+Tab / Tab must stay inside.
+assert.equal(s.activeElement,dialog);
+const allow=s.elements.find(e=>e.textContent==='Povoliť analytiku');
+let prevented=false;
+dialog.keydown({key:'Tab',shiftKey:true,preventDefault(){prevented=true;}});
+assert.equal(prevented,true);assert.equal(s.activeElement,allow);
+prevented=false;
+dialog.keydown({key:'Tab',shiftKey:false,preventDefault(){prevented=true;}});
+assert.equal(prevented,true);assert.equal(s.activeElement,privacy);
+// Escaped focus (outside dialog) is pulled back into the trap.
+s.activeElement=s.pageMain;
+prevented=false;
+dialog.keydown({key:'Tab',shiftKey:false,preventDefault(){prevented=true;}});
+assert.equal(prevented,true);assert.equal(s.activeElement,privacy);
+s.activeElement=s.pageMain;
+prevented=false;
+dialog.keydown({key:'Tab',shiftKey:true,preventDefault(){prevented=true;}});
+assert.equal(prevented,true);assert.equal(s.activeElement,allow);
 let accept=s.elements.find(e=>e.textContent==='Povoliť analytiku');assert.equal(accept['data-choice']||accept.getAttribute?.('data-choice'),'allow');accept.click();assert.equal(s.scripts().length,1);assert.equal(s.scripts()[0].src,'https://www.clarity.ms/tag/abc123');assert.equal(s.body['data-clarity-mask'],'true');assert.equal(s.window.clarity.q[0][1].ad_Storage,'denied');
 s.elements.find(e=>e.textContent==='Nastavenia analytiky').click();s.elements.filter(e=>e.textContent==='Odmietnuť').at(-1).click();assert.equal(s.reloads,1);assert.equal(JSON.parse(s.value).granted,false);assert.ok(s.cookies.some(c=>c.includes('Domain=.example.com')));
 s=run();s.elements.find(e=>e.textContent==='Odmietnuť').click();assert.equal(s.scripts().length,0);
@@ -85,4 +147,4 @@ s.value=null;
 s.events.storage({key:'clarity-consent-v1-abc123'});
 assert.ok(s.elements.filter(e=>e.role==='dialog'&&!e.removed).length>=1);
 assert.equal(s.reloads,0);
-console.log('PASS: consent gating, a11y dialog (inert/privacy fallback), live lang copy + status announce, cross-tab storage sync, project ID, masking, revocation, cookies, expiry, duplicate prevention, private paths and tokens.');
+console.log('PASS: consent gating, a11y dialog (inert/privacy fallback + Tab trap on container), live lang copy + status announce, cross-tab storage sync, project ID, masking, revocation, cookies, expiry, duplicate prevention, private paths and tokens.');

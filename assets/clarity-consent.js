@@ -88,10 +88,17 @@
         if (!items.length) return;
         const first = items[0];
         const last = items[items.length - 1];
-        if (event.shiftKey && document.activeElement === first) {
-            event.preventDefault();
-            last.focus();
-        } else if (!event.shiftKey && document.activeElement === last) {
+        const active = document.activeElement;
+        // First-run opens with focus on the dialog container (tabIndex=-1).
+        // That node is not one of the Tab-cycle controls, so Shift+Tab used
+        // to leave the modal (often into browser chrome) despite inert
+        // background. Treat container focus and any escaped focus as edges.
+        if (event.shiftKey) {
+            if (active === first || active === banner || !banner.contains(active)) {
+                event.preventDefault();
+                last.focus();
+            }
+        } else if (active === last || active === banner || !banner.contains(active)) {
             event.preventDefault();
             first.focus();
         }
