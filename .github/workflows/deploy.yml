@@ -18,7 +18,8 @@ jobs:
         run: |
           mkdir -p deploy
           cp index.html robots.txt sitemap.xml site.webmanifest manifest.webmanifest \
-             favicon.ico apple-touch-icon.png apple-touch-icon-precomposed.png deploy/
+             favicon.ico favicon.svg browserconfig.xml \
+             apple-touch-icon.png apple-touch-icon-precomposed.png deploy/
           cp .htaccess deploy/
           cp -r assets deploy/
           cp -r legal deploy/
@@ -37,11 +38,12 @@ jobs:
         run: |
           fail=0
           for f in index.html robots.txt sitemap.xml site.webmanifest manifest.webmanifest \
-                   favicon.ico apple-touch-icon.png apple-touch-icon-precomposed.png .htaccess \
+                   favicon.ico favicon.svg browserconfig.xml \
+                   apple-touch-icon.png apple-touch-icon-precomposed.png .htaccess \
                    assets/site.css assets/legal.js \
                    assets/clarity-consent.js assets/clarity-consent.css \
                    assets/logo.webp assets/og-image.jpg \
-                   assets/favicon.ico assets/apple-touch-icon.png \
+                   assets/favicon.ico assets/favicon.svg assets/apple-touch-icon.png \
                    assets/fonts/inter-latin.woff2 assets/fonts/inter-latin-ext.woff2 \
                    legal/.htaccess \
                    legal/ochrana-osobnych-udajov.html legal/cookies.html \

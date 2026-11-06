@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Nephroctor">
+  <!-- Raster monogram from assets/favicon-32.png; dark swap matches site tokens. -->
+  <style>
+    .dark { display: none }
+    @media (prefers-color-scheme: dark) {
+      .light { display: none }
+      .dark { display: inline }
+    }
+  </style>
+  <image class="light" width="32" height="32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAET0lEQVR42sWXfWiWVRjGf+c877bXbeYXtaVuiX1JVIqGaWgIQQT2jzTqD0laURYE0QdRGBV9oBKVuhQKY5BIH9PAogIDP1CzNFMr82NsTR1z72xu7t3e7d3znHP1x/vO1NyH4rbrz+c5nPs697mv674PkixAIpEoDsNwhXOuTlIoyevqwUsKnXN1YRiuSCQSxQA9sUmn09OcczUaIjjnatLp9DQAk0wmr8vPz99nrZ0IREAAGAYHAhwQ897Xp1KpGbF4PL7kvOAxBhcmGyOy1k6Mx+NLTBRFDUEQFJ+3YCggAOdco3HOeWttv4G9FwKsNRewlDL/guDyuXvvZSSpX7peGDs4ybEDObmxhr37TvBMxX5+T7pMJXnhvdixP8HHGw5l1uq//PqrQcB7YQzUVjdw3yOfUDS+kFsLAyQRWIO1hqk3jabqs80k27uwJnMlZiAnG1gGhDGG8sXLmTWnlDcfupk8hMEQhhHVNU2EUZqikkJisVgmuIEzgn0RRBpIOfaCKHKSpL2//Cry5mjLnmp57xWGkbykmrom5eY+rFnz3tZvRxOSpM4oY55LUxKHu9SYTGeMpw9Ptb0Ty9ziho0/UFBUxMw7JmGMITSGRqCGPGK5t/DztlrWrN0FQI8QXKcwtS0QRnjv6avMeyVgTGa3Awf+5PricRTEY0SCv7sNu4CjNp+umQuY/XQ5a9dX8/jy7eQgJEFLJzpcj5zDWktgr6gGDAJSQQl5E+4EiSYPLTmGeuBMYYyFFdN5Z/VcXly5kMqD8OzWpgzx1k442sCIvBi7d/9Fw6kzPdf9vyixvjKQAsbMeZCm9Fh2Yqj3cCqE5iQUjYJYN9Q4eKBsAu3TJ7B68ylGl3ZyTV4OJhJNTa2sXLWBjyqeoze7ifUuQUeBjXFvcJhv3trImPIvuK10LMfS4nhouNYaVq1r5kjjSda9MoWKSXGSJsG7r+9g8vgC4ocOkpMzm5LSIqLIXb4KnMuooK6uVjBVr77xeaaxd4fqkFdVWySmVGrp0q0qf3mTGhpb5bxT2WubxMgnNapokU6fbtHZtg61trb3qgL66ts9Unxq8TIRLNCx2vrM99CptrlTayr3SJI++PBbrfl0myQpDCPNX7BMMFUnTjaoI9XV52zQJwHvvZxzSnV0aMZdz2vc5Bd06MhFc0vYrbIlP+r7n47LZ0efrq603nt/vVpa2vTl1zv1T/PZc/tdjH6bkZRxw7OtbTz2RCXf/dHOo4vuYd7dNxDaPPa2dHHjNbm8dH9Jpsdm3bAH3d0hQRAQ9KLFgXXDLAmALdtr+WpHC03hCEYVj2T+3NGU3V6YtWFzbr1znlgs6H9CGQiBnk0FWGMuOV1cabPucwSLfMbZvEAICZzLWut5RKy5MO09HZFsdxyRG1yS+GVlYLBgGWYMPwHv/bBdgfdeVlJjtpCHkoiyXaDRSqrKqsgNIQGXFUDVsD/Nhv1xynA/z/8FuEASSgUAj6wAAAAASUVORK5CYII="/>
+  <image class="dark" width="32" height="32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAzUlEQVR42u1XMRKEMAgkzPVXWPgH32Dpsy19g3+wsPAF2lxuGE0gJlEatnJQ2Q0EEhz88G27HV7EtswOAAA1yCmn0yCnQFCGCVAX8En9sBmn//M69Bc7tVWPQIy8hDgrBWcyKowTXSQg5sjbQ+9TyW9FIJR3lSqQIvKoAIkklg7uP/EsqBFurlKwlqNH+8CZKETWjFOwR0jCsHT3c40pJX2YW4Lc6rx9HXpRxK0LCefslT0grTgHdiUzASbABOgL8FOqBrZldkhHZY3x/AA3b162EJLDGwAAAABJRU5ErkJggg=="/>
+</svg>

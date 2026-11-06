@@ -140,12 +140,38 @@ def check_no_third_party():
 
 
 def check_icons():
-    expected = ['favicon.ico', 'favicon-16.png', 'favicon-32.png', 'apple-touch-icon.png',
-                'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'og-image.jpg']
+    expected = ['favicon.ico', 'favicon.svg', 'favicon-16.png', 'favicon-32.png',
+                'apple-touch-icon.png', 'icon-192.png', 'icon-512.png',
+                'icon-maskable-512.png', 'og-image.jpg']
     for name in expected:
         path = ROOT / 'assets' / name
         check(f'asset present {name}', path.exists() and path.stat().st_size > 0)
     check('root favicon.ico present (implicit browser request)', (ROOT / 'favicon.ico').exists())
+    root_svg = ROOT / 'favicon.svg'
+    assets_svg = ROOT / 'assets' / 'favicon.svg'
+    check('root favicon.svg present (common probe / modern browsers)',
+          root_svg.exists() and root_svg.stat().st_size > 0)
+    if root_svg.exists() and assets_svg.exists():
+        check('root favicon.svg matches assets copy',
+              root_svg.read_bytes() == assets_svg.read_bytes())
+    if assets_svg.exists():
+        svg_text = assets_svg.read_text(encoding='utf-8')
+        check('favicon.svg declares image/svg viewBox and dark-scheme swap',
+              'viewBox="0 0 32 32"' in svg_text
+              and 'prefers-color-scheme: dark' in svg_text
+              and 'class="light"' in svg_text
+              and 'class="dark"' in svg_text)
+    browserconfig = ROOT / 'browserconfig.xml'
+    check('root browserconfig.xml present (Windows tile / msapplication)',
+          browserconfig.exists() and browserconfig.stat().st_size > 0)
+    if browserconfig.exists():
+        bc = browserconfig.read_text(encoding='utf-8')
+        check('browserconfig.xml points at existing tile icons',
+              '/assets/icon-192.png' in bc
+              and '/assets/icon-512.png' in bc
+              and '#0077b6' in bc
+              and (ROOT / 'assets' / 'icon-192.png').exists()
+              and (ROOT / 'assets' / 'icon-512.png').exists())
     root_ati = ROOT / 'apple-touch-icon.png'
     root_ati_pre = ROOT / 'apple-touch-icon-precomposed.png'
     assets_ati = ROOT / 'assets' / 'apple-touch-icon.png'

@@ -24,7 +24,7 @@ SITE = ['index.html', 'assets/site.css', 'assets/legal.js',
        [f'legal/{p.name}' for p in sorted((ROOT / 'legal').glob('*.html'))]
 # Config and tooling: whitespace hygiene only, each has its own idiom.
 OTHER = ['robots.txt', 'site.webmanifest', 'manifest.webmanifest', 'sitemap.xml',
-         '.htaccess', 'legal/.htaccess'] + \
+         'browserconfig.xml', '.htaccess', 'legal/.htaccess'] + \
         [f'.audit/{p.name}' for p in sorted((ROOT / '.audit').glob('*.py'))] + \
         [f'.audit/{p.name}' for p in sorted((ROOT / '.audit').glob('*.js'))] + \
         [f'.audit/{p.name}' for p in sorted((ROOT / '.audit').glob('*.cjs'))]
