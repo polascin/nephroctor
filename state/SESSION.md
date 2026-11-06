@@ -8,7 +8,7 @@ See latest commit on `origin/main` after iter-21 push (SEO/meta polish).
 
 ## Latest handoff
 
-`.codex/handoffs/` – iter-21 handoff written at end of this iteration.
+`.codex/handoffs/2026-11-06-022505-nephroctor-loop-iter-21.md`
 
 ## Just completed
 
