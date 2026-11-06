@@ -8,6 +8,7 @@
     RewriteRule ^terms\.html$ /legal/podmienky-pouzivania.html [R=301,L]
     RewriteRule ^accessibility\.html$ /legal/pristupnost.html [R=301,L]
     RewriteRule ^imprint\.html$ /legal/pravne-informacie.html [R=301,L]
+    RewriteRule ^impressum\.html$ /legal/pravne-informacie.html [R=301,L]
     RewriteRule ^cookie-policy\.html$ /legal/cookies.html [R=301,L]
     RewriteRule ^disclaimer\.html$ /legal/zdravotne-upozornenie.html [R=301,L]
     RewriteRule ^health-notice\.html$ /legal/zdravotne-upozornenie.html [R=301,L]

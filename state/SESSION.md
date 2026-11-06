@@ -1,24 +1,24 @@
 # SESSION – Nephroctor improvement loop
 
-Last updated: 2026-11-06 (loop iter 22)
+Last updated: 2026-11-06 (loop iter 23)
 
 ## HEAD
 
-See latest commit on `origin/main` after iter-22 push (skip-link focus target).
+See latest commit on `origin/main` after iter-23 push (impressum aliases).
 
 ## Latest handoff
 
-`.codex/handoffs/2026-11-06-024652-nephroctor-loop-iter-22.md`
+(Will be `.codex/handoffs/2026-11-06-*-nephroctor-loop-iter-23.md` after docs handoff.)
 
 ## Just completed
 
-Iter 22: WCAG 2.4.1 skip-link fix. `<main id="main">` lacked `tabindex="-1"`, so keyboard focus often stayed on the skip link after activation. Added `tabindex="-1"` on home + all legal pages, `#main:focus { outline: none }`, accessibility statement 1.6, structure audit assert. Skipped `.sk`/`.eu` panel and EN legal redirects. Noted prod `/impressum` still 404 (optional next).
+Iter 23: DE discoverability aliases. `/impressum` and `/legal/impressum.html` 301 → `/legal/pravne-informacie.html` (parallel of working `/imprint`). No higher-severity in-repo functional bug found. Skipped `.sk`/`.eu` panel.
 
 ## Next iteration priority
 
-WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to domain alias of `nephroctor.com`, then run `tools/verify-domain-aliases.ps1`. Or `/impressum` (+ `/legal/impressum.html`) 301 to `pravne-informacie.html` (DE parallel of `/imprint`). Or local SFTP deploy if hosting credentials become available.
+WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to domain alias of `nephroctor.com`, then run `tools/verify-domain-aliases.ps1`. Prefer a real functional/security/a11y bug if found. Or local SFTP deploy if hosting credentials become available.
 
 ## Deploys this session
 
-- Prior: iter-21 Deploy success (`28b0f20`)
-- Iter 22: Deploy success (`6b3154e`, run 42144923500); Smoke + security headers OK (WAF 429 annotations)
+- Prior: iter-22 Deploy success (`6b3154e`)
+- Iter 23: Deploy pending after push

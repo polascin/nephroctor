@@ -61,6 +61,7 @@ AddDefaultCharset utf-8
     RewriteRule ^accessibility/?$ https://nephroctor.com/legal/pristupnost.html [R=301,L]
     RewriteRule ^pristupnost/?$ https://nephroctor.com/legal/pristupnost.html [R=301,L]
     RewriteRule ^imprint/?$ https://nephroctor.com/legal/pravne-informacie.html [R=301,L]
+    RewriteRule ^impressum/?$ https://nephroctor.com/legal/pravne-informacie.html [R=301,L]
     RewriteRule ^health-notice/?$ https://nephroctor.com/legal/zdravotne-upozornenie.html [R=301,L]
     RewriteRule ^disclaimer/?$ https://nephroctor.com/legal/zdravotne-upozornenie.html [R=301,L]
     RewriteRule ^zdravotne-upozornenie/?$ https://nephroctor.com/legal/zdravotne-upozornenie.html [R=301,L]
@@ -68,6 +69,7 @@ AddDefaultCharset utf-8
     RewriteRule ^legal/terms\.html$ https://nephroctor.com/legal/podmienky-pouzivania.html [R=301,L]
     RewriteRule ^legal/accessibility\.html$ https://nephroctor.com/legal/pristupnost.html [R=301,L]
     RewriteRule ^legal/imprint\.html$ https://nephroctor.com/legal/pravne-informacie.html [R=301,L]
+    RewriteRule ^legal/impressum\.html$ https://nephroctor.com/legal/pravne-informacie.html [R=301,L]
     RewriteRule ^legal/cookie-policy\.html$ https://nephroctor.com/legal/cookies.html [R=301,L]
     RewriteRule ^legal/disclaimer\.html$ https://nephroctor.com/legal/zdravotne-upozornenie.html [R=301,L]
     RewriteRule ^legal/health-notice\.html$ https://nephroctor.com/legal/zdravotne-upozornenie.html [R=301,L]
@@ -92,11 +94,12 @@ AddDefaultCharset utf-8
 # Canonical URLs stay the Slovak .html files listed in the sitemap. English
 # lives in the same documents via ?lang=en; there are no separate EN files.
 # /privacy, /terms, /cookies, /cookie-policy, /accessibility, /pristupnost,
-# /imprint, /health-notice, /disclaimer, /zdravotne-upozornenie,
+# /imprint, /impressum, /health-notice, /disclaimer, /zdravotne-upozornenie,
 # /legal/privacy.html, /legal/terms.html, /legal/accessibility.html,
-# /legal/imprint.html, /legal/cookie-policy.html, /legal/disclaimer.html and
-# /legal/health-notice.html would 404 because nothing is at those paths; /legal
-# is a real directory whose listing is blocked (403).
+# /legal/imprint.html, /legal/impressum.html, /legal/cookie-policy.html,
+# /legal/disclaimer.html and /legal/health-notice.html would 404 because
+# nothing is at those paths; /legal is a real directory whose listing is
+# blocked (403). /impressum is the German discoverability parallel of /imprint.
 #
 # RedirectMatch, not Redirect: Apache Redirect is prefix-based and would
 # turn /legal/cookies.html into /legal/pravne-informacie.html/cookies.html.
@@ -113,6 +116,7 @@ AddDefaultCharset utf-8
     RedirectMatch 301 ^/accessibility/?$ /legal/pristupnost.html
     RedirectMatch 301 ^/pristupnost/?$ /legal/pristupnost.html
     RedirectMatch 301 ^/imprint/?$ /legal/pravne-informacie.html
+    RedirectMatch 301 ^/impressum/?$ /legal/pravne-informacie.html
     RedirectMatch 301 ^/health-notice/?$ /legal/zdravotne-upozornenie.html
     RedirectMatch 301 ^/disclaimer/?$ /legal/zdravotne-upozornenie.html
     RedirectMatch 301 ^/zdravotne-upozornenie/?$ /legal/zdravotne-upozornenie.html
@@ -120,6 +124,7 @@ AddDefaultCharset utf-8
     RedirectMatch 301 ^/legal/terms\.html$ /legal/podmienky-pouzivania.html
     RedirectMatch 301 ^/legal/accessibility\.html$ /legal/pristupnost.html
     RedirectMatch 301 ^/legal/imprint\.html$ /legal/pravne-informacie.html
+    RedirectMatch 301 ^/legal/impressum\.html$ /legal/pravne-informacie.html
     RedirectMatch 301 ^/legal/cookie-policy\.html$ /legal/cookies.html
     RedirectMatch 301 ^/legal/disclaimer\.html$ /legal/zdravotne-upozornenie.html
     RedirectMatch 301 ^/legal/health-notice\.html$ /legal/zdravotne-upozornenie.html
