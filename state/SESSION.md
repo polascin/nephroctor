@@ -1,18 +1,18 @@
 # SESSION – Nephroctor improvement loop
 
-Last updated: 2026-11-06 (loop iter 27)
+Last updated: 2026-11-06 (loop iter 28)
 
 ## HEAD
 
-`8494589` on `origin/main` (root `manifest.webmanifest`).
+Pending commit: Clarity modal scroll lock (`setScrollLock` + overscroll-behavior).
 
 ## Latest handoff
 
-`.codex/handoffs/2026-11-06-042015-nephroctor-loop-iter-27.md`
+`.codex/handoffs/2026-11-06-042015-nephroctor-loop-iter-27.md` (iter 28 handoff follows deploy)
 
 ## Just completed
 
-Iter 26 verified after loop kill (apple-touch live). Iter 27: root `/manifest.webmanifest` = `site.webmanifest`. Skipped `.sk`/`.eu` panel and legal redirects.
+Iter 28: lock document scroll while Clarity consent dialog is open (container focus still received Space/PageDown). Cache-bust `?v=2b163b588ee0`. Skipped `.sk`/`.eu` panel and legal redirects.
 
 ## Next iteration priority
 
@@ -22,3 +22,4 @@ WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to do
 
 - Iter 26: Deploy success `5ca7810` (apple-touch)
 - Iter 27: Deploy success `8494589` (manifest.webmanifest), run 42154902070
+- Iter 28: Deploy pending (scroll lock)

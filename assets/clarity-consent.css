@@ -28,6 +28,8 @@
     box-shadow: var(--shadow);
     font: 16px/1.5 system-ui, sans-serif;
     text-align: left;
+    /* Keep wheel/touch overscroll from chaining into the locked page behind. */
+    overscroll-behavior: contain;
 }
 
 .clarity-consent h2 {

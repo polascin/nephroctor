@@ -33,6 +33,9 @@
     let settings;
     let previousFocus = null;
     let dismissible = false;
+    let scrollLocked = false;
+    let previousHtmlOverflow = "";
+    let previousBodyOverflow = "";
     const read = () => { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } };
     const save = granted => { try { localStorage.setItem(key, JSON.stringify({granted, expires: Date.now() + 180 * 86400000})); } catch { /* Consent still applies for this page. */ } };
     const focusable = root => [...root.querySelectorAll("a[href], button:not([disabled])")].filter(el => !el.hasAttribute("disabled"));
@@ -63,10 +66,33 @@
             }
         }
     }
+    function setScrollLock(on) {
+        // First-run focus lands on the dialog container (tabIndex=-1). With that
+        // focus, Space / PageDown / arrow keys still scroll the document behind
+        // the modal even when siblings are inert. Lock root overflow while open.
+        const html = document.documentElement;
+        const body = document.body;
+        if (!html || !body || !html.style || !body.style) return;
+        if (on) {
+            if (scrollLocked) return;
+            previousHtmlOverflow = html.style.overflow || "";
+            previousBodyOverflow = body.style.overflow || "";
+            html.style.overflow = "hidden";
+            body.style.overflow = "hidden";
+            scrollLocked = true;
+        } else if (scrollLocked) {
+            html.style.overflow = previousHtmlOverflow;
+            body.style.overflow = previousBodyOverflow;
+            previousHtmlOverflow = "";
+            previousBodyOverflow = "";
+            scrollLocked = false;
+        }
+    }
     function closeBanner() {
         if (!banner) return;
         banner.removeEventListener("keydown", onKeyDown);
         setBackgroundInert(false);
+        setScrollLock(false);
         banner.remove();
         banner = null;
         if (settings) settings.setAttribute("aria-expanded", "false");
@@ -243,6 +269,7 @@
         banner.addEventListener("keydown", onKeyDown);
         document.body.appendChild(banner);
         setBackgroundInert(true);
+        setScrollLock(true);
         if (fromSettings) decline.focus();
         else banner.focus();
     }

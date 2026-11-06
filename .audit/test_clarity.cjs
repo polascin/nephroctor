@@ -22,6 +22,7 @@ function run({path='/',query='',stored=null,external=false,src='https://example.
    children:[],
    dataset:{},
    attrs:{},
+   style:{},
    focus(){activeElement=el;},
    contains(node){
     if(node===el)return true;
@@ -46,7 +47,7 @@ function run({path='/',query='',stored=null,external=false,src='https://example.
  const pageMain=make('main');pageMain.id='main';
  const pageStatus=make('div');pageStatus.className='visually-hidden';pageStatus.setAttribute('role','status');pageStatus.setAttribute('aria-live','polite');
  body.appendChild(pageMain);body.appendChild(pageStatus);
- const documentElement={lang};
+ const documentElement={lang,style:{}};
  const document={
   currentScript:{dataset:{project:'abc123',consent:external?'external':'',paths:'/,/index.php'},src},
   head,body,documentElement,createElement:make,querySelector(){return null},
@@ -77,6 +78,9 @@ assert.ok(liveWhileOpen);assert.notEqual(liveWhileOpen.inert,true);assert.equal(
 assert.notEqual(s.pageStatus.inert,true);assert.equal(s.pageStatus.getAttribute('data-clarity-inert'),null);
 assert.equal(s.pageMain.inert,true);assert.equal(s.pageMain.getAttribute('data-clarity-inert'),'1');
 assert.equal(settingsBtn.inert,true);assert.equal(settingsBtn.getAttribute('data-clarity-inert'),'1');
+// Modal must lock document scroll: container focus still receives Space/PageDown.
+assert.equal(s.documentElement.style.overflow,'hidden');
+assert.equal(s.body.style.overflow,'hidden');
 // First-run focuses the dialog container; Shift+Tab / Tab must stay inside.
 assert.equal(s.activeElement,dialog);
 const allow=s.elements.find(e=>e.textContent==='Povoliť analytiku');
@@ -96,7 +100,11 @@ prevented=false;
 dialog.keydown({key:'Tab',shiftKey:true,preventDefault(){prevented=true;}});
 assert.equal(prevented,true);assert.equal(s.activeElement,allow);
 let accept=s.elements.find(e=>e.textContent==='Povoliť analytiku');assert.equal(accept['data-choice']||accept.getAttribute?.('data-choice'),'allow');accept.click();assert.equal(s.scripts().length,1);assert.equal(s.scripts()[0].src,'https://www.clarity.ms/tag/abc123');assert.equal(s.body['data-clarity-mask'],'true');assert.equal(s.window.clarity.q[0][1].ad_Storage,'denied');
-s.elements.find(e=>e.textContent==='Nastavenia analytiky').click();s.elements.filter(e=>e.textContent==='Odmietnuť').at(-1).click();assert.equal(s.reloads,1);assert.equal(JSON.parse(s.value).granted,false);assert.ok(s.cookies.some(c=>c.includes('Domain=.example.com')));
+assert.equal(s.documentElement.style.overflow,'');assert.equal(s.body.style.overflow,'');
+s.elements.find(e=>e.textContent==='Nastavenia analytiky').click();
+assert.equal(s.documentElement.style.overflow,'hidden');assert.equal(s.body.style.overflow,'hidden');
+s.elements.filter(e=>e.textContent==='Odmietnuť').at(-1).click();assert.equal(s.reloads,1);assert.equal(JSON.parse(s.value).granted,false);assert.ok(s.cookies.some(c=>c.includes('Domain=.example.com')));
+assert.equal(s.documentElement.style.overflow,'');assert.equal(s.body.style.overflow,'');
 s=run();s.elements.find(e=>e.textContent==='Odmietnuť').click();assert.equal(s.scripts().length,0);
 const noClarity=r=>!r.elements.some(e=>e.id==='clarity-settings'||e.role==='dialog'||(e.tag==='script'&&String(e.src||'').includes('clarity.ms')));
 for(const path of ['/login.php','/calculator.php','/admin.php'])assert.ok(noClarity(run({path})));
@@ -147,4 +155,4 @@ s.value=null;
 s.events.storage({key:'clarity-consent-v1-abc123'});
 assert.ok(s.elements.filter(e=>e.role==='dialog'&&!e.removed).length>=1);
 assert.equal(s.reloads,0);
-console.log('PASS: consent gating, a11y dialog (inert/privacy fallback + Tab trap on container), live lang copy + status announce, cross-tab storage sync, project ID, masking, revocation, cookies, expiry, duplicate prevention, private paths and tokens.');
+console.log('PASS: consent gating, a11y dialog (inert/privacy fallback + Tab trap on container + scroll lock), live lang copy + status announce, cross-tab storage sync, project ID, masking, revocation, cookies, expiry, duplicate prevention, private paths and tokens.');
