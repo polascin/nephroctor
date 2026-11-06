@@ -1,25 +1,24 @@
 # SESSION – Nephroctor improvement loop
 
-Last updated: 2026-11-06 (loop iter 27, after killed iter-26 shell)
+Last updated: 2026-11-06 (loop iter 27)
 
 ## HEAD
 
-See latest commit on `origin/main` after iter-27 push (root `manifest.webmanifest`).
+`8494589` on `origin/main` (root `manifest.webmanifest`).
 
 ## Latest handoff
 
-`.codex/handoffs/` – iter-27 after completing stub iter-26 handoff.
+`.codex/handoffs/2026-11-06-042015-nephroctor-loop-iter-27.md`
 
 ## Just completed
 
-Iter 26 verified live after loop kill: root apple-touch icons `5ca7810`, Deploy success, prod 200 PNG.
-Iter 27: root `/manifest.webmanifest` byte-identical to `site.webmanifest` (common probe was 404). Skipped `.sk`/`.eu` panel and legal redirects.
+Iter 26 verified after loop kill (apple-touch live). Iter 27: root `/manifest.webmanifest` = `site.webmanifest`. Skipped `.sk`/`.eu` panel and legal redirects.
 
 ## Next iteration priority
 
-WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to domain alias of `nephroctor.com`, then run `tools/verify-domain-aliases.ps1`. Prefer a real functional/security/a11y bug if found. Or local SFTP deploy if hosting credentials become available.
+WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to domain alias of `nephroctor.com`, then run `tools/verify-domain-aliases.ps1`. Prefer a real functional/security/a11y bug if found.
 
 ## Deploys this session
 
-- Iter 26: Deploy success `5ca7810` (apple-touch); handoff stub completed after kill
-- Iter 27: Deploy after root `manifest.webmanifest`
+- Iter 26: Deploy success `5ca7810` (apple-touch)
+- Iter 27: Deploy success `8494589` (manifest.webmanifest), run 42154902070
