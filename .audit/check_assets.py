@@ -138,6 +138,19 @@ def check_icons():
         path = ROOT / 'assets' / name
         check(f'asset present {name}', path.exists() and path.stat().st_size > 0)
     check('root favicon.ico present (implicit browser request)', (ROOT / 'favicon.ico').exists())
+    root_ati = ROOT / 'apple-touch-icon.png'
+    root_ati_pre = ROOT / 'apple-touch-icon-precomposed.png'
+    assets_ati = ROOT / 'assets' / 'apple-touch-icon.png'
+    check('root apple-touch-icon.png present (iOS home-screen request)',
+          root_ati.exists() and root_ati.stat().st_size > 0)
+    check('root apple-touch-icon-precomposed.png present (legacy iOS request)',
+          root_ati_pre.exists() and root_ati_pre.stat().st_size > 0)
+    if root_ati.exists() and assets_ati.exists():
+        check('root apple-touch-icon.png matches assets copy',
+              root_ati.read_bytes() == assets_ati.read_bytes())
+    if root_ati_pre.exists() and assets_ati.exists():
+        check('root apple-touch-icon-precomposed.png matches assets copy',
+              root_ati_pre.read_bytes() == assets_ati.read_bytes())
 
 
 def main() -> int:

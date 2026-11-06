@@ -25,6 +25,8 @@ assets/
   favicon.*, icon-*   favicony a ikony aplikácie odvodené z monogramu loga
   og-image.jpg        náhľad pre sociálne siete (1200 × 630)
 favicon.ico           koreňová kópia (prehliadače ju žiadajú implicitne)
+apple-touch-icon.png  koreňová kópia (iOS home screen / implicitná požiadavka)
+apple-touch-icon-precomposed.png  koreňová kópia (staršie iOS)
 robots.txt            pravidlá pre crawlery + odkaz na sitemapu
 sitemap.xml           sitemapa s hreflang alternatívami pre 24 jazykov
 site.webmanifest      webový manifest

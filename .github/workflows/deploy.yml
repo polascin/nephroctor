@@ -17,7 +17,8 @@ jobs:
       - name: Prepare deploy directory
         run: |
           mkdir -p deploy
-          cp index.html robots.txt sitemap.xml site.webmanifest favicon.ico deploy/
+          cp index.html robots.txt sitemap.xml site.webmanifest favicon.ico \
+             apple-touch-icon.png apple-touch-icon-precomposed.png deploy/
           cp .htaccess deploy/
           cp -r assets deploy/
           cp -r legal deploy/
@@ -35,7 +36,8 @@ jobs:
       - name: Verify deploy payload
         run: |
           fail=0
-          for f in index.html robots.txt sitemap.xml site.webmanifest favicon.ico .htaccess \
+          for f in index.html robots.txt sitemap.xml site.webmanifest favicon.ico \
+                   apple-touch-icon.png apple-touch-icon-precomposed.png .htaccess \
                    assets/site.css assets/legal.js \
                    assets/clarity-consent.js assets/clarity-consent.css \
                    assets/logo.webp assets/og-image.jpg \

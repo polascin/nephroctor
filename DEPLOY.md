@@ -49,6 +49,8 @@ Ak chcete nasadiť bez push:
 | `legal/`           | 6 právnych dokumentov (SK + EN)                                     |
 | `assets/`          | logá, favicony, ikony, OG obrázok, `site.css`, `legal.js`, `fonts/` |
 | `favicon.ico`      | koreňový favicon (prehliadače ho žiadajú implicitne)                |
+| `apple-touch-icon.png` | koreňová kópia (iOS home screen / implicitná požiadavka)        |
+| `apple-touch-icon-precomposed.png` | koreňová kópia (staršie iOS)                        |
 | `robots.txt`       | pravidlá pre crawlery + odkaz na sitemapu                           |
 | `sitemap.xml`      | sitemapa s `hreflang` alternatívami                                 |
 | `site.webmanifest` | webový manifest (názov, ikony, farby)                               |
