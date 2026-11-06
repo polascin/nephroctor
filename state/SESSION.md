@@ -8,7 +8,7 @@ See latest commit on `origin/main` after iter-22 push (skip-link focus target).
 
 ## Latest handoff
 
-`.codex/handoffs/2026-11-06-022505-nephroctor-loop-iter-21.md` (superseded by iter-22 handoff after deploy)
+`.codex/handoffs/2026-11-06-024652-nephroctor-loop-iter-22.md`
 
 ## Just completed
 
@@ -21,4 +21,4 @@ WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to do
 ## Deploys this session
 
 - Prior: iter-21 Deploy success (`28b0f20`)
-- Iter 22: see handoff after push
+- Iter 22: Deploy success (`6b3154e`, run 42144923500); Smoke + security headers OK (WAF 429 annotations)
