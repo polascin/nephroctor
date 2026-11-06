@@ -152,7 +152,11 @@
 
     Array.prototype.forEach.call(buttons, function (btn) {
         btn.addEventListener('click', function () {
-            showVersion(btn.getAttribute('data-doc-lang'), true);
+            var next = btn.getAttribute('data-doc-lang');
+            /* Persist sk/en only on explicit legal-switch clicks. Storage sync
+               must not collapse a richer home-page code (e.g. de) back to en. */
+            store.set('nephroctor-lang', next === 'en' ? 'en' : 'sk');
+            showVersion(next, true);
         });
     });
 
@@ -167,6 +171,15 @@
         if (!code || SITE_LANGUAGES.indexOf(code) === -1) return null;
         return (code === 'sk' || code === 'cs') ? 'sk' : 'en';
     }
+
+    /* Cross-tab language: map any stored site language onto SK/EN document. */
+    window.addEventListener('storage', function (e) {
+        if (e.key !== 'nephroctor-lang') return;
+        var mapped = resolveDocLang(e.newValue);
+        if (mapped && mapped !== docLang) {
+            showVersion(mapped, true);
+        }
+    });
 
     var requested = null;
     try {

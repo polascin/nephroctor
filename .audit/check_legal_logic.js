@@ -205,5 +205,59 @@ for (const [label, input, expected] of CASES) {
   }
 }
 
+/* Cross-tab language: site codes map to SK/EN without collapsing storage. */
+{
+  const label = 'storage lang de -> EN doc';
+  try {
+    const result = run({ search: '', saved: 'sk' });
+    global.localStorage.setItem('nephroctor-lang', 'de');
+    const handlers = (result.winListeners && result.winListeners.storage) || [];
+    handlers.forEach((fn) => fn({ key: 'nephroctor-lang', newValue: 'de' }));
+    const shows = skBlock.hidden ? 'en' : 'sk';
+    const stored = global.localStorage.getItem('nephroctor-lang');
+    const announce = result.liveRegion && result.liveRegion.textContent;
+    const ok = shows === 'en'
+      && stored === 'de'
+      && announce === 'Document language: English';
+    if (!ok) failures++;
+    console.log(`  ${ok ? 'OK  ' : 'FAIL'} ${label.padEnd(31)} shows=${shows} stored=${stored} announce=${JSON.stringify(announce)}`);
+  } catch (err) {
+    failures++;
+    console.log(`  FAIL ${label.padEnd(31)} THREW: ${err.message}`);
+  }
+}
+{
+  const label = 'storage lang cs -> SK doc';
+  try {
+    const result = run({ search: '?lang=en', saved: 'en' });
+    global.localStorage.setItem('nephroctor-lang', 'cs');
+    const handlers = (result.winListeners && result.winListeners.storage) || [];
+    handlers.forEach((fn) => fn({ key: 'nephroctor-lang', newValue: 'cs' }));
+    const shows = skBlock.hidden ? 'en' : 'sk';
+    const stored = global.localStorage.getItem('nephroctor-lang');
+    const ok = shows === 'sk' && stored === 'cs';
+    if (!ok) failures++;
+    console.log(`  ${ok ? 'OK  ' : 'FAIL'} ${label.padEnd(31)} shows=${shows} stored=${stored}`);
+  } catch (err) {
+    failures++;
+    console.log(`  FAIL ${label.padEnd(31)} THREW: ${err.message}`);
+  }
+}
+{
+  const label = 'click EN persists nephroctor-lang';
+  try {
+    run({ search: '', saved: null });
+    btnEn.click();
+    const stored = global.localStorage.getItem('nephroctor-lang');
+    const shows = skBlock.hidden ? 'en' : 'sk';
+    const ok = shows === 'en' && stored === 'en';
+    if (!ok) failures++;
+    console.log(`  ${ok ? 'OK  ' : 'FAIL'} ${label.padEnd(31)} shows=${shows} stored=${stored}`);
+  } catch (err) {
+    failures++;
+    console.log(`  FAIL ${label.padEnd(31)} THREW: ${err.message}`);
+  }
+}
+
 console.log('\nlegal document switch:', failures ? `FAILED (${failures})` : 'all cases correct');
 process.exit(failures ? 1 : 0);

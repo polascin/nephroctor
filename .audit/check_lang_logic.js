@@ -56,5 +56,14 @@ for (const [label, input, expected] of CASES) {
   console.log(`  ${ok ? 'OK  ' : 'FAIL'} ${label.padEnd(34)} -> ${actual}${ok ? '' : `  (expected ${expected})`}`);
 }
 
+/* Cross-tab sync must listen for nephroctor-lang and call switchLang. */
+{
+  const label = 'index storage syncs nephroctor-lang';
+  const ok = /e\.key === ['"]nephroctor-lang['"]/.test(main)
+    && /switchLang\(e\.newValue\)/.test(main);
+  if (!ok) failures++;
+  console.log(`  ${ok ? 'OK  ' : 'FAIL'} ${label}`);
+}
+
 console.log('\nlanguage resolution:', failures ? `FAILED (${failures})` : 'all cases correct');
 process.exit(failures ? 1 : 0);

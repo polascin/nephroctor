@@ -938,15 +938,22 @@
 
         themeToggle.addEventListener('click', toggleTheme);
 
-        /* Cross-tab theme: storage fires in other tabs only. */
+        /* Cross-tab theme/lang: storage fires in other tabs only. */
         window.addEventListener('storage', function (e) {
-            if (e.key !== 'nephroctor-theme') return;
-            if (e.newValue === 'dark' || e.newValue === 'light') {
-                document.documentElement.setAttribute('data-theme', e.newValue);
-            } else {
-                document.documentElement.removeAttribute('data-theme');
+            if (e.key === 'nephroctor-theme') {
+                if (e.newValue === 'dark' || e.newValue === 'light') {
+                    document.documentElement.setAttribute('data-theme', e.newValue);
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                }
+                updateThemeIcon();
+                return;
             }
-            updateThemeIcon();
+            if (e.key === 'nephroctor-lang') {
+                if (e.newValue && translations[e.newValue] && e.newValue !== currentLang) {
+                    switchLang(e.newValue);
+                }
+            }
         });
 
         /* Collapsed theme-color has no media query; when following the system,
