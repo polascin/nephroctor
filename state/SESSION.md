@@ -8,7 +8,7 @@ See latest commit on `origin/main` after iter-26 push (root apple-touch icons).
 
 ## Latest handoff
 
-`.codex/handoffs/` (iter-26 handoff after deploy)
+`.codex/handoffs/2026-11-06-040502-nephroctor-loop-iter-26.md`
 
 ## Just completed
 
