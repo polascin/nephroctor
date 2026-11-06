@@ -8,7 +8,7 @@ See latest commit on `origin/main` after iter-24 push (Clarity inert vs aria-liv
 
 ## Latest handoff
 
-`.codex/handoffs/2026-11-06-030329-nephroctor-loop-iter-23.md` (superseded by iter-24 handoff after docs commit)
+`.codex/handoffs/2026-11-06-032804-nephroctor-loop-iter-24.md`
 
 ## Just completed
 
@@ -21,4 +21,4 @@ WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to do
 ## Deploys this session
 
 - Prior: iter-23 Deploy success (`ae4b0e6`)
-- Iter 24: Deploy pending after push
+- Iter 24: Deploy success (`b98fa42`, run 42149341229); Smoke + security headers OK
