@@ -73,6 +73,11 @@ def check_metadata():
             check(f'manifest icon exists {icon["src"]}', (ROOT / icon['src'].lstrip('/')).exists())
         check('manifest declares a maskable icon',
               any(i.get('purpose') == 'maskable' for i in manifest['icons']))
+        # Align with light theme-color / background_color (dark chrome uses HTML meta).
+        check('manifest theme_color matches background_color',
+              manifest.get('theme_color') == manifest.get('background_color') == '#f8fafc',
+              f' -> theme={manifest.get("theme_color")!r} '
+              f'bg={manifest.get("background_color")!r}')
     except Exception as exc:                                    # noqa: BLE001
         check('web manifest parses', False, f' -> {exc}')
 

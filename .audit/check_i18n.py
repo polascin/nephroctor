@@ -76,6 +76,32 @@ def main() -> int:
           set(hreflang) == set(order) | {'x-default'}, f' -> {len(hreflang)} tags')
     check('no duplicate hreflang tags', len(hreflang) == len(set(hreflang)))
 
+    primary_og = re.search(
+        r'<meta property="og:locale" content="([a-z]{2}_[A-Z]{2})">', html
+    )
+    check('primary og:locale present', bool(primary_og))
+    primary_locale = primary_og.group(1) if primary_og else ''
+    check('primary og:locale is sk_SK', primary_locale == 'sk_SK', f' -> {primary_locale}')
+
+    alt_locales = re.findall(
+        r'<meta property="og:locale:alternate" content="([a-z]{2}_[A-Z]{2})">', html
+    )
+    expected_alts = {translations[c]['locale'] for c in translations
+                     if translations[c]['locale'] != primary_locale}
+    check('og:locale:alternate covers every non-primary locale',
+          set(alt_locales) == expected_alts,
+          f' -> {len(alt_locales)} tags, expected {len(expected_alts)}')
+    check('no duplicate og:locale:alternate', len(alt_locales) == len(set(alt_locales)))
+    check('og:locale:alternate excludes primary', primary_locale not in alt_locales)
+
+    og_alt = re.search(r'<meta property="og:image:alt" content="([^"]*)"', html)
+    tw_alt = re.search(r'<meta name="twitter:image:alt" content="([^"]*)"', html)
+    check('twitter:image:alt present', bool(tw_alt))
+    check('twitter:image:alt matches og:image:alt',
+          bool(og_alt and tw_alt and og_alt.group(1) == tw_alt.group(1)),
+          f' -> og={og_alt.group(1) if og_alt else None!r} '
+          f'tw={tw_alt.group(1) if tw_alt else None!r}')
+
     sitemap = (ROOT / 'sitemap.xml').read_text(encoding='utf-8')
     home = re.findall(r'hreflang="([\w-]+)" href="https://nephroctor\.com/(?:\?lang=\w+)?"', sitemap)
     check('sitemap home entry matches index.html hreflang', set(home) == set(hreflang),

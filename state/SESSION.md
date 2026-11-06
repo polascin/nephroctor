@@ -1,24 +1,24 @@
 # SESSION – Nephroctor improvement loop
 
-Last updated: 2026-11-06 (loop iter 20)
+Last updated: 2026-11-06 (loop iter 21)
 
 ## HEAD
 
-See latest commit on `origin/main` after iter-20 push (home lang aria-live).
+See latest commit on `origin/main` after iter-21 push (SEO/meta polish).
 
 ## Latest handoff
 
-`.codex/handoffs/` – iter-20 handoff written at end of this iteration.
+`.codex/handoffs/` – iter-21 handoff written at end of this iteration.
 
 ## Just completed
 
-Iter 20: home-page language switch now announces via `aria-live="polite"` (autonym), matching legal docs and Clarity. Initial paint stays silent. Accessibility statement bumped to 1.5. Skipped `.sk`/`.eu` panel and EN legal redirects.
+Iter 21: SEO/meta hardening on home: `twitter:image:alt` (matches `og:image:alt`); static 23× `og:locale:alternate` for every non-primary locale; `site.webmanifest` `theme_color` reconciled to `#f8fafc` (same as `background_color` / light HTML `theme-color`). Audits extended in `check_i18n.py` + `check_assets.py`. Skipped `.sk`/`.eu` panel and EN legal redirects.
 
 ## Next iteration priority
 
-WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to domain alias of `nephroctor.com`, then run `tools/verify-domain-aliases.ps1`. Prefer another real functional bug (SEO meta gaps such as `twitter:image:alt` / `og:locale:alternate`, manifest `theme_color` vs chrome, fonts/contrast regressions). Or local SFTP deploy if hosting credentials become available on this machine.
+WebSupport panel (user): switch `nephroctor.sk` / `.eu` from HTTP redirect to domain alias of `nephroctor.com`, then run `tools/verify-domain-aliases.ps1`. Prefer another real functional bug (fonts, contrast, broken scripts) or a full Beh doaudit. Or local SFTP deploy if hosting credentials become available on this machine.
 
 ## Deploys this session
 
-- Prior: iter-19 Deploy success (`52fac8c`)
-- Iter 20: see handoff after push
+- Prior: iter-20 Deploy success (`3b97b0f`)
+- Iter 21: see handoff after push
