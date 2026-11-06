@@ -65,5 +65,16 @@ for (const [label, input, expected] of CASES) {
   console.log(`  ${ok ? 'OK  ' : 'FAIL'} ${label}`);
 }
 
+/* Home language changes must announce via aria-live after the initial paint. */
+{
+  const label = 'index announces lang via aria-live';
+  const ok = /aria-live['"]?\s*,?\s*['"]?polite/.test(main)
+    && /function announceLang\s*\(/.test(main)
+    && /announce:\s*false/.test(main)
+    && /opts\.announce !== false/.test(main);
+  if (!ok) failures++;
+  console.log(`  ${ok ? 'OK  ' : 'FAIL'} ${label}`);
+}
+
 console.log('\nlanguage resolution:', failures ? `FAILED (${failures})` : 'all cases correct');
 process.exit(failures ? 1 : 0);

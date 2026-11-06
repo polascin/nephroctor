@@ -66,7 +66,7 @@
             <article class="content-card" id="doc-sk" data-lang-block="sk" lang="sk">
                 <div class="doc-header">
                     <h1>Vyhlásenie o prístupnosti</h1>
-                    <p class="doc-meta">Aktualizované 5. novembra 2026 · verzia 1.4</p>
+                    <p class="doc-meta">Aktualizované 6. novembra 2026 · verzia 1.5</p>
                 </div>
 
                 <div class="prose">
@@ -85,7 +85,7 @@
                         <li>kontrast textu najmenej <code>4,5 : 1</code> v svetlom aj tmavom režime a kontrast netextových prvkov najmenej <code>3 : 1</code> (WCAG 1.4.3, 1.4.11); pomery sú počítané, nie odhadované – v auguste 2026 bol opravený kontrast bieleho textu na aktívnom tlačidle (z 2,46 : 1 na 4,87 : 1), farba symbolov v ikonách v tmavom režime (z 1,81 : 1 na 9,88 : 1) a svetlejší koniec prechodu v ikonách (z 2,46 : 1 na 3,48 : 1),</li>
                         <li>rešpektovanie systémovej predvoľby <code>prefers-reduced-motion</code> – animácie a prechody sa vypnú,</li>
                         <li>rešpektovanie systémovej predvoľby <code>prefers-color-scheme</code> pri prvom načítaní, s možnosťou manuálneho prepnutia,</li>
-                        <li>stav tlačidiel jazyka a jazyka dokumentu sa oznamuje pomocou <code>aria-pressed</code>, nielen farebne (WCAG 1.4.1); pri manuálnom prepnutí SK/EN na právnych dokumentoch sa nový jazyk oznamuje aj cez <code>aria-live="polite"</code>,</li>
+                        <li>stav tlačidiel jazyka a jazyka dokumentu sa oznamuje pomocou <code>aria-pressed</code>, nielen farebne (WCAG 1.4.1); pri manuálnom prepnutí jazyka na domovskej stránke (24 jazykov) aj pri SK/EN na právnych dokumentoch sa nový jazyk oznamuje aj cez <code>aria-live="polite"</code>,</li>
                         <li>atribút <code>lang</code> na prvku <code>html</code> sa mení podľa zvoleného jazyka, jednotlivé jazykové tlačidlá majú vlastný atribút <code>lang</code> (WCAG 3.1.1, 3.1.2),</li>
                         <li>všetky obrázky majú zmysluplný atribút <code>alt</code>, dekoratívne ikony SVG sú skryté cez <code>aria-hidden="true"</code> a <code>focusable="false"</code>,</li>
                         <li>responzívne rozloženie od šírky 320 px bez vodorovného posúvania a bez straty obsahu pri 200 % zväčšení (WCAG 1.4.4, 1.4.10),</li>
@@ -119,7 +119,7 @@
             <article class="content-card" id="doc-en" data-lang-block="en" lang="en" hidden>
                 <div class="doc-header">
                     <h1>Accessibility statement</h1>
-                    <p class="doc-meta">Updated 5 November 2026 · version 1.4</p>
+                    <p class="doc-meta">Updated 6 November 2026 · version 1.5</p>
                 </div>
 
                 <div class="prose">
@@ -142,7 +142,7 @@
                         <li>text contrast of at least <code>4.5 : 1</code> in both light and dark mode and non-text contrast of at least <code>3 : 1</code> (WCAG 1.4.3, 1.4.11); ratios are computed rather than estimated – in August 2026 we corrected white text on the active button (from 2.46 : 1 to 4.87 : 1), the icon glyph colour in dark mode (from 1.81 : 1 to 9.88 : 1) and the lighter end of the icon gradient (from 2.46 : 1 to 3.48 : 1),</li>
                         <li>respect for the <code>prefers-reduced-motion</code> system setting – animations and transitions are disabled,</li>
                         <li>respect for the <code>prefers-color-scheme</code> system setting on first load, with a manual override,</li>
-                        <li>the state of language buttons is announced via <code>aria-pressed</code>, not by colour alone (WCAG 1.4.1); a manual SK/EN switch on legal documents is also announced via <code>aria-live="polite"</code>,</li>
+                        <li>the state of language buttons is announced via <code>aria-pressed</code>, not by colour alone (WCAG 1.4.1); a manual language switch on the home page (24 languages) and the SK/EN switch on legal documents are also announced via <code>aria-live="polite"</code>,</li>
                         <li>the <code>lang</code> attribute on <code>html</code> follows the selected language and each language button carries its own <code>lang</code> (WCAG 3.1.1, 3.1.2),</li>
                         <li>all images have a meaningful <code>alt</code> attribute; decorative SVG icons are hidden via <code>aria-hidden="true"</code> and <code>focusable="false"</code>,</li>
                         <li>responsive layout from 320 px wide with no horizontal scrolling and no loss of content at 200 % zoom (WCAG 1.4.4, 1.4.10),</li>

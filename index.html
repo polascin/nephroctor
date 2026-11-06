@@ -809,6 +809,24 @@
 
         let currentLang = 'sk';
 
+        /* Polite status for language changes after the initial paint (clicks +
+           cross-tab storage). Autonym alone is enough: "Deutsch", "English". */
+        const langLiveRegion = document.createElement('div');
+        langLiveRegion.className = 'visually-hidden';
+        langLiveRegion.setAttribute('role', 'status');
+        langLiveRegion.setAttribute('aria-live', 'polite');
+        langLiveRegion.setAttribute('aria-atomic', 'true');
+        document.body.appendChild(langLiveRegion);
+
+        function announceLang(code) {
+            const msg = translations[code] && translations[code].name;
+            if (!msg) return;
+            langLiveRegion.textContent = '';
+            const paint = () => { langLiveRegion.textContent = msg; };
+            if (typeof requestAnimationFrame === 'function') requestAnimationFrame(paint);
+            else paint();
+        }
+
         function setMeta(selector, value) {
             const el = document.head.querySelector(selector);
             if (el) el.setAttribute('content', value);
@@ -851,8 +869,10 @@
 
         function switchLang(code, options) {
             if (!translations[code]) code = 'sk';
+            const changed = currentLang !== code;
             currentLang = code;
             const t = translations[code];
+            const opts = options || {};
 
             document.getElementById('subtitle').textContent = t.subtitle;
             document.getElementById('lang-title').textContent = t.langTitle;
@@ -881,7 +901,7 @@
             updateThemeIcon();
             store.set('nephroctor-lang', code);
 
-            if (!options || options.pushUrl !== false) {
+            if (opts.pushUrl !== false) {
                 try {
                     const target = code === 'sk'
                         ? window.location.pathname
@@ -891,6 +911,9 @@
                     /* replaceState unavailable (e.g. file:// origin) */
                 }
             }
+
+            /* Initial paint passes announce:false; clicks and cross-tab sync announce. */
+            if (changed && opts.announce !== false) announceLang(code);
         }
 
         // Theme toggle
@@ -975,7 +998,7 @@
 
         currentLang = initialLang();
         buildLangButtons();
-        switchLang(currentLang, { pushUrl: false });
+        switchLang(currentLang, { pushUrl: false, announce: false });
         document.getElementById('copyright-year').textContent = new Date().getFullYear();
     </script>
 <script src="assets/clarity-consent.js?v=a6b08f84514b" data-project="z6syb9ejim" data-paths="/,/index.html,/legal/cookies.html,/legal/ochrana-osobnych-udajov.html" data-privacy="/legal/ochrana-osobnych-udajov.html" defer></script>
